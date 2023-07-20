@@ -1,0 +1,131 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <div class="row">
+              <div class="col-md-3"></div>
+              <div class="col-sm-12 col-md-9 dataTables_filter" >
+                <mat-slide-toggle color="primary" (change)="toggleSearch($event)" style="float: right;"  >Recherche avancée</mat-slide-toggle>
+              </div>
+            </div>
+          </div>
+          <div class="body table-responsive">
+            <ejs-grid
+              showColumnMenu="true"
+              #grid
+              [filterSettings]='filterSettings'
+              [gridLines]="gridLines"
+              showColumnMenu="true"
+              [allowSelection]="false"
+              [dataSource]="data"
+              [allowPaging]="true"
+              [allowFiltering]="true"
+              (dataBound)="dataBound($event)"
+              [allowGrouping]="true"
+            >
+              <e-columns>
+                <e-column [width]="170"  field="productCode" headerText="Code produit"></e-column>
+                <e-column [width]="130" field="productName" headerText="Produit"></e-column>
+                <e-column [width]="130" field="dateShort" headerText="Date" ></e-column>
+                <e-column [width]="130" field="quantity" headerText="Quantité"></e-column>
+                <e-column [width]="130" field="customerName" headerText="Client" ></e-column>
+                <e-column [width]="130" field="customerId" headerText="Client" [visible]="false"></e-column>
+                <e-column [width]="170" field="customerCode" headerText="Code client" ></e-column>
+                <e-column [width]="170" field="salesPersonName" headerText="Commercial(e)"></e-column>
+                <e-column field="status" [width]="130" headerText="Statut" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true">
+                  <ng-template #filterTemplate let-data>
+                    <ejs-dropdownlist id='status' [(ngModel)]="data.Name" ngDefaultControl  [enabled]="data.column.allowFiltering" showClearButton="true"
+                      (change)=onChange($event) [dataSource]='status' [fields]='fields' [popupHeight]='height' >
+                    </ejs-dropdownlist>
+                  </ng-template>
+                  <ng-template #template let-element>
+                  <span
+                    class="label bg-red shadow-style"
+                    *ngIf="element.status == 'Demande rejetée'"
+                    >{{ element.status }}</span
+                  >
+                  <span
+                    class="label bg-green shadow-style"
+                    *ngIf="element.status == 'Demande validée'"
+                    >{{ element.status }}</span
+                  >
+                  <span
+                    class="label bg-orange shadow-style"
+                    *ngIf="element.status == 'Demande en attente'"
+                    >{{ element.status }}</span
+                  >
+                </ng-template>
+              </e-column>
+                <e-column
+                  [width]="100"
+                  headerText="Actions"
+                  [allowFiltering]="false"
+                  isPrimaryKey="true"
+                  [allowSorting]="false"
+                >
+                  <ng-template #template let-row>
+                    <button
+                      mat-icon-button
+                      class="button-action"
+                      [matMenuTriggerFor]="menu"
+                      aria-label="Click to see more actions"
+                      *ngIf="row.status == 'Demande en attente'"
+                    >
+                      <i class="material-icons">more_vert</i>
+                    </button>
+                    <mat-menu #menu="matMenu" style="height: 25px">
+                      <button
+                        *ngIf="!isSales && row.status == 'Demande en attente'"
+                        mat-menu-item
+                        (click)="validate(row)"
+                      >
+                        <mat-icon aria-label="Edit">check</mat-icon> Valider
+                      </button>
+                      <button
+                        *ngIf="!isSales && row.status == 'Demande en attente'"
+                        mat-menu-item
+                        (click)="edit(row)"
+                      >
+                        <mat-icon aria-label="Edit">create</mat-icon> Modifier
+                      </button>
+                      <button
+                      *ngIf="isSales && isSalesPerson && row.status == 'Demande en attente'"
+                      mat-menu-item
+                      (click)="validate(row)"
+                    >
+                      <mat-icon aria-label="Edit">check</mat-icon> Valider
+                    </button>
+                    <button
+                      *ngIf="isSales && isSalesPerson && row.status == 'Demande en attente'"
+                      mat-menu-item
+                      (click)="edit(row)"
+                    >
+                      <mat-icon aria-label="Edit">create</mat-icon> Modifier
+                    </button>
+                      <button
+                        *ngIf="isSales && !isSalesPerson && row.status == 'Demande en attente'"
+                        mat-menu-item
+                        (click)="buyerValidation(row)"
+                      >
+                        <mat-icon aria-label="Edit">check</mat-icon> Valider
+                      </button>
+                      <button
+                      *ngIf="row.status == 'Demande en attente'"
+                      mat-menu-item
+                      (click)="reject(row)"
+                    >
+                      <mat-icon aria-label="Edit">clear</mat-icon> Rejeter
+                    </button>
+                    </mat-menu>
+                  </ng-template>
+                </e-column>
+              </e-columns>
+            </ejs-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

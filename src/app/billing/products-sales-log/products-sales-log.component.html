@@ -1,0 +1,68 @@
+<div style="height: 100%;margin: 15px;padding-top: 10px;">
+    <div class="row">
+        <div class="col-md-7" >
+            <input  style="width: 150px;"  autocomplete="off" (dateChange)="onStrtChange($event)" placeholder="DU"  [matDatepicker]="picker1" [(ngModel)]="start">
+               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+               <mat-datepicker #picker1></mat-datepicker>
+               <input  autocomplete="off" style="width: 150px;" (dateChange)="onEndChange($event)" placeholder="AU"   [matDatepicker]="picker" [(ngModel)]="end">
+               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+               
+               <mat-datepicker #picker></mat-datepicker>
+               <ng-select 
+               [hidden]="byCustomer"
+               style="display: inline-block;width:450px; margin-top: -10px;"
+                  [items]="customers | async" 
+                  bindLabel="name" 
+                  [minTermLength]="3" 
+                  placeholder="Filtrer par client"
+                  [loading]="customersLoading"
+                  typeToSearchText="Please enter 3 or more characters" 
+                  [typeahead]="customersInput$"
+                  [(ngModel)]="selectedCustomer"
+                  (change)='onCustomerSelection($event)'  >
+ 
+             </ng-select>
+          </div>
+          <div class="col-md-5" style="text-align: right;">
+            <div class="row">
+              <div class="col-md-6" [hidden]="!byCustomer">
+                <h4>
+                  Montant global: {{totalAmount| number: '.2' }} DZD
+              </h4>
+              
+              </div>
+              
+              <div class="col-md-6">
+                <button style="margin-top: -5px;" mat-raised-button class="personlized-button"  (click)='exportExcel()' #btnRef><mat-icon>download</mat-icon>Exportation Excel</button>
+              </div>
+            </div>
+          </div>
+    </div>
+    <br>
+    <br>
+    <ejs-grid
+      #grid
+      (actionBegin)='begin($event)'
+      showColumnMenu="true"
+      [allowSelection]="true"
+      [selectionSettings]='selectionOptions'
+      [gridLines]="gridLines"
+      [dataSource]="data"
+      [allowPaging]="true"
+      [allowSorting]="true"
+      [allowFiltering]="true"
+      (dataBound)="dataBound($event)"
+>
+<e-columns>
+  
+ 
+  <e-column [width]="100" field="productCode"  headerText="Code article"></e-column>
+  <e-column [width]="200" field="productName" headerText="Désignation"></e-column>
+  <e-column [width]="180" field="quantity" headerText="Quantité" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+  <e-column [width]="180" format="N2" field="totalHT" headerText="Total HT" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+  <e-column [width]="180" format="N2" field="totalTTC" headerText="Total TTC" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+  <e-column [width]="180" field="manufacturer" headerText="Labo" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+</e-columns>
+</ejs-grid>
+
+</div>

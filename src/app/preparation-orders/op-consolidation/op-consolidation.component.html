@@ -1,0 +1,77 @@
+
+
+<h4>Consolidation </h4>
+
+<table  class="table table-bordered">
+    <tr>
+      <td rowspan="2" style="font-size: 50px;font-weight: 600;text-align: center;vertical-align: middle;"><span >{{ bl.zoneGroupName }}</span></td>
+      <td>Client: <strong>{{ bl.customerName }}</strong></td>
+      <td>Cmd N°:  <strong>{{bl.orderIdentifier}}</strong></td>
+    </tr>
+    <tr>
+      <td>Secteur: <strong>{{ bl.sectorName }}</strong></td>
+      <td>Date: <strong>{{ bl.createdDateTime |  date:'medium' }}</strong></td>
+    </tr>
+  </table>
+<div class="row">
+    <form [formGroup]="formGroup" *ngIf="formGroup" class="col-md-6 col-lg-6 col-xl-6">
+        <div class="form-group mt-1 ">
+            <mat-form-field *ngIf="currentZone.zoneType != 10" >
+                <mat-label>Nombre Colis</mat-label>
+                <input type="number" min=1 matInput formControlName="totalPackage" >
+                <mat-error *ngIf="formGroup.get('totalPackage').hasError('PackageInvalid')">
+                    Le nombre de colis doit être superieur a 0
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group mt-1 " *ngIf="thermolabileZoneInOrder != null">
+            <mat-form-field >
+                <mat-label>Nombre Colis Frigo</mat-label>
+                <input type="number" matInput formControlName="totalPackageThermolabile" >
+            </mat-form-field>
+        </div>
+        <div class="form-group mt-1 ">
+            <ng-select id="employeeCode" autofocus
+                placeholder="Code Employé"
+                #employeeCode
+                formControlName="employeeCode"
+                [items]="consolidators"
+                [markFirst]="true"
+                bindValue="hrCode"
+                bindLabel="name"
+                [searchFn]="customEmployeeSearchFn"
+                (change)='onConsolidatorSelection($event)'
+                [virtualScroll]	='true'>
+            </ng-select>
+            <!-- <mat-form-field >
+                <mat-label>Code employé</mat-label>
+                <input matInput formControlName="employeeCode" required>
+            </mat-form-field> -->
+        </div>
+
+
+        <div class="mb-2 mt-2">
+            <button mat-raised-button  [disabled]="!formGroup.valid " [class.personlized-button]="formGroup.valid" [class.disabled-personlized-button]="!formGroup.valid" #btnRef (click)="save()">Enregistrer </button>
+            <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">Fermer (Echap)</button>
+        </div>
+    </form>
+    
+    <ejs-grid #grid  [allowSelection]='false' [dataSource]="allOpByOrder" class="col-md-6 col-lg-6 col-xl-6">
+        <e-columns>
+            <e-column field='zoneGroupName'  headerText='G.Zone'    isPrimaryKey='true' textAlign='Left'></e-column>
+            <e-column field='consolidatedByName' headerText='Consolidé par'    isPrimaryKey='true' textAlign='Left'></e-column>
+            <e-column field='consolidatedTime'  headerText='Consolidé le'   format="dd/MM/yyyy hh:mm" type="date"  isPrimaryKey='true' textAlign='Left'></e-column>
+            <e-column field='preparationOrderStatus'  headerText='Status'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'>
+                <ng-template #template let-data>
+                    <span *ngIf="data.preparationOrderStatus == 20" class="label l-bg-orange shadow-style" style="margin-right: 5px">Controlé</span>
+                    <span *ngIf="data.preparationOrderStatus == 30" class="label bg-green shadow-style" style="margin-right: 5px">Consolidé</span>
+                    <span *ngIf="data.preparationOrderStatus == 500" class="label bg-green shadow-style" style="margin-right: 5px">Annulé</span>
+
+                </ng-template>
+            </e-column>
+            <!-- <e-column field='executedTime'   format="dd/MM/yyyy hh:mm" type="date" [width]='120' headerText='Préparé le'    isPrimaryKey='true' textAlign='Left'></e-column> -->
+        </e-columns>
+    </ejs-grid>
+</div>
+
+

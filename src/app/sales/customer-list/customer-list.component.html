@@ -1,0 +1,86 @@
+<span style="margin-bottom: 20px; display: block;">
+  <h4 class="page-title">Clients </h4> 
+  <p style="float: right;margin-top: -35px;">
+    <span class="label bg-green shadow-style" style='margin-right: 5px;'>F9: Filtrer</span>
+    <span class="label bg-green shadow-style" >Enter: Selectionner</span>
+    <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">Fermer (Echap)</button>
+  </p>
+</span>
+<ejs-grid 
+showColumnMenu="true"
+  style="padding: 5px"
+  (load)='load($event)'
+  [filterSettings]='filterOptions' 
+  (dataBound)="dataBound($event)"
+  (rowSelected)="rowSelected($event)"
+  (recordDoubleClick)="Doubleclick($event)"
+  #grid
+  [dataSource]="data"
+  [gridLines]="gridLines"
+  [allowSelection]="true"
+  [allowSorting]="true"
+  [allowFiltering]='true' 
+  [allowPaging]='true'
+  (keyPressed)="keyPressed($event)"
+  [selectionSettings]='selectionOptions'
+  (actionComplete)='complete($event)'
+  (actionBegin)=begin($event) 
+
+
+>
+  <e-columns>
+    <e-column field="code" width="120" headerText="Code" [allowSorting]="true" ></e-column>
+    <e-column field="organizationGroupCode" width="120" headerText="Code Grp" [allowSorting]="true"></e-column>
+    <e-column field="name" headerText="Nom" width="150" width="300" [allowSorting]="true"></e-column>
+    <e-column field="phoneNumber" headerText="N° Tél" width="100" [allowSorting]="true"></e-column>
+    <e-column field="sectorCode" headerText="Secteur"  width="180" [allowSorting]="true"></e-column>
+    <e-column field="debt" headerText="Créance" [allowFiltering]="false" type="number" format="N2" [allowSorting]="true"></e-column>
+    <e-column field="limitCredit" headerText="Limite crédit"  width="150" [allowFiltering]="false" type="number" format="N2" [allowSorting]="true"></e-column>
+    <e-column field="paymentDeadline" headerText="Echéance/jrs"  width="150"  [allowFiltering]="false" [allowSorting]="true"></e-column>
+    <e-column field="monthlyObjective" headerText="Obj mensuel"  width="150" [allowFiltering]="true" type="number" format="N2" [allowSorting]="true"></e-column>
+    <e-column field="paymentMethod" headerText="Type de paiement"  width="150" [allowFiltering]="false" [allowSorting]="true"></e-column>
+    <e-column field="customerState" headerText="Statut" width="250" [allowSorting]="true">
+      <ng-template #filterTemplate let-data>
+        <ejs-dropdownlist id='customerState' [(ngModel)]="data.Name" [enabled]="data.column.allowFiltering" showClearButton="true" name="customerState"
+          (change)=onChange($event) [dataSource]='dropState' [fields]='fieldType'[popupHeight]='height' >
+        </ejs-dropdownlist>
+      </ng-template>
+      <ng-template #template let-data>
+        <span
+          *ngIf="data.customerState == 0"
+          class="label  bg-green shadow-style"
+          style="margin-right: 5px"
+          >Actif</span
+        >
+        <span
+          *ngIf="data.customerState == 1"
+          class="label bg-red shadow-style"
+          style="margin-right: 5px"
+          >Bloqué</span
+        >
+      </ng-template>
+    </e-column>
+  </e-columns>
+</ejs-grid>
+<br>
+<h4 class="page-title">Commandes facturées </h4>
+
+
+<ejs-grid #detailgrid  
+[allowSelection]='false' 
+[dataSource]="orders"
+[allowSorting]="true"
+  [allowFiltering]='true'
+  [gridLines]="gridLines" 
+[allowPaging]='true'>
+  <e-columns>
+      <e-column field='orderNumber' headerText='N°'></e-column>
+      <e-column field='orderDate' format='dd/MM/yyyy' type='date' headerText='Date'></e-column>
+      <e-column field='commandType' headerText='Type'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+      <e-column field='status' headerText='Etat'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+       <e-column field='orderTotal' headerText='Total HT'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true' type="number" format="N2"></e-column>
+      <e-column field='orderTotal' headerText='Total TTC'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true' type="number" format="N2"></e-column>
+      
+  </e-columns>
+</ejs-grid>
+

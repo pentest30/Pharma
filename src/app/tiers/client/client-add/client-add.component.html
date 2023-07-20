@@ -1,0 +1,368 @@
+<mat-tab-group
+  backgroundColor="primary"
+  class="searchProduct"
+  style="min-height: 500px"
+>
+  <mat-tab
+    id="tab1"
+    label="{{ id == undefined ? 'Nouveau client' : organizationName }}"
+  >
+    <div style="width: 600px; height: auto">
+      <!-- <h4 *ngIf="id==undefined" mat-dialog-title>Nouveau client</h4>
+            <h4  *ngIf="id!=undefined" mat-dialog-title>{{organizationName}}</h4> -->
+      <div style="margin-left: 40px; margin-top: -15px">
+        <form class="form-form m-5" [formGroup]="form">
+          <input type="hidden" formControlName="id" />
+          <br />
+          <div class="row" style="gap: 16px" *ngIf="id == undefined">
+            <ng-select
+              (clear)="isDisplayable = false"
+              (change)="onClientSelection($event)"
+              style="width: 250px"
+              class="mat-form-field-infix ng-tns-c110-56 col-8"
+              placeholder="Client"
+              formControlName="organizationId"
+            >
+              <ng-option
+                *ngFor="let car of potentialCustomers"
+                [value]="car.id"
+                >{{ car.name }}</ng-option
+              >
+            </ng-select>
+
+            <mat-form-field
+              *ngIf="isDisplayable"
+              style="width: 100%"
+              appearance="outline"
+              class="mat-form-field-infix ng-tns-c110-56 col-4"
+            >
+              <mat-label>Code Groupe</mat-label>
+              <input
+                disabled
+                matInput
+                formControlName="organizationGroupCode"
+              />
+            </mat-form-field>
+          </div>
+          <ng-select
+            [multiple]="false"
+            style="display: inline-block; width: 250px"
+            class="row mat-form-field-infix ng-tns-c110-56"
+            placeholder="Groupe de taxe"
+            formControlName="taxGroupId"
+          >
+            <ng-option *ngFor="let car of taxGroups" [value]="car.id">{{
+              car.name
+            }}</ng-option>
+          </ng-select>
+          <br />
+          <ng-select
+            [multiple]="true"
+            style="display: inline-block; width: 500px"
+            (change)="onSelectClass($event)"
+            class="row mat-form-field-infix ng-tns-c110-56"
+            placeholder="Classes de produit autorisées"
+            formControlName="allowedProductClasseIds"
+          >
+            <ng-option *ngFor="let car of productClasses" [value]="car.id">{{
+              car.name
+            }}</ng-option>
+            <ng-option value="All">Selectionner tout</ng-option>
+          </ng-select>
+          <br />
+          <div>
+            <ng-select
+              style="display: inline-block; width: 250px"
+              [items]="sectors"
+              placeholder="Secteur de livraison"
+              bindValue="id"
+              class="row mat-form-field-infix ng-tns-c110-56"
+              formControlName="defaultDeliverySector"
+              bindLabel="name"
+              [virtualScroll]="true"
+            ></ng-select>
+          </div>
+
+          <div class="row">
+            <ng-select
+              style="display: inline-block; width: 250px"
+              class="mat-form-field-infix ng-tns-c110-56"
+              placeholder="Commercial(e)"
+              formControlName="defaultSalesPerson"
+            >
+              <ng-option *ngFor="let car of salesPersons" [value]="car.id">{{
+                car.userName
+              }}</ng-option>
+            </ng-select>
+          </div>
+          <div class="row">
+            <ng-select
+              style="display: inline-block; width: 100%"
+              class="auto-grow mat-form-field-infix ng-tns-c110-56"
+              placeholder="Mode de paiment"
+              formControlName="paymentMode"
+            >
+              <ng-option *ngFor="let item of paymentModeList" [value]="item">
+                {{
+                paymentModes[item]
+              }}</ng-option>
+            </ng-select>
+          </div>
+          <br />
+          <mat-form-field style="width: 100%">
+            <input
+            autocomplete="off"
+              placeholder="Limite Crédit"
+              formControlName="limitCredit"
+              matInput
+              type="number"
+              pattern="^\d+(?:\.\d{1,2})?$"
+              min="0" max="10" step="0.25" value="0.00"
+            />
+
+            <mat-error *ngIf="form.get('limitCredit').hasError('required')">
+              limit Credit is required
+            </mat-error>
+          </mat-form-field>
+          <br />
+          <mat-form-field style="width: 100%">
+            <input
+            autocomplete="off"
+              placeholder="Echéance/jrs"
+              formControlName="paymentDeadline"
+              matInput
+              type="number"
+              min="0"
+            />
+            <mat-error *ngIf="form.get('paymentDeadline').hasError('required')">
+              limit Credit is required
+            </mat-error>
+          </mat-form-field>
+          <br />
+          <div class="col-xl-16 col-lg-16 col-md-16 col-sm-16">
+            <mat-label>Type de livraison </mat-label>
+
+            <mat-radio-group
+              style="margin-left: 5px"
+              [(ngModel)]="deliveryType"
+              formControlName="deliveryType"
+              class="example-full-width"
+              aria-label="Activité"
+            >
+              <mat-radio-button [value]="0">Livré au client</mat-radio-button>
+              <mat-radio-button [value]="1"
+                >Récupéré par le client</mat-radio-button
+              >
+            </mat-radio-group>
+          </div>
+
+          <br />
+          <br />
+          <div>
+            <mat-slide-toggle
+              style="margin-right: 10px"
+              formControlName="onlineCustomer"
+              >Client en ligne?</mat-slide-toggle
+            >
+
+            <mat-slide-toggle
+              style="margin-right: 10px"
+              formControlName="isPickUpLocation"
+              >Point de relais?</mat-slide-toggle
+            >
+
+            <mat-slide-toggle
+              style="margin-right: 10px"
+              formControlName="quotaEligibility"
+              >Ouvre droit au QUOTA?</mat-slide-toggle
+            >
+          </div>
+          <br />
+          <div *ngIf="id" class="col-xl-16 col-lg-16 col-md-16 col-sm-16">
+            <mat-label>Status </mat-label>
+            <br /><br />
+
+            <mat-radio-group
+              style="margin-right: 5px"
+              [(ngModel)]="customerState"
+              formControlName="customerState"
+              class="example-full-width"
+              aria-label="Status"
+            >
+              <mat-radio-button style="margin-right: 5px" [value]="0"
+                >Actif</mat-radio-button
+              >
+              <mat-radio-button style="margin-right: 5px" [value]="1"
+                >Bloqué</mat-radio-button
+              >
+            </mat-radio-group>
+          </div>
+          <br /><br />
+
+          <div class="text-right">
+            <button
+              class="mat-focus-indicator personlized-button mat-raised-button mat-button-base"
+              style="margin-right: 2px"
+              (click)="save()"
+            >
+              Enregistrer
+            </button>
+            <button
+              style="margin-left: 2px"
+              mat-raised-button
+              color="default"
+              (click)="close()"
+            >
+              Fermer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab
+    *ngIf="id != undefined && customers.length"
+    id="tab2"
+    label="Informations d'organisation"
+  >
+    <ng-template matTabContent>
+      <h5>Informations générales :</h5>
+      <ejs-grid
+      style="padding: 5px; margin: 10px;" #grid
+      [dataSource]="customers"
+      [gridLines]="gridLines">
+          <e-columns>
+              <e-column field="code" width="150" headerText="Code" [allowSorting]="true"  ></e-column>
+              <e-column field="organizationName" width="150" headerText="Nom de l'organisation " [allowSorting]="true"></e-column>
+              <e-column field="organizationGroupCode" width="120" headerText="Code Groupe" [allowSorting]="true"></e-column>
+              <e-column field="activity" width="120" headerText="Activité" [allowSorting]="true"></e-column>
+              <e-column field="organizationStatusDescription" width="120" headerText="Statut" [allowSorting]="true"></e-column>
+              <e-column field="disabledReason" width="120" headerText="Raison du blocage" [allowSorting]="true"></e-column>
+              <e-column field="establishmentDate" width="120" headerText="Date d'integration" format="dd/MM/yyyy" type="date"></e-column>
+              <e-column field="limitCredit" width="120"   headerText="Limite crédit" type="number" format="N2"></e-column>
+              <e-column field="sector" width="120" headerText="Secteur" [allowSorting]="true"></e-column>
+
+          </e-columns>
+      </ejs-grid>
+      <h5>Informations fiscales :</h5>
+      <ejs-grid
+      style="padding: 5px; margin: 10px;" #grid
+      [dataSource]="customers"
+      [gridLines]="gridLines">
+          <e-columns>
+              <e-column field="nif" width="120" headerText="NIF " [allowSorting]="true"></e-column>
+              <e-column field="nis" width="120" headerText="NIS" [allowSorting]="true"></e-column>
+              <e-column field="rc" width="120" headerText="RC" [allowSorting]="true"></e-column>
+              <e-column field="ai" width="120" headerText="AI" [allowSorting]="true"></e-column>
+              <e-column field="paymentMode" width="120" headerText="Mode de paiement" >
+                <ng-template #template let-data>
+                  <span
+                    *ngIf="data.paymentMode ==0"
+                    >Chèque</span
+                  >
+                  <span
+                    *ngIf="data.paymentMode ==1"
+                    >Transfert</span
+                  >
+                  <span
+                  *ngIf="data.paymentMode ==2"
+                  >Carte de crédit</span
+                >
+                </ng-template>
+              </e-column>
+              <e-column field="paymentDeadline" width="120" headerText="Echéance"></e-column>
+              <e-column field="monthlyObjective" width="120"  headerText="Obj mensuel" type="number" format="N2"></e-column>
+              <e-column field="debt" width="120"  headerText="Créance"  type="number"  format="N2"></e-column>
+
+          </e-columns>
+      </ejs-grid>
+      <h6>Comptes bancaires</h6>
+      <ejs-grid
+          style="padding: 5px; margin: 10px;" #grid2
+          [dataSource]="bankAccounts"
+          [gridLines]="gridLines">
+          <e-columns>
+              <e-column field="bankName" width="120" headerText="Banque " [allowSorting]="true"></e-column>
+              <e-column field="bankCode" width="120" headerText="Code" [allowSorting]="true"></e-column>
+              <e-column field="number" width="120" headerText="N° de compte" [allowSorting]="true"></e-column>
+
+          </e-columns>
+      </ejs-grid>
+      <h5>Adresses et contacts : </h5>
+      <ejs-grid
+          style="padding: 5px; margin: 10px;" #grid
+          [dataSource]="addresses"
+          [gridLines]="gridLines">
+          <e-columns>
+              <e-column field="country" width="120" headerText="Pays " [allowSorting]="true"></e-column>
+              <e-column field="city" width="120" headerText="Ville" [allowSorting]="true"></e-column>
+              <e-column field="zipCode" width="120" headerText="Code postal" [allowSorting]="true"></e-column>
+              <e-column field="street" width="120" headerText="Rue" [allowSorting]="true"></e-column>
+              <e-column field="main" width="120" headerText="Principale" [allowSorting]="true">
+                <ng-template #template let-data>
+                  <span
+                    *ngIf="data.main ==true"
+                    >Oui</span
+                  >
+                  <span
+                    *ngIf="data.main ==false"
+                    >Non</span
+                  >
+                </ng-template>
+              </e-column>
+
+          </e-columns>
+      </ejs-grid>
+
+      <h6>Numéros de téléphones</h6>
+      <ejs-grid
+          style="padding: 5px; margin: 10px;" #grid3
+          [dataSource]="phoneNumbers"
+          [gridLines]="gridLines">
+          <e-columns>
+              <e-column field="countryCode" width="120" headerText="Code Pays " [allowSorting]="true"></e-column>
+              <e-column field="number" width="120" headerText="Numéro" [allowSorting]="true"></e-column>
+              <e-column field="isFax" width="120" headerText="Fax" [allowSorting]="true">
+                <ng-template #template let-data>
+                  <span
+                    *ngIf="data.isFax ==true"
+                    >Oui</span
+                  >
+                  <span
+                    *ngIf="data.isFax ==false"
+                    >Non</span
+                  >
+                </ng-template>
+              </e-column>
+
+          </e-columns>
+      </ejs-grid>
+      <h6>Emails</h6>
+      <ejs-grid
+          style="padding: 5px; margin: 10px;" #grid4
+          [dataSource]="emails"
+          [gridLines]="gridLines">
+          <e-columns>
+              <e-column field="email" width="120" headerText="Email " [allowSorting]="true"></e-column>
+
+          </e-columns>
+      </ejs-grid>
+      <h5>Informations système : </h5>
+      <ejs-grid
+      style="padding: 5px; margin: 10px;" #grid4
+      [dataSource]="customers"
+      [gridLines]="gridLines">
+      <e-columns>
+        <e-column field="defaultSalesGroupName" width="120" headerText="Superviseur" ></e-column>
+        <e-column field="salesPersonName" width="120" headerText="Commercial(e)" ></e-column>
+          <e-column field="createdDateTime" width="120" headerText="Date de création " format="dd/MM/yyyy" type="date"></e-column>
+          <e-column field="createdBy" width="120" headerText="Créé par" [allowSorting]="true"></e-column>
+          <e-column field="updatedDateTime" width="120" headerText=" Date de modification " format="dd/MM/yyyy" type="date"></e-column>
+          <e-column field="updatedBy" width="120" headerText="Modifier par " ></e-column>
+
+      </e-columns>
+      </ejs-grid>
+
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

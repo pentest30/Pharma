@@ -1,0 +1,84 @@
+<section class="content">
+    <div class="container-fluid">
+      <div class="block-header">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="breadcrumb breadcrumb-style ">
+                    <li class="breadcrumb-item">
+                        <h4 class="page-title">Facturation</h4>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-1">
+                        <a routerLink="/dashboard/main">
+                            <i class="fas fa-home"></i>Factures Clients</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="header">
+          <div class="row">
+              <div class="col-sm-12 col-md-6">
+                <button class="mat-focus-indicator personlized-button mat-raised-button mat-button-base" (click)="printSelectedInvoices()">Imprimer sélection </button>
+              </div>
+              <div class="col-sm-12 col-md-6 dataTables_filter" >
+              
+              </div>
+          </div>
+        </div>
+  
+        <div class="body table-responsive">
+          <div class="spinner__loading" *ngIf="loading">
+            <div><mat-spinner></mat-spinner> </div>
+          </div>
+          <ejs-grid
+          #grid
+          (actionBegin)='begin($event)'
+          showColumnMenu="true"
+          [allowSelection]="true"
+          [selectionSettings]='selectionOptions'
+          [gridLines]="gridLines"
+          [dataSource]="data"
+          [allowPaging]="true"
+          [allowSorting]="true"
+          [allowFiltering]="true"
+          (dataBound)="dataBound($event)"
+          [childGrid]="childGrid"
+          >
+          <e-columns>
+            <e-column type='checkbox' width='100'></e-column>
+            <e-column headerText='#' [width]="100">
+              <ng-template #template let-row>
+                <button mat-icon-button [matMenuTriggerFor]="menu" class="button-action" aria-label="Actions">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button  mat-menu-item (click)="print(row)">
+                    <mat-icon>print</mat-icon>
+                    <span>Imprimer</span>
+                  </button>
+                  <button  mat-menu-item (click)="view(row)">
+                    <mat-icon>remove_red_eye</mat-icon>
+                    <span>Détail Facture</span>
+                  </button>
+                </mat-menu>
+              </ng-template>
+            </e-column>
+            <e-column [width]="180" field="sequenceNumber" headerText="N°Facture" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" type="string">
+              <ng-template #template let-data>{{data.invoiceNumber}}</ng-template>
+            </e-column>
+            <e-column [width]="200" field="customerName" headerText="Client"></e-column>
+            <e-column [width]="200" field="invoiceDate" format="dd/MM/yyyy" type="date" headerText="Date"></e-column>
+            <e-column [width]="180" field="totalTax" format="N2" headerText="Total tva" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+            <e-column [width]="180" field="totalTTC" format="N2" headerText="Total TTC" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+            <e-column [width]="180" field="createdBy" headerText="Créée par"></e-column>
+            <e-column [width]="180" field="createdDateTime"  headerText="Date de création" format="dd/MM/yyyy hh:mm" type="date"></e-column>
+            <e-column [width]="180" field="updatedBy" headerText="Modifiée par"></e-column>
+            <e-column [width]="180" field="updatedDateTime" headerText="Date de modification" format="dd/MM/yyyy hh:mm" type="date"></e-column>
+          </e-columns>
+          </ejs-grid>
+        </div>
+      </div>
+    </div>
+  </section>
+    

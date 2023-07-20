@@ -1,0 +1,151 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">Consolidation</h4>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <div class="row">
+              <div class="col-sm-12 col-md-3">
+                <button mat-button (click)="test()">Bypass</button>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <label for="exampleInputEmail1">Code à barre</label>
+                <input type="text" class="form-control" [formControl]="barcodeFormControl" (keyup.enter)="loadOP(null)"
+                  #barcodeRef autofocus>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+        <div class="card container-shadow" *ngIf="!!consolidationOrder">
+          <div class="header">
+            <div class="main-container d-flex flex-wrap p-1">
+              <div class="col-12 p-2 d-flex justify-content-center">
+                <table class="table table-bordered">
+                  <tr>
+                    <td rowspan="2"
+                      style="font-size: 50px; font-weight: 600; text-align: center; vertical-align: middle;">
+                      <span>{{consolidationOrder.zoneGroupName}}</span>
+                    </td>
+                    <td>Client: <strong>{{consolidationOrder.customerName}}</strong></td>
+                    <td>Cmd N° : <strong>{{consolidationOrder.orderIdentifier}}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Secteur : <strong>
+                        {{consolidationOrder.sectorName}}</strong></td>
+                    <td>Date : <strong>{{consolidationOrder.createdDateTime}}</strong>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Agent de consolidation : <strong>
+                        {{consolidationOrder.consolidatedByName}}</strong>
+                    </td>
+
+                  </tr>
+                </table>
+              </div>
+              <div class="content-container p-2">
+                <mat-form-field class="col-12 p-0" appearance="outline">
+                  <mat-label>Nombre de colis Frigo</mat-label>
+                  <input #thermoInput matInput type="number" autocomplete="off"
+                    [formControl]="form.controls.totalPackageThermolabile"
+                    (keydown.enter)="isFixedAgent ? save() : agentInput.focus()">
+                </mat-form-field>
+
+                <mat-form-field class="col-12 p-0" appearance="outline">
+                  <mat-label>Nombre de colis</mat-label>
+                  <input #colisInput matInput type="number" [formControl]="form.controls.totalPackage"
+                    autocomplete="off" (keydown.enter)="isFixedAgent ? save() : agentInput.focus()">
+                </mat-form-field>
+
+                <div class="col-12 row-container p-0">
+                  <mat-form-field appearance="outline">
+                    <mat-label>agent de consolidation</mat-label>
+                    <input #agentInput matInput [formControl]="agentFormControl" (keydown.enter)="enter(auto)"
+                      (focus)="agentFormControl.reset()" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" [autoActiveFirstOption]="true"
+                      (optionSelected)="selectAgent($event,saveBtn)">
+                      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{option.name}}
+                      </mat-option>
+                    </mat-autocomplete>
+
+                    <button mat-icon-button matSuffix (click)="lockField()">
+                      <mat-icon>{{isFixedAgent ? 'lock': 'lock_open'}}</mat-icon>
+                    </button>
+                  </mat-form-field>
+
+                  <div class="actions-row">
+                    <button #saveBtn mat-raised-button color="primary" (click)="save()"
+                      [disabled]="!form.valid && !bypass">Save</button>
+                    <button mat-raised-button color="accent" (click)="printConsolidationOrder()"
+                      [disabled]="!isCommandControlled">
+                      <mat-icon>print</mat-icon> Print
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+              <div class="zones-container p-2">
+                <div class="card bg-light mx-2" *ngFor="let coz of allSiblingOP">
+                  <div class="card-body d-flex">
+                    <div class="left d-flex flex-column">
+                      <ng-container [ngSwitch]="coz.preparationOrderStatus">
+                        <div class="chip label bg-green shadow-style" *ngSwitchCase="50">
+                          Expedié
+                        </div>
+                        <div class="chip label bg-red shadow-style" *ngSwitchCase="30">
+                          Consolidé
+                        </div>
+                        <div class="chip label l-bg-purple shadow-style" *ngSwitchCase="20">
+                          Controllé
+                        </div>
+                        <div class="chip label l-bg-purple shadow-style" *ngSwitchCase="10">
+                          Préparé
+                        </div>
+                        <div class="chip label l-bg-purple-dark shadow-style" *ngSwitchCase="0">
+                          En préparation
+                        </div>
+                        <div class="chip label l-bg-purple-dark shadow-style" *ngSwitchCase="500">
+                          Annulé
+                        </div>
+                      </ng-container>
+
+                      <span style="font-size: 64px;text-align: center;">{{coz.zoneGroupName}}</span>
+                      <span class="font-weight-bold">{{coz.consolidatedByName}}</span>
+                      <div class="d-flex flex-column font-weight-bold mt-3">
+                        <div class="d-flex align-items-center justify-content-center">Colis: <div class="strong ml-2">
+                            {{coz.totalPackage}}</div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center">Frigo: <div class="strong ml-2">
+                            {{coz.totalPackageThermolabile}}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

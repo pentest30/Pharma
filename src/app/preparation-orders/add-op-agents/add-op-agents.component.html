@@ -1,0 +1,50 @@
+
+
+<h4>Activité de préparation : {{ currentZone?.name }}</h4>
+
+<table  class="table table-bordered">
+    <tr>
+      <td rowspan="2" *ngIf="currentZone" style="font-size: 50px;font-weight: 600;text-align: center;vertical-align: middle;"><span >{{ currentZone?.name  }}</span></td>
+      <td>Client: <strong>{{ bl.customerName }}</strong></td>
+      <td>Cmd N° :  <strong>{{bl.orderIdentifier}}</strong></td>
+    </tr>
+    <tr>
+      <td>Secteur : <strong>{{ bl.sectorName }}</strong></td>
+      <td>Date : <strong>{{ bl.createdDateTime |  date:'medium' }}</strong></td>
+    </tr>
+</table>
+<div class="row">
+    <form [formGroup]="formGroup" *ngIf="formGroup" class="col-lg-12 col-md-12 col-xl-12">
+        <div class="form-group mt-1 ">
+            <ng-select id="executedById" autofocus  
+                placeholder="Préparateur"
+                #executedById 
+                formControlName="executedById"
+                [searchFn]="customEmployeeSearchFn"
+                [items]="executers"
+                bindValue="id" 
+                bindLabel="name" 
+                [virtualScroll]	='true'
+                (change)='onExecuterSelection($event)'> 
+            </ng-select>
+        </div>
+        <div class="form-group mt-1">
+            <ng-select id="verifiedById" autofocus  
+                placeholder="Controlleur"
+                #verifiedById 
+                formControlName="verifiedById"
+                [items]="controllers"
+                [markFirst]="true"
+                bindValue="id" 
+                bindLabel="name" 
+                [virtualScroll]	='true'
+                [searchFn]="customEmployeeSearchFn"
+                (change)='onVerifierSelection($event)'> 
+            </ng-select>
+        </div>
+        <div class="mt-2 mb-2">
+            <button mat-raised-button   [disabled]="!formGroup.valid " [class.personlized-button]="formGroup.valid" [class.disabled-personlized-button]="!formGroup.valid" (click)="save()">Enregistrer </button>
+            <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">Fermer (Echap)</button>
+        </div>
+    </form>
+</div>

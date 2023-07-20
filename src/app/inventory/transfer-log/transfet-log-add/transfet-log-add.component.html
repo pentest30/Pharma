@@ -1,0 +1,66 @@
+
+<section class="content" style="overflow: auto;overflow-y: hidden;">
+    <div class="container-fluid no-padding" >
+        <mat-tab-group backgroundColor="primary">
+            <mat-tab label="Lignes journal de transfert"> 
+        <div class="card " style="margin-bottom: 0px!important;">
+            <div class="header" class="no-padding">
+                <div class="padding-bottom-3x mb-1" style="font-size: 12px;" id="headerElement">
+                    <div class="card mb-1" >
+
+                      
+                    </div>
+                </div>
+                <div class="padding-bottom-3x mb-1">
+                    <div class="card mb-1" >
+                        <ejs-grid  #batchgrid id='batchgrid' class="bodyGrid" 
+                        (created)="created()"  
+                        style="padding: 5px;"  
+                         [gridLines]='gridLines'  
+                        (load)='load($event)'
+                        (dataBound)="dataBound($event)"
+                      
+                        showColumnMenu='true'
+                        [dataSource]='rows'
+                        [allowSelection]='true' 
+         
+                        [allowFiltering]='true' 
+                        (commandClick)='commandClick($event)' 
+                        
+                        (actionComplete)="actionComplete($event)"
+                        [editSettings]='editOptions' 
+                        (recordDoubleClick)='onDoubleClick($event)' 
+                        (toolbarClick)='clickHandler($event)'
+                        [toolbar]='toolbarItems'  >
+                        <e-columns>
+                            <e-column field='id' headerText='N°' [width]='80' textAlign='Center' isPrimaryKey='true'>
+                            <ng-template #template let-data >
+                                {{ getIndexRow(data.id)}} 
+                            </ng-template>
+                            </e-column>
+                            <e-column field='productCode' headerText='Code'  [allowFiltering]='true' [allowSorting]='true'   isPrimaryKey='true' textAlign='Left'></e-column>
+                            <e-column field='productName' headerText='Nom'  [allowFiltering]='true' [allowSorting]='true'   isPrimaryKey='true'></e-column>
+                            <e-column field='internalBatchNumber'  headerText='Lot Interne'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                            <e-column field='quantity'    editType= 'numericedit'  headerText='Quantité' [allowFiltering]='true' [allowSorting]='true' ></e-column>
+                            <e-column field='zoneSourceName'  headerText='Zone source'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                            <e-column field='zoneDestName'  headerText='Zone Dest'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                            <e-column field='stockStateName'  headerText='Statut stock'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                          
+                            <e-column headerText='#' [width]='80' [commands]='commands'></e-column>
+                           
+                        </e-columns>
+                    
+                        </ejs-grid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>
+    </div>
+</section>
+ 
+  
+  
+  
+  

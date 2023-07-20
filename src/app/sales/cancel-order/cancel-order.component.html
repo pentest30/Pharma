@@ -1,0 +1,29 @@
+<div>
+    <h4 mat-dialog-title>Annulation Commande</h4>
+    <div>
+        <form class="form-form m-5" [formGroup]="form">
+            <input type="hidden" formControlName="id">
+            <div>
+                <mat-form-field >
+                    <mat-label>Raison d'annulation </mat-label>
+                    <mat-select formControlName="reason" >
+                        <mat-option value=1>Date de livraison depassée</mat-option>
+                        <mat-option value=2>Impossible de terminer la commande cette fois</mat-option>
+                        <mat-option value=3>Envoie d'une commande test</mat-option>
+
+                    </mat-select>
+                    <mat-error *ngIf="form.get('reason').hasError('required')">
+                        name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            
+            <div class="text-left">
+                <button mat-raised-button  color="primary" style="margin-right:2px;" 
+                    (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

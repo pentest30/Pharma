@@ -1,0 +1,101 @@
+<section class="content">
+    <div class="container-fluid">
+      <div class="block-header">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="breadcrumb breadcrumb-style ">
+                    <li class="breadcrumb-item">
+                        <h4 class="page-title">Avoirs</h4>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-1">
+                        <a routerLink="/dashboard/main">
+                            <i class="fas fa-home"></i>Avoirs Clients</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="header">
+          <div class="row">
+              <div class="col-sm-12 col-md-6">
+                <div class="col-sm-12 col-md-3">
+                    <button mat-raised-button class="personlized-button"  (click)='add()' #btnRef><mat-icon>add</mat-icon>Nouvel Avoir (F4)</button>
+                  </div>
+              </div>
+              <div class="col-sm-12 col-md-6 dataTables_filter" >
+              
+              </div>
+          </div>
+        </div>
+  
+        <div class="body table-responsive">
+       
+          <ejs-grid
+          #grid
+          (actionBegin)='begin($event)'
+          showColumnMenu="true"
+          [allowSelection]="true"
+          [selectionSettings]='selectionOptions'
+          [gridLines]="gridLines"
+          [dataSource]="data"
+          [allowPaging]="true"
+          [allowFiltering]="true"
+          (dataBound)="dataBound($event)"
+          [childGrid]="childGrid"
+          >
+          <e-columns>
+            <e-column type='checkbox' width='100'></e-column>
+            <e-column headerText='#' [width]="100">
+              <ng-template #template let-row>
+                <button mat-icon-button [matMenuTriggerFor]="menu" class="button-action" aria-label="Actions">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                
+                  <button  mat-menu-item (click)="view(row)">
+                    <mat-icon>remove_red_eye</mat-icon>
+                    <span>Détail </span>
+                  </button>
+                  <button *ngIf="row.state == 0" mat-menu-item (click)="validate(row)">
+                    <mat-icon>check</mat-icon>
+                    <span>Valider </span>
+                  </button>
+                  <button *ngIf="row.state == 0" mat-menu-item (click)="edit(row)">
+                    <mat-icon>create</mat-icon>
+                    <span>Editer </span>
+                  </button>
+                  <button *ngIf="row.state == 0" mat-menu-item (click)="delete(row)">
+                    <mat-icon>delete</mat-icon>
+                    <span>Supprimer </span>
+                  </button>
+                </mat-menu>
+              </ng-template>
+            </e-column>
+            <e-column [width]="180" field="sequenceNumber" headerText="N°Facture" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" type="string">
+              <ng-template #template let-data>{{data.creditNoteNumber}}</ng-template>
+            </e-column>
+            <e-column [width]="200" field="customerName" headerText="Client"></e-column>
+            <e-column [width]="200" field="invoiceDate" format="dd/MM/yyyy" type="date" headerText="Date"></e-column>
+            <e-column [width]="200" field="state" headerText="Type" [allowFiltering]="true" isPrimaryKey="true"  [allowSorting]="true" type="string"  > 
+        
+              <ng-template #template let-data>
+                <span *ngIf="data.state == 0" class="label bg-red shadow-style">Brouillon</span>
+                <span *ngIf="data.state == 1" class="label bg-green shadow-style">Validé</span >
+                <span *ngIf="data.state == 2" class="label bg-green shadow-style">Annulée</span >
+
+              </ng-template>
+            </e-column>      
+            <e-column [width]="180" field="totalTax" format="N2" headerText="Total tva" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+            <e-column [width]="180" field="totalTTC" format="N2" headerText="Total TTC" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+            <e-column [width]="180" field="createdBy" headerText="Créée par"></e-column>
+            <e-column [width]="180" field="creditNoteDate"  headerText="Date de création" format="dd/MM/yyyy" type="date"></e-column>
+            <e-column [width]="180" field="updatedBy" headerText="Modifiée par"></e-column>
+            <e-column [width]="180" field="updatedDateTime" headerText="Date de modification" format="dd/MM/yyyy hh:mm" type="date"></e-column>
+          </e-columns>
+          </ejs-grid>
+        </div>
+      </div>
+    </div>
+  </section>
+    

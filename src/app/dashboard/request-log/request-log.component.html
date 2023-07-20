@@ -1,0 +1,96 @@
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul class="breadcrumb breadcrumb-style ">
+                        <li class="breadcrumb-item">
+                            <h4 class="page-title">Dashboard</h4>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-1">
+                            <a routerLink="/dashboard/main">
+                                <i class="fas fa-home"></i>Home</a>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-2">
+                            <a href="#" onClick="return false;">Logs</a>
+                        </li>
+                        <li class="breadcrumb-item active">Liste</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                   
+                    
+                    <ejs-grid
+                    #grid2
+                    id="grid2"
+                    showColumnMenu="true"
+                    style="padding: 5px; margin: 10px"
+                    [gridLines]="gridLines"
+                    [dataSource]="data"
+                    [allowSelection]="true"
+                    [allowSorting]="true"
+                    [allowFiltering]="true"
+                    [gridLines]="gridLines"
+                    [allowPaging]="true"
+                  >
+                    <e-columns>
+                      <e-column
+                        field="clientIP"
+                        headerText="Ip client"
+                      ></e-column>
+                      <e-column
+                      field="action"
+                      headerText="Ressource"
+                    ></e-column>
+                    <e-column
+                    field="methode"
+                    headerText="Méthode"
+                  ></e-column>
+                  <e-column
+                  field="body"
+                  headerText="Body"
+                ></e-column>
+                <e-column
+                field="statusCode"
+                headerText="Statut code"
+                
+              >
+              <ng-template #template let-data>
+                <span *ngIf="data.statusCode >= 100 &&data.statusCode<300 " class="label l-bg-green shadow-style" style="margin-right: 5px">{{data.statusCode}} </span>
+                    <span *ngIf="data.statusCode >= 300 &&data.statusCode<400 " class="label l-bg-purple shadow-style" style="margin-right: 5px">{{data.statusCode}} </span>
+                        <span *ngIf="data.statusCode >= 400 &&data.statusCode<500 " class="label l-bg-orange shadow-style" style="margin-right: 5px">{{data.statusCode}} </span>
+                            <span *ngIf="data.statusCode >= 500  " class="label l-bg-red shadow-style" style="margin-right: 5px">{{data.statusCode}} </span>
+              
+                </ng-template>
+            </e-column>
+              <e-column
+              field="header"
+              headerText="Réponse"
+            ></e-column>
+              <e-column
+              field="requestTime"
+              format="dd/MM/yyyy hh:mm:ss"
+              type="date"
+              headerText="Temps"
+            ></e-column>
+            <e-column
+              field="duration"
+              headerText="Temps de réponse (MS)"
+            ></e-column>
+                    </e-columns>
+                  </ejs-grid>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+   
+</section>
+
+
+
+

@@ -1,0 +1,79 @@
+<div style="height: 100%;margin: 15px;padding-top: 10px;">
+    <div class="row">
+        <div class="col-md-6" >
+            <input  style="width: 150px;"  autocomplete="off" (dateChange)="onStrtChange($event)" placeholder="DU"  [matDatepicker]="picker1" [(ngModel)]="start">
+               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+               <mat-datepicker #picker1></mat-datepicker>
+               <input  autocomplete="off" style="width: 150px;" (dateChange)="onEndChange($event)" placeholder="AU"   [matDatepicker]="picker" [(ngModel)]="end">
+               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+               
+               <mat-datepicker #picker></mat-datepicker>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-6">
+                <h4>
+                  Montant global: {{totalAmount| number: '.2' }} DZD
+              </h4>
+             
+              </div>
+              <div class="col-md-6" style="text-align: right;">
+                <button style="margin-top: -5px;" mat-raised-button class="personlized-button"  (click)='exportExcel()' #btnRef><mat-icon>download</mat-icon>Exportation Excel</button>
+              </div>
+            </div>
+          </div>
+    </div>
+    
+    <ejs-grid
+#grid
+(actionBegin)='begin($event)'
+showColumnMenu="true"
+[allowSelection]="true"
+[selectionSettings]='selectionOptions'
+[gridLines]="gridLines"
+[dataSource]="data"
+[allowPaging]="true"
+[allowSorting]="true"
+[allowFiltering]="true"
+(dataBound)="dataBound($event)"
+>
+<e-columns>
+  
+  <e-column headerText='#' [width]="70">
+    <ng-template #template let-row>
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="button-action" aria-label="Actions">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button  mat-menu-item (click)="print(row)">
+          <mat-icon>print</mat-icon>
+          <span>Imprimer</span>
+        </button>
+        <button  mat-menu-item (click)="view(row)">
+          <mat-icon>remove_red_eye</mat-icon>
+          <span>Détail Facture</span>
+        </button>
+      </mat-menu>
+    </ng-template>
+  </e-column>
+  <e-column [width]="100" field="sequenceNumber"  headerText="N° de facture"></e-column>
+  <e-column [width]="180" field="sequenceNumber" headerText="N° Doc" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" type="string">
+    <ng-template #template let-data>{{data.invoiceNumber}}</ng-template>
+  </e-column>
+  <!-- <e-column [width]="200" field="invoiceType" headerText="Type" [allowFiltering]="true" isPrimaryKey="true"  [allowSorting]="true" type="string"  > 
+    
+    <ng-template #template let-data>
+      <span *ngIf="data.invoiceType == 1" class="label bg-red shadow-style">Psychotrope</span>
+      <span *ngIf="data.invoiceType == 0" class="label bg-green shadow-style">Non Psychotrope</span >
+    </ng-template>
+  </e-column>       -->
+  <e-column [width]="200" field="invoiceDate" format="dd/MM/yyyy" type="date" headerText="Date de facturation"></e-column>
+  <e-column [width]="180" field="totalHT" format="N2" headerText="Total HT" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+  <e-column [width]="180" field="totalTTC" format="N2" headerText="Total TTC" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+  <e-column [width]="180" field="totalTax" format="N2" headerText="Total TVA" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+  <e-column [width]="180" field="totalDisplayedDiscount" format="N2" headerText="Total des Remises" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+ 
+</e-columns>
+</ejs-grid>
+
+</div>

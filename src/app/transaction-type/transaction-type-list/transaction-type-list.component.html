@@ -1,0 +1,78 @@
+<section class="content">
+    <div class="container-fluid">
+      <div class="block-header">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <ul class="breadcrumb breadcrumb-style">
+              <li class="breadcrumb-item">
+                <h4 class="page-title">Référentiel </h4>
+              </li>
+              <li class="breadcrumb-item bcrumb-1">
+                <a routerLink="/dashboard/main">
+                  <i class="fas fa-home"></i>Type de transations</a
+                >
+              </li>
+              <!-- <li class="breadcrumb-item bcrumb-2">
+                <a href="#" onClick="return false;">Ordres de Préparations</a>
+              </li> -->
+              <li class="breadcrumb-item active">Liste</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="header">
+              <div class="row">
+                <div class="col-sm-12 col-md-6">
+                  <button class="mat-focus-indicator personlized-button mat-raised-button mat-button-base"  (click)="add()">Ajouter</button>
+
+                </div>
+              </div>
+            </div>
+  
+            <ejs-grid
+              #grid
+              class="bodyGrid"
+              style="padding: 5px; margin: 10px;"
+              [gridLines]="gridLines"
+              [dataSource]="data"
+              [allowSelection]="true"
+              [allowSorting]="true"
+              [allowFiltering]="true"
+              [gridLines]="gridLines"
+              [allowPaging]="true"
+            >
+                <e-columns>
+
+                <e-column field="transactionTypeName" headerText="Designation"></e-column>
+                <e-column field="blocked" headerText="Statut"></e-column>
+                <e-column headerText="Actions" [allowFiltering]="false" isPrimaryKey="true"[allowSorting]="false" >
+                <ng-template #template let-row let-data>
+                  <button mat-icon-button class="button-action" [matMenuTriggerFor]="menu" aria-label="Click to see more actions">
+                      <i class="material-icons">more_vert</i>
+                    </button>
+                    <mat-menu #menu="matMenu" style="height: 25px;">
+
+                      <button  mat-menu-item (click)="delete(row)">
+                        <mat-icon aria-label="Visualiser">create</mat-icon> Supprimer
+                      </button>
+                      <button  mat-menu-item (click)="edit(data)">
+                        <mat-icon aria-label="Editer">create</mat-icon> Editer
+                      </button>
+                    </mat-menu>
+                </ng-template>
+          </e-column>
+              </e-columns>
+            </ejs-grid>
+
+           
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  

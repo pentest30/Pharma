@@ -1,0 +1,28 @@
+<div>
+    <h4 mat-dialog-title>Paiement</h4>
+    <div>
+        <form class="form-form m-5" [formGroup]="form">
+            <div>
+                <mat-form-field >
+                    <mat-label>Raison d'annulation </mat-label>
+                    <mat-select formControlName="paymentStatus" style="text-transform:uppercase" required>
+                        <mat-option value=10>En attente</mat-option>
+                        <mat-option value=20>En Cours</mat-option>
+                        <mat-option value=30>Payé</mat-option>
+                        <mat-option value=40>Rejetée</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form.get('paymentStatus').hasError('required')">
+                        name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            
+            <div class="text-left">
+                <button mat-raised-button  color="primary" style="margin-right:2px;" 
+                    (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

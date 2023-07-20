@@ -1,0 +1,102 @@
+<section >
+    <div >
+      <h4> Demande </h4>
+      <hr>
+      <ng-select [(ngModel)]="selectedCustomer" 
+                                      
+      [items]="customers" 
+      bindValue="id" 
+      bindLabel="name"  
+      [virtualScroll]	='true' 
+    
+      labelForId='Client' 
+      placeholder='Client'
+      (change)="onClientSelection($event)">
+    <ng-template ng-header-tmp class="table-dropdown-no-scroll" >
+    
+      <table class="table table-striped" style=" max-width: 95.5%;overflow-x: hidden;">
+        <thead>
+          <tr class="row dropdown-line-table" >
+            <th width="40%" >Code</th>
+            <th width="60%" >Nom </th>
+           
+          </tr>
+        </thead>
+      </table>
+    </ng-template>
+    <ng-template let-item="item" ng-option-tmp class="table-dropdown "  let-itemIndex="itemIndex" >
+      <table class="table table-striped" style="max-width: 95.5%;overflow-x: hidden;" >
+        <tr  class="row  dropdown-line-table ">
+          <td  width="40%">{{item.code}}</td>
+          <td width="60%">{{item.name}}</td>
+        </tr>
+      </table> 
+    </ng-template>
+  </ng-select> 
+  <br>
+        <ng-select
+        [multiple]='true' 
+        [items]="inventQuotas" 
+        bindValue="productId" 
+        bindLabel="productFullName"  
+        [virtualScroll]	='true' 
+        labelForId='Client' 
+        placeholder='Produit' 
+        [searchFn]="customSearchFn"
+        (change)="onPorductSelection($event)"
+        >
+        <ng-template ng-header-tmp class="table-dropdown-no-scroll" >
+        
+        <table class="table table-striped" style=" max-width: 95.5%;overflow-x: hidden;">
+          <thead>
+            <tr class="row dropdown-line-table" >
+              <th width="40%" >Code</th>
+              <th width="60%" >Nom </th>
+             
+            </tr>
+          </thead>
+        </table>
+        </ng-template>
+        <ng-template let-item="item" ng-option-tmp class="table-dropdown "  let-itemIndex="itemIndex" >
+        <table class="table table-striped" style="max-width: 95.5%;overflow-x: hidden;" >
+          <tr  class="row  dropdown-line-table ">
+            <td  width="40%">{{item.productCode}}</td>
+            <td width="60%">{{item.productFullName}}</td>
+          </tr>
+        </table> 
+        </ng-template>
+        </ng-select> 
+        <br>
+        <div class="text-right">
+ 
+            <button [disabled]="!selectedCustomer ||requestedProducts.length==0 "   mat-raised-button (click)="save()" class="personlized-button" style="margin-right:2px;" 
+                >Enregistrer </button>
+            <button  style="margin-left:2px;" (click)="close()" mat-raised-button class="personlized-button-blue" >Fermer
+            </button>
+            </div>
+      
+                
+          <br>
+          <ejs-grid #grid
+           [editSettings]='editSettings' 
+           [allowFiltering]="true"
+          [gridLines]="gridLines"
+          (actionComplete)="actionComplete($event)"
+          (cellEdit)="cellEdit($event)"
+          >
+            <e-columns>
+                <e-column field='productId' headerText='N°' [width]='50'  isPrimaryKey='true'>
+                    <ng-template #template let-data >
+                        {{ getIndexRow(data.productId)}} 
+                    </ng-template>
+                    </e-column>
+                <e-column field='productCode' headerText='Code'  isPrimaryKey='true' width='50'></e-column>
+                <e-column field='productFullName' headerText='Désignation' isPrimaryKey='true' width='180'></e-column>
+                <e-column field='physicalDispenseQuantity' headerText='Qnt disponible' isPrimaryKey='true'   width=120></e-column>
+                <e-column field='requestedQuantity' headerText='Qnt demandée' editType= 'numericedit' width=120 ></e-column>
+                
+            </e-columns>
+            </ejs-grid>
+         
+    </div>
+    </section>

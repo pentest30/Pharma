@@ -1,0 +1,252 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <div class="row">
+              <div class="col-sm-12 col-md-6">
+                <button
+                  mat-raised-button
+                  class="personlized-button"
+                  (click)="add()"
+                  #btnRef
+                  *ngIf="isSales"
+                >
+                  <mat-icon>add</mat-icon>Nouvel arrivage
+                </button>
+                <!-- <button
+                  mat-raised-button
+                  class="personlized-button"
+                  (click)="quotaTransfer()"
+                 
+                >
+                  <mat-icon>autorenew</mat-icon>Transférer quota 
+                </button> -->
+              </div>
+              <div class="col-sm-12 col-md-6 dataTables_filter" >
+                <mat-slide-toggle color="primary" (change)="toggleSearch($event)" style="float: right;"  >Recherche avancée</mat-slide-toggle>
+              </div>
+            </div>
+          </div>
+          <div class="body table-responsive">
+            <ejs-grid
+              #grid
+              [filterSettings]='filterSettings'
+              [gridLines]="gridLines"
+              showColumnMenu="true"
+              [allowSelection]="true"
+              [dataSource]="data"
+              [allowPaging]="true"
+              [allowFiltering]="true"
+              [allowGrouping] = "true"
+              [groupSettings]='groupOptions'
+              (dataBound)="dataBound($event)"
+              (rowSelected)="rowSelected($event)"
+            >
+              <e-columns>
+                <e-column
+                  [width]="130"
+                  field="productCode"
+                  headerText="Code produit"
+                ></e-column>
+                <e-column
+                  [width]="130"
+                  field="productName"
+                  headerText="Produit"
+                ></e-column>
+
+                <e-column
+                  [width]="130"
+                  field="customerName"
+                  headerText="Client"
+                  [visible]="false"
+                ></e-column>
+                <e-column
+                  [width]="130"
+                  field="customerCode"
+                  headerText="Code client"
+                  [visible]="false"
+                ></e-column>
+                <e-column
+                [width]="130"
+                field="salesPersonName"
+                headerText="Commercial(e)"
+                [visible]="SupervisorAndSales"
+              ></e-column>
+                <e-column
+                  [width]="130"
+                  field="initialQuantity"
+                  headerText="Quantité initiale"
+                >
+                </e-column>
+                <e-column
+                  [width]="130"
+                  field="reservedQuantity"
+                  headerText="Quantité réservée"
+
+                >
+                </e-column>
+                <e-column
+                [width]="130"
+                field="availableQuantity"
+                headerText="Quantité restante"
+
+              >
+              </e-column>
+                <e-column
+                [width]="120"
+                field="quotaDate"
+                type="date"
+                format="dd/MM/yyyy"
+                headerText="Date"
+               
+              ></e-column>
+                <e-column
+                  [width]="120"
+                  field="quotaDateShort"
+                  type="string"
+                  headerText="Date"
+                  [visible]="false"
+                ></e-column>
+                <e-column
+                  [width]="80"
+                  headerText="Actions"
+                  [allowFiltering]="false"
+                  isPrimaryKey="true"
+                  [allowSorting]="false"
+                  [visible]="SupervisorAndSales"
+                >
+                  <ng-template #template let-row>
+                    <button
+                      mat-icon-button
+                      class="button-action"
+                      [matMenuTriggerFor]="menu"
+                      aria-label="Click to see more actions"
+                    >
+                      <i class="material-icons">more_vert</i>
+                    </button>
+                    <mat-menu #menu="matMenu" style="height: 25px">
+                      <button mat-menu-item (click)="edit(row)" *ngIf="isSales">
+                        <mat-icon aria-label="Edit">create</mat-icon> Libérer
+                      </button>
+                      <button mat-menu-item (click)="transferToSalesPerson(row)" *ngIf="isSuprvisor">
+                        <mat-icon aria-label="Edit">create</mat-icon> Transférer
+                      </button>
+                    </mat-menu>
+                  </ng-template>
+                </e-column>
+              </e-columns>
+              <e-aggregates>
+                <e-aggregate >
+                    <e-columns>
+                     
+                        <e-column  [visible]="!isSales"  [width]="120"  field="reservedQuantity" type="sum">
+                            <ng-template #groupFooterTemplate let-data>Total réservé: {{data.sum}}</ng-template>
+                        </e-column>
+                     
+                    </e-columns>
+                </e-aggregate>
+            </e-aggregates>
+            </ejs-grid>
+          </div>
+          <br>
+          <div class="body table-responsive">
+           <div class="row">
+             <div class="col-md-6">
+              <ejs-grid
+              #grid2
+              showColumnMenu="true"
+              [gridLines]="gridLines"
+              [allowSelection]="false"
+              [dataSource]="details"
+              [allowPaging]="true"
+              [allowFiltering]="true"
+              [allowGrouping] = "true"
+  
+  
+            >
+              <e-columns>
+  
+                <e-column
+                [width]="130"
+                field="customerCode"
+                headerText="Code client"
+  
+              ></e-column>
+                <e-column
+                  [width]="130"
+                  field="customerName"
+                  headerText="Client"
+  
+                ></e-column>
+               
+               
+                <e-column
+                  [width]="130"
+                  field="quantity"
+                  headerText="Quantité réservée"
+  
+                >
+            
+                </e-column>
+  
+              </e-columns>
+              <e-aggregates>
+                <e-aggregate >
+                    <e-columns>
+                        <e-column [visible]="!isSales" [width]="120" field="availableQuantity" type="sum" >
+                            <ng-template #footerTemplate let-data>  Quantité restante totale : {{data.sum}}</ng-template>
+                        </e-column>
+                    </e-columns>
+                </e-aggregate>
+            </e-aggregates>
+            </ejs-grid>
+             </div>
+             <div class="col-md-6">
+              <ejs-grid
+              #grid3
+              showColumnMenu="true"
+              [gridLines]="gridLines"
+              [allowSelection]="false"
+              [dataSource]="detailsInit"
+              [allowPaging]="true"
+              [allowFiltering]="true"
+              [allowGrouping] = "true"
+  
+  
+            >
+              <e-columns>
+  
+                <e-column
+                [width]="130"
+                field="customerCode"
+                headerText="Code client"
+  
+              ></e-column>
+                <e-column
+                  [width]="130"
+                  field="customerName"
+                  headerText="Client"
+  
+                ></e-column>
+                <e-column
+                  [width]="130"
+                  field="quantity"
+                  headerText="Quantité initiale"
+  
+                >
+            
+                </e-column>
+  
+              </e-columns>
+            
+            </ejs-grid>
+             </div>
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

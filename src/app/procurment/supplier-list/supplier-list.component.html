@@ -1,0 +1,93 @@
+<span style="margin-bottom: 20px; display: block;">
+  <h4 class="page-title">Fournisseurs </h4> 
+    <p style="float: right;margin-top: -35px;">
+      <span class="label bg-green shadow-style" style='margin-right: 5px;'>F9: Filtrer</span>
+      <span class="label bg-green shadow-style" >Enter: Selectionner</span>
+      <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">Fermer (Echap)</button>
+    </p>
+  
+      <!-- <mat-chip-list aria-label="Fish selection" style="float: right;margin-top: -30px;">
+        <mat-chip focused='false' color="primary" disableRipple='false' selected  >F9: Filtrer</mat-chip>
+        <mat-chip focused='false' color="primary" disableRipple='false' selected  >Enter: Selectionner</mat-chip>
+      </mat-chip-list> -->
+  
+  </span>
+  
+  <ejs-grid 
+    style="padding: 5px"
+    (load)='load($event)'
+    showColumnMenu="true"
+    (dataBound)="dataBound($event)"
+    (rowSelected)="rowSelected($event)"
+    (recordDoubleClick)="Doubleclick($event)"
+    #grid
+    [dataSource]="data"
+    [gridLines]="gridLines"
+    [allowSelection]="true"
+    [allowSorting]="true"
+    [allowFiltering]='true' 
+    [allowPaging]='true'
+    (keyPressed)="keyPressed($event)"
+    [selectionSettings]='selectionOptions'
+    (dataStateChange)= 'dataStateChange($event)'
+  >
+    <e-columns>
+      <e-column field="code" width="120" headerText="Code" [allowSorting]="true"></e-column>
+      <e-column field="organizationGroupCode" width="150" headerText="Code Grp" [allowSorting]="true"></e-column>
+      <e-column field="name" width="250" headerText="Nom" [allowSorting]="true"></e-column>
+      <e-column field="phoneNumber" width="200" headerText="N° Tél" [allowSorting]="true"></e-column>
+      <e-column field="sector" headerText="Secteur" width="200" [allowSorting]="true" ></e-column>
+      <e-column field="debt" headerText="Créance" width="150" [allowFiltering]="false" type="number" format="N2" [allowSorting]="true"></e-column>
+      <e-column field="limitCredit" headerText="Limite crédit" width="150" [allowFiltering]="false" type="number" format="N2" [allowSorting]="true"></e-column>
+      <e-column field="paymentDeadline" headerText="Echéance/jrs" width="200" [allowFiltering]="false" [allowSorting]="true"></e-column>
+      <e-column field="monthlyObjective" headerText="Obj mensuel" width="200" [allowFiltering]="false" type="number" format="N2" [allowSorting]="true"></e-column>
+      <e-column field="paymentMethod" headerText="Type de paiement" width="200" [allowFiltering]="false" [allowSorting]="true"></e-column>
+      <e-column field="customerStatus" headerText="Statut" width="200" [allowSorting]="true"></e-column>
+    </e-columns>
+  </ejs-grid>
+  <br>
+  <h4 class="page-title">Commandes facturées </h4>
+  
+  
+ <ejs-grid #detailgrid  
+  showColumnMenu="true"
+  [allowSelection]='false' 
+  [dataSource]="supplierOrders"
+  [allowPaging]='true'>
+    <e-columns>
+        <e-column [width]="150" field='orderNumber' headerText='N°'></e-column>
+        <e-column [width]="180" field='orderDate' format='dd/MM/yyyy' type='date' headerText='Date'></e-column>
+        <e-column [width]="180" field='orderType' headerText='Type'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'>
+          <ng-template #template let-data>
+            <span
+              *ngIf="data.orderType == 1"
+              class="label bg-red shadow-style"
+              style="margin-right: 5px"
+              >Psychotrope</span
+            >
+            <span
+              *ngIf="data.orderType == 0"
+              class="label bg-green shadow-style"
+              style="margin-right: 5px"
+              >Non Psychotrope</span
+            >
+          </ng-template>
+        </e-column>
+        <e-column [width]="180" field='orderTotal' headerText='Total TTC'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true' type="number" format="N2"></e-column>
+        <e-column [width]="180" field="orderStatus" headerText="Etat">
+          <ng-template #template let-data>
+            <span *ngIf="data.orderStatus == 10" class="label l-bg-green shadow-style" style="margin-right: 5px">En attente </span>
+            <span *ngIf="data.orderStatus == 20" class="label bg-red shadow-style" style="margin-right: 5px">Enregistré</span>
+            <span *ngIf="data.orderStatus == 30" class="label l-bg-purple shadow-style" style="margin-right: 5px">Acceptée</span>
+            <span *ngIf="data.orderStatus == 40" class="label l-bg-purple shadow-style" style="margin-right: 5px">En cours de traitement</span>
+            <span *ngIf="data.orderStatus == 50" class="label l-bg-purple shadow-style" style="margin-right: 5px">En route</span>
+            <span *ngIf="data.orderStatus == 60" class="label l-bg-purple shadow-style" style="margin-right: 5px">Terminée</span>
+            <span *ngIf="data.orderStatus == 70" class="label l-bg-purple shadow-style" style="margin-right: 5px">Annulée</span>
+            <span *ngIf="data.orderStatus == 80" class="label l-bg-purple shadow-style" style="margin-right: 5px">Rejetée</span>
+            <span *ngIf="data.orderStatus == 90" class="label l-bg-purple shadow-style" style="margin-right: 5px">Confirmée / Imprimée</span>
+          </ng-template>
+        </e-column>
+    </e-columns>
+  </ejs-grid> 
+  
+  

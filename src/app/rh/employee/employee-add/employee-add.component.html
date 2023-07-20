@@ -1,0 +1,54 @@
+<div>
+    <h4 mat-dialog-title>Formulaire d'informations Employé</h4>
+    <div>
+        <form class="form-form m-5" [formGroup]="form">
+            <div class="row">
+                <mat-form-field >
+                    <mat-label>Code RH </mat-label>
+                    <input matInput formControlName="hrCode" style="text-transform:uppercase" required>
+
+                    <mat-error *ngIf="form.get('hrCode').hasError('required')">
+                        Code rh is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <mat-form-field >
+                    <mat-label>Titre poste </mat-label>
+                    <input matInput formControlName="jobTitle" style="text-transform:uppercase" required>
+
+                    <mat-error *ngIf="form.get('jobTitle').hasError('required')">
+                        Titre obligatoire
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <mat-form-field >
+                    <mat-label>Nom </mat-label>
+                    <input matInput formControlName="name" style="text-transform:uppercase" required>
+
+                    <mat-error *ngIf="form.get('name').hasError('required')">
+                        Nom obligatoire
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <ng-select     class="auto-grow mat-form-field-infix ng-tns-c110-56"  placeholder="Groupe de zone" formControlName="step">
+                    <ng-option [value]=1>Préparation</ng-option>      
+                    <ng-option [value]=2>Consolidation</ng-option>       
+                    <ng-option [value]=3>Control</ng-option>       
+                    <ng-option [value]=4>Facturation</ng-option>       
+                    <ng-option [value]=5>Expedition</ng-option>       
+                    <ng-option [value]=6>Reception</ng-option>       
+
+                </ng-select>
+            </div>
+            <div class="mt-5 text-left">
+                <button mat-raised-button  color="primary" style="margin-right:2px;" 
+                    (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

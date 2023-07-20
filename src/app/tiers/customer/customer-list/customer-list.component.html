@@ -1,0 +1,151 @@
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul class="breadcrumb breadcrumb-style ">
+                        <li class="breadcrumb-item">
+                            <h4 class="page-title">Organisations</h4>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-1">
+                            <a routerLink="/dashboard/main">
+                                <i class="fas fa-home"></i>Tiers</a>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-2">
+                            <a href="#" onClick="return false;">Organisations</a>
+                        </li>
+                        <li class="breadcrumb-item active">Liste</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+      
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                              <button class="mat-focus-indicator personlized-button mat-raised-button mat-button-base"   routerLink="/tiers/customer/customer-add">
+                                 + Nouvelle entité
+                              </button>
+                            </div>
+                         
+                        </div>                
+                    </div>
+                   
+                   
+                        <ejs-grid
+                        showColumnMenu="true"
+                        style="margin:10px"
+                        #grid2
+                        showColumnMenu="true"
+                        [allowSelection]="true"
+                        [allowFiltering]="true"
+                        [dataSource]="data"
+                        [allowPaging]="true"
+                        [gridLines]="gridLines"
+                      >
+                        <e-columns>
+                          <e-column
+                            field="id"
+                            headerText="N°"
+                            [visible]="false"
+                            textAlign="Center"
+                            isPrimaryKey="true"
+                          ></e-column>
+                          <e-column
+                            [width]="180"
+                            field="organizationGroupCode"
+                            headerText="Code"
+                          ></e-column>
+                          <e-column
+                            [width]="180"
+                            field="name"
+                            headerText="Entité"
+                          ></e-column>
+                          <e-column
+                            [width]="120"
+                            field="nis"
+                            
+                            headerText="NIS"
+                          ></e-column>
+                          <e-column
+                            [width]="120"
+                            field="nif"
+                            headerText="NIF"
+                          ></e-column>
+                          <e-column
+                          [width]="120"
+                          field="organizationActivity"
+                          headerText="Activité"
+                          [allowFiltering]="true"
+                        ></e-column>
+                       
+                          <e-column
+                            [width]="120"
+                            field="establishmentDateShort"
+                           
+                            type='string'
+                            headerText="Date de création"
+                            [allowFiltering]="true"
+                          ></e-column>
+                          <e-column
+                          field="organizationState"
+                          [width]="200"
+                          headerText="Statut"
+                          isPrimaryKey="true"
+                          textAlign="Left"
+                          [allowFiltering]="false"
+                        >
+                          <ng-template #template let-data>
+                            <span
+                              *ngIf="data.organizationStatus ==1 "
+                              class="label bg-red shadow-style"
+                              style="margin-right: 5px"
+                              >Bloqué</span
+                            >
+                            <span
+                              *ngIf="data.organizationStatus ==0"
+                              class="label bg-green shadow-style"
+                              style="margin-right: 5px"
+                              >Actif</span
+                            >
+                          </ng-template>
+                        </e-column>
+                          <e-column
+                            headerText="Actions"
+                            
+                            [width]="80"
+                          >
+                          <ng-template  #template let-data>
+                            <button class="button-action" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Click to see more actions">
+                                <i class="material-icons">more_vert</i>
+                              </button>
+                              <mat-menu #menu="matMenu">
+                               
+                                <button mat-menu-item (click)="edit(data)">
+                                  <mat-icon aria-label="Edit">create</mat-icon> Modifier
+                                </button>
+                                <button *ngIf="data.organizationStatus ==1"  mat-menu-item (click)="activate(data)">
+                                    <mat-icon aria-label="Edit">check</mat-icon> Activer
+                                  </button>
+                                  <button *ngIf="data.organizationStatus ==0"  mat-menu-item (click)="delete(data)">
+                                    <mat-icon aria-label="Edit">clear</mat-icon> Désactiver
+                                  </button>
+                              </mat-menu>
+                          </ng-template>
+                        </e-column>
+                        </e-columns>
+                      </ejs-grid>
+                     
+                </div>
+            </div>
+        </div>
+        
+    </div>
+   
+</section>
+
+
+

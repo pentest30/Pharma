@@ -1,0 +1,16 @@
+<div class="form-group" >
+     <mat-form-field style="margin-left: 2px;">
+      <mat-label>Nombre de colis </mat-label>
+      <input autocomplete="off"  [(ngModel)]="packing"   #quantity type="number" min="1" matInput   required
+      (focus)="$event.target.select()"
+      (keyup.enter)="save()"  (keyup.escape)="close()"
+       >
+    </mat-form-field>
+    <div class="text-left"> 
+        <button mat-raised-button  style="margin-right:2px;" 
+          (click)="save()">
+          Enregistrer </button>
+          <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">
+            Fermer (Echap)</button>
+      </div>
+  </div>

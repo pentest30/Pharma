@@ -1,0 +1,142 @@
+<div style="width: 800px;height:auto ;">
+    <h4 *ngIf="viewmodel.id==undefined" mat-dialog-title>Nouvelle entrée stock</h4>
+    <h4  *ngIf="viewmodel.id!=undefined" mat-dialog-title>{{viewmodel.organizationName}}</h4>
+        <div style="margin-left:10px;">
+            <form class="form-form m-5" [formGroup]="form">
+
+                <br/>
+                <div class="row" >
+                    
+                    <mat-form-field class="example-full-width" >
+                        <input type="hidden" formControlName="id">
+                        <input type="hidden"  formControlName="productId" [(value)]="viewmodel.productId"/>
+                     
+                            <mat-label>Produit</mat-label>
+                            <input *ngIf="viewmodel.id!=undefined && viewmodel.id!=null"  matInput 
+                             readonly formControlName="productFullName"
+                              [(ngModel)]="viewmodel.productFullName">
+                      
+                        <input type="text"
+                               placeholder="Sélectonnez un produit" 
+                               aria-label="Produit" 
+                               matInput
+                               required
+                               (input)="_filter($event.target.value)" 
+                               *ngIf="viewmodel.id==undefined || viewmodel.id==null" 
+                               [formControl]="matautocomplete_product"
+                               [matAutocomplete]="auto">
+                        <mat-autocomplete autoActiveFirstOption  #auto="matAutocomplete"  >
+                          <mat-option
+                          
+                          *ngFor="let option of filteredProducts | async "  [value]="option.fullName"> 
+                            {{option.code}} - {{option.fullName}}
+                          </mat-option>
+ 
+                        </mat-autocomplete>
+                    </mat-form-field>
+    
+                </div>
+                <div class="row">
+                    <mat-form-field style="margin-right:5px;">
+                        <mat-label>Lot interne</mat-label>
+                        <input matInput  [readonly]="viewmodel.id!=undefined && viewmodel.id!=null"  formControlName="internalBatchNumber" [(ngModel)]="viewmodel.internalBatchNumber">
+                    </mat-form-field>
+       
+          
+                <mat-form-field style="margin-right:10px;">
+                    <mat-label>Date de péremption </mat-label>
+                    <input matInput [matDatepicker]="picker"
+                    [matDatepickerFilter]="myFilter"  
+                    (input)="rewriteDate($event.target.value)" 
+                    [readonly]="feed"
+                     
+    
+                     formControlName="expiryDate" [(ngModel)]="viewmodel.expiryDate">
+                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker formControlName="picker" [disabled]="feed" #picker></mat-datepicker>
+                  
+                </mat-form-field> 
+                
+               
+                    <mat-form-field style="margin-right:5px;">
+                        <mat-label>Lot fournisseur</mat-label>
+                        <input matInput  [readonly]="viewmodel.id!=undefined && viewmodel.id!=null"  formControlName="vendorBatchNumber" [(ngModel)]="viewmodel.vendorBatchNumber">
+                    </mat-form-field>
+            
+            
+                 </div>
+                                 <div class="row">
+                    <mat-form-field style="margin-right:2px;">
+                       <mat-label>Quantité</mat-label>
+                       <input   [readonly]="!feed && viewmodel.id!=undefined && viewmodel.id!=null"  formControlName="physicalOnhandQuantity" matInput type="number"  appTwoDigitDecimaNumber [(ngModel)]="viewmodel.physicalOnhandQuantity">
+                   </mat-form-field>
+         
+                   <mat-form-field style="margin-right:2px;">
+                    <mat-label>Quantité non vendable</mat-label>
+                    <input    formControlName="physicalDispenseQuantity" matInput type="number"  appTwoDigitDecimaNumber [(ngModel)]="viewmodel.physicalDispenseQuantity">
+                </mat-form-field>
+                   </div>
+                 <div class="row">
+                 <mat-form-field style="margin-right:2px;">
+                    <mat-label>Prix d'achat</mat-label>
+                    <input formControlName="purchaseUnitPrice"[readonly]="feed"  matInput type="number"  appTwoDigitDecimaNumber [(ngModel)]="viewmodel.purchaseUnitPrice">
+                </mat-form-field>
+                <mat-form-field style="margin-right:2px;">
+                    <mat-label>Remise d'achat (%)</mat-label>
+                    <input formControlName="purchaseDiscountRatio"[readonly]="feed"  matInput type="number" appTwoDigitDecimaNumber  [(ngModel)]="viewmodel.purchaseDiscountRatio">
+                  
+                </mat-form-field>
+            </div>
+            <br/>
+            <div class="row">
+                <mat-form-field style="margin-right:2px;">
+                    <mat-label>Prix de vente</mat-label>
+                    <input formControlName="salesUnitPrice"[readonly]="feed"  matInput type="number" appTwoDigitDecimaNumber [(ngModel)]="viewmodel.salesUnitPrice">
+                </mat-form-field>
+                <mat-form-field style="margin-right:10px;">
+                    <mat-label>Remise de vente (%)</mat-label>
+                    <input formControlName="salesDiscountRatio"[readonly]="feed"  matInput type="number" appTwoDigitDecimaNumber [(ngModel)]="viewmodel.salesDiscountRatio">
+                  
+                </mat-form-field>
+                <mat-form-field style="margin-right:10px;">
+                    <mat-label>Packaging code</mat-label>
+                    <input formControlName="packagingCode"[readonly]="feed" type="number" matInput  appTwoDigitDecimaNumber [(ngModel)]="viewmodel.packagingCode">
+                  
+                </mat-form-field>
+                <mat-form-field style="margin-right:10px;">
+                    <mat-label>Colisage</mat-label>
+                    <input formControlName="packing"[readonly]="feed" type="number" matInput  appTwoDigitDecimaNumber [(ngModel)]="viewmodel.packing">
+                  
+                </mat-form-field>
+                <mat-form-field style="margin-right:10px;">
+                    <mat-label>Shp</mat-label>
+                    <input formControlName="pfs"[readonly]="feed"  matInput  type="number"   appTwoDigitDecimaNumber [(ngModel)]="viewmodel.pfs">
+                  
+                </mat-form-field>
+                <mat-form-field style="margin-right:10px;">
+                    <mat-label>PPA (TTC+Shp)</mat-label>
+                    <input formControlName="ppaPFS"[readonly]="feed"  matInput   type="number" appTwoDigitDecimaNumber [(ngModel)]="viewmodel.ppaPFS">
+                  
+                </mat-form-field>
+                
+         
+            </div>
+
+                   <br/>
+                   <br/>
+            <div class="text-right">
+                <mat-slide-toggle formControlName="isPublic" [disabled]="feed"  [(ngModel)]="viewmodel.isPublic" >Publié?</mat-slide-toggle>
+            </div>
+
+                <br/><br/>
+
+                <div class="text-right">
+                                <button mat-raised-button  color="primary" style="margin-right:2px;" 
+                                    (click)="save()">Enregistrer </button>
+                                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                                </button>
+                </div>
+            </form>
+        </div>
+</div>
+                     

@@ -1,0 +1,80 @@
+<div style="width: 750px;">
+    <h6 mat-dialog-title>{{modalTitle}}</h6>
+    <div>
+        <form class="form-form m-5" [formGroup]="form">
+            <input type="hidden" formControlName="id">
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field >
+                        <mat-label>Nom </mat-label>
+                        <input matInput formControlName="name"  required>
+        
+                        <mat-error *ngIf="form.get('name').hasError('required')">
+                            name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-6" style="margin-top: -10px;">
+                    <ng-select  style="display: inline-block;width: 250px;"  class="mat-form-field-infix ng-tns-c110-56" placeholder="Forme" formControlName="formId">
+                        <ng-option *ngFor="let car of forms" [value]="car.id">{{car.name}}</ng-option>
+                       
+                    </ng-select>
+                 
+                </div>
+            </div>
+           <br>
+         
+            <div class="card">
+                <div class="header">
+                  <h6>Détails</h6>
+                </div>
+                <div class="body">
+                  <button (click)="openDialog()" mat-mini-fab color="primary" aria-label="Example icon button with a bookmark icon">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                  <br>
+                  <br>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Dci </th>
+                        <th scope="col">Dosage</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of dciDosages">
+                            <td>
+                                <ng-select  dropdownPosition ="top" style="display: inline-block;width: 250px;"  class="mat-form-field-infix ng-tns-c110-56" placeholder="Dci" [(value)]="item.innId">
+                                    <ng-option *ngFor="let car of inns" [value]="car.id">{{car.name}}</ng-option>
+                                   
+                                </ng-select>
+                              
+                            </td>
+                            <td>
+                                <ng-select dropdownPosition ="top"  style="display: inline-block;width: 250px;"   class="mat-form-field-infix ng-tns-c110-56" placeholder="Dosage" [(value)]="item.dosageId">
+                                    <ng-option *ngFor="let car of dosages" [value]="car.id">{{car.name}}</ng-option>
+                                   
+                                </ng-select>
+                              
+                            </td>
+                            <td > 
+                                <a mat-icon-button color="danger" aria-label="Supprimer"  (click)="delete(item)">
+                                 <i class="fa fa-trash"></i>
+                                </a>
+                            </td>
+                          </tr>
+                     
+                    </tbody>
+                  </table>
+                
+                </div>
+              </div>
+            <div class="text-right">
+                <button mat-raised-button  color="primary" style="margin-right:2px;" (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

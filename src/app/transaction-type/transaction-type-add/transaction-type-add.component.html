@@ -1,0 +1,35 @@
+<div>
+    <h4 mat-dialog-title>{{title}}</h4>
+    <div>
+        <form class="form-form m-5" [formGroup]="form" *ngIf="form">
+            <!-- <input type="hidden" formControlName="id"> -->
+            <div>
+                <mat-form-field >
+                    <mat-label>Nom </mat-label>
+                    <input matInput formControlName="transactionTypeName" style="text-transform:uppercase" required>
+
+                    <mat-error *ngIf="form.get('transactionTypeName').hasError('required')">
+                        name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-slide-toggle
+                  formControlName="blocked"
+                  style="margin-left: 5px"
+                  >Bloqué</mat-slide-toggle
+                >
+            </div>
+            <br>
+            <ng-select style="display: inline-block;width: 350px;margin-top: -5px;margin-bottom: 15px;"   class="auto-grow mat-form-field-infix ng-tns-c110-56" placeholder="Code Type transaction" formControlName="codeTransaction">
+                <ng-option *ngFor="let item of codeTypesTransaction" [value]="item">{{transactionTypeCode[item]}}</ng-option>       
+            </ng-select>
+            <div class="text-left">
+                <button mat-raised-button  color="primary" style="margin-right:2px;" 
+                    (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

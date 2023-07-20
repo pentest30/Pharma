@@ -1,0 +1,213 @@
+
+<section class="content"   (window:resize)="onResize($event)">
+    <div class="container-fluid no-padding" >
+        <div class="card " style="margin-bottom: 0px!important;" *ngIf='form'>
+            <div class="header" class="no-padding">
+                <div class="padding-bottom-3x mb-1" style="font-size: 12px;" id="headerElement">
+                    <div class="card mb-1" >
+                     
+                        <form [formGroup]="form"  style="margin-top: 5px;">
+                            <div class="row" style="margin-right: 0px;margin-left: 0px; ">
+                                <div class="col-md-3 col-lg-3 col-xl-3 "  >
+                                    <ng-select [(ngModel)]="selectedSupplier" 
+                                        [items]="suppliers" 
+                                        bindValue="organizationId" 
+                                        bindLabel="name"  
+                                        [virtualScroll]	='true' 
+                                        [dropdownPosition]='bottom' 
+                                        formControlName="supplierId" 
+                                        labelForId='Fournisseur' 
+                                        placeholder='Fournisseur' 
+                                        [searchFn]="supplierSearchFn"
+                                        (change)="onSupplierSelection($event)">
+                                    <ng-template ng-header-tmp class="table-dropdown-no-scroll" >
+                                    
+                                        <table class="table table-striped" style=" max-width: 95.5%;overflow-x: hidden;">
+                                        <thead>
+                                            <tr class="row dropdown-line-table" >
+                                            <th width="40%" >Code</th>
+                                            <th width="60%" >Nom </th>
+                                            
+                                            </tr>
+                                        </thead>
+                                        </table>
+                                    </ng-template>
+                                    <ng-template let-item="item" ng-option-tmp class="table-dropdown "  let-itemIndex="itemIndex" >
+                                        <table class="table table-striped" style="max-width: 95.5%;overflow-x: hidden;" >
+                                        <tr  class="row  dropdown-line-table ">
+                                            <td  width="40%">{{item.code}}</td>
+                                            <td width="60%">{{item.name}}</td>
+                                        </tr>
+                                        </table> 
+                                    </ng-template>
+                                    </ng-select> 
+                                </div> 
+                                <mat-form-field appearance="fill" class="col-md-2 col-lg-2 col-xl-2 "  >
+                                    <mat-label>Réf Facture </mat-label>
+                                    <input formControlName="refDocument" #refDocument matInput required (keyup.enter)="onRefDocumentKeyEnter($event)" (change)="onRefDocumentChange($event.target.value)"/>
+                                </mat-form-field>
+                             
+                                <mat-form-field color="accent" appearance="fill"  class="col-md-3 col-lg-3 col-xl-3 "  >
+                                    <mat-label>Date Facture Fournisseur</mat-label>
+                                    <input matInput [matDatepicker]="picker2" id="invoiceDate" formControlName="invoiceDate" (keyup.enter)="onInvoiceDateKeyEnter($event)" (dateChange)="onInvoiceDateChange($event.target.value)">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                </mat-form-field>
+                                <mat-form-field appearance="fill" class="col-md-2 col-lg-2 col-xl-2 "  >
+                                    <mat-label>Total TTC </mat-label>
+                                    <input formControlName="totalAmount" #totalAmount (keyup.enter)="onTotalAmountEnter($event)" type="number" matInput />
+                                </mat-form-field>
+                                <mat-form-field appearance="fill" class="col-md-2 col-lg-2 col-xl-2 "  >
+                                    <mat-label>Total HT </mat-label>
+                                    <input formControlName="totalAmountExlTax" type="number" #totalAmountExcTax matInput />
+                                    <mat-error *ngIf="form.get('totalAmountExlTax').hasError('TTCInvalid')">
+                                        Le total HT doit etre inferieur ou egale au total TTC
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                         
+                        </form>  
+                    </div>
+                </div>
+                <div class="padding-bottom-3x mb-1">
+                    <div class="card mb-1" *ngIf="currentSupplier != null">
+                        <ejs-grid  #batchgrid id='batchgrid' class="bodyGrid" 
+                        (created)="created()" 
+                        [gridLines]='gridLines'  
+                        (load)='load($event)'
+                        (dataBound)="dataBound($event)"
+                        (toolbarClick)='clickHandler($event)'
+                        showColumnMenu='true'
+                        [dataSource]='rows'
+                        [allowSelection]='true' 
+                        [allowSorting]='true'
+                        [pageSettings]="pageSettings" 
+                        [allowFiltering]='true' 
+                        (commandClick)='commandClick($event)' 
+                        (recordDoubleClick)='onDoubleClick($event)' 
+                        (actionComplete)="actionComplete($event)"
+                        [editSettings]='editOptions' 
+                        [toolbar]='toolbarItems'  >
+                        <e-columns>
+                            <e-column field='id' headerText='N°' [width]='80' textAlign='Center' isPrimaryKey='true'>
+                            <ng-template #template let-data >
+                                {{ getIndexRow(data.index)}} 
+                            </ng-template>
+                            </e-column>
+                            <e-column field='productCode' headerText='Code' [width]='150' [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                            <e-column field='productName' headerText='Nom'  [allowFiltering]='true' [allowSorting]='true' [width]='300'  isPrimaryKey='true'></e-column>
+                            <e-column field='internalBatchNumber' [width]='180' headerText='Lot Interne'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                            <e-column field='vendorBatchNumber' [width]='180' headerText='Lot Fr'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true'  textAlign='Left'></e-column>
+                            <e-column field='quantity' [width]='150' editType= 'numericedit' headerText='Qnt'  [validationRules]='quantityRules'  [allowFiltering]='true' [allowSorting]='true' ></e-column>
+                            <e-column field='unitPrice' [width]='150' editType= 'numericedit' headerText='Prix'  [validationRules]='quantityRules' [allowFiltering]='true' [allowSorting]='true' textAlign='Left'></e-column>
+                            <e-column field='discount' [validationRules]='extraDiscountRules' [width]='150' editType= 'numericedit' headerText='Remise'  [allowFiltering]='false' [allowSorting]='true'   textAlign='Left'>
+                                <ng-template #template let-data >
+                                    {{ data.discount }} %
+                                </ng-template>
+                            </e-column>
+                            <e-column field='ug' [width]='150' headerText='UG' [allowEditing] ='false' [allowFiltering]='false' [allowSorting]='true'   textAlign='Left'>
+                                <ng-template #template let-data >
+                                    {{ getUG(data)}} 
+                                 </ng-template>
+                            </e-column>
+                            <e-column field='salePrice' [width]='150' editType= 'numericedit' headerText='Prix vente' [validationRules]='quantityRules' [allowFiltering]='false' [allowSorting]='true'   textAlign='Left'></e-column>
+                            <e-column field='expiryDate' [width]='150' headerText='DDP'  [allowFiltering]='true' [allowSorting]='true' type='date' editType= 'datepickeredit' format='dd/MM/yyyy'></e-column>
+                            <e-column field='pfs'[width]='150' [validationRules]='pfsRules'  editType= 'numericedit' headerText='SHP'   [allowFiltering]='true' [allowSorting]='true' textAlign='Left'></e-column>
+                            <e-column field='ppaHT' [width]='150' [validationRules]='quantityRules' editType= 'numericedit' headerText='PPA HT'   [allowFiltering]='true' [allowSorting]='true'  textAlign='Left'></e-column>
+                            <e-column field='ppaTTC' [width]='150'  headerText='PPA TTC'   [allowFiltering]='true' [allowSorting]='true'  textAlign='Left'></e-column>
+                            <e-column field='ppaPFS' [width]='150'  headerText='PPA/PFS'   [allowFiltering]='true' [allowSorting]='true'  textAlign='Left'></e-column>
+
+                            <e-column field='wholesaleMargin' [width]='150'  headerText='Marge Gros'   [allowFiltering]='true' [allowSorting]='true'  textAlign='Left'  isPrimaryKey='true'>
+                                <ng-template #template let-data >
+                                    {{ data.wholesaleMargin * 100 }} %
+                                </ng-template>
+                            </e-column>
+                            <e-column field='pharmacistMargin' [width]='190'  headerText='Marge Pharmacien'   [allowFiltering]='true' [allowSorting]='true'  textAlign='Left'  isPrimaryKey='true'>
+                                <ng-template #template let-data >
+                                    {{ data.pharmacistMargin * 100 }} %
+                                </ng-template>
+                            </e-column>
+                            <e-column field='totalRemise' [width]='190'  headerText='Total Remise'   [allowFiltering]='true' [allowSorting]='true'  textAlign='Left'  isPrimaryKey='true'>
+                                <ng-template #template let-data >
+                                    {{ getTotalLineDiscount(data) |  numberSeparator}} 
+                                </ng-template>
+                            </e-column>
+                          
+                            <e-column field='totalExlTax' [width]='150' headerText='Total HT'  [allowFiltering]='true' isPrimaryKey='true' type="number" format="N2" [allowSorting]='true'>
+                                <ng-template #template let-data >
+                                    {{ calculHelper.getTotalHt(data.purchaseUnitPrice, data.quantity) |  numberSeparator}}
+                                </ng-template>
+
+                            </e-column>
+                            <e-column field='totalInlTax'  [width]='150' headerText='Total TTC'  [allowFiltering]='true' isPrimaryKey='true' type="number" format="N2" [allowSorting]='true'>
+                                <ng-template #template let-data >
+                                    {{ getLineTotalTTC(data) |  numberSeparator}}
+                                </ng-template>
+                            </e-column>
+                            <e-column field='tvag'  [width]='150' headerText='Total tva'  [allowFiltering]='true' isPrimaryKey='true' type="number" format="N2" [allowSorting]='true'>
+                                <ng-template #template let-data >
+                                    {{ getTotalLineTva(data) |  numberSeparator}}
+                                </ng-template>
+                            </e-column>
+                            <e-column headerText='#' [width]='80' [commands]='commands'></e-column>
+                        </e-columns>
+                    
+                        </ejs-grid>
+                        <div class="row justify-content-md-center pricing-table" >
+                            <div class="col-md-4 col-lg-4">
+                                <div class="item">
+                                  <div class="heading">
+                                    <h5>Total NET  :   <span  class="price-bold"> {{ getTotalCartHt() | currencyFormat :'DZD'}} </span></h5>
+                                  </div>
+                                </div>
+                              </div>
+                            <div class="col-md-4 col-lg-4">
+                              <div class="item">
+                                <div class="heading">
+                                  <h5>Total HT REMISE  :   <span  class="price-bold"> {{ totalhtdiscounted | currencyFormat :'DZD'}} </span></h5>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                              <div class="item">
+                                <div class="heading">
+                                  <h5>Total TTC  :   <span  class="price-bold">{{ getTotalTTCCart() | currencyFormat :'DZD' }}</span></h5>
+                                </div>
+                              </div>
+                            </div>
+                           
+                        </div>
+                        <div class="row justify-content-md-center pricing-table">
+                            <div class="col-md-4 col-lg-4">
+                              <div class="item">
+                                <div class="heading">
+                                  <h5>Total TVA  : <span  class="price-bold"> {{ getTotalTVACart() | currencyFormat :'DZD' }}</span></h5>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <div class="item">
+                                  <div class="heading">
+                                    <h5>Total Remise  : <span  class="price-bold">{{ getTotalDiscountCart() | currencyFormat :'DZD' }}</span></h5>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <div class="item">
+                                <div class="heading">
+                                    <h5>Ecart  : <span  class="price-bold">{{ ecartTTC | currencyFormat :'DZD' }}</span></h5>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+  
+  
+  
+  
+  

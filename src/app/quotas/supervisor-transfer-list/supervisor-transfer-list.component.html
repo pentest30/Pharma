@@ -1,0 +1,102 @@
+
+<section class="content">
+    <div class="container-fluid">
+      <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="header">
+              <div class="row">
+                <div class="col-sm-12 col-md-6">
+                   
+                    <button
+                      mat-raised-button
+                      class="personlized-button"
+                      (click)="quotaTransfer()"
+                     
+                    >
+                      <mat-icon>autorenew</mat-icon> Réaffecter les clients 
+                    </button>
+                    <button
+                      mat-raised-button
+                      class="personlized-button"
+                      (click)="cancelQuotaTransfer()"
+                     
+                    >
+                      <mat-icon>clear</mat-icon>Annuler les réaffectations 
+                    </button>
+                  </div>
+                <div class="col-sm-12 col-md-6 dataTables_filter" >
+                  <mat-slide-toggle color="primary" (change)="toggleSearch($event)" style="float: right;"  >Recherche avancée</mat-slide-toggle>
+                </div>
+              </div>
+            </div>
+            <div class="body table-responsive">
+              <ejs-grid
+                showColumnMenu="true"
+                #grid
+                [filterSettings]='filterSettings'
+                [gridLines]="gridLines"
+                showColumnMenu="true"
+                [allowSelection]="false"
+                [dataSource]="data"
+                [allowPaging]="true"
+                [allowFiltering]="true"
+                [allowGrouping]="true"
+              >
+                <e-columns>
+                    <e-column [width]="100" field="code" headerText="Code client" ></e-column>
+                   <e-column [width]="170" field="name" headerText="Client" ></e-column>
+                 
+                  <e-column [width]="170" field="defaultSalesPersonName" headerText="Commercial(e) par défault"></e-column>
+                  <e-column [width]="170" field="actualSalesPersonName" headerText="Commercial(e) intérimaire"></e-column>
+                  <e-column [width]="150" field="customerState" headerText="Statut" [allowSorting]="true">
+                    <ng-template #filterTemplate let-data>
+                    <ejs-dropdownlist id='customerState' [(ngModel)]="data.Name" [enabled]="data.column.allowFiltering" showClearButton="true"
+                    ngDefaultControl (change)=onChange($event) [dataSource]='customerState' [fields]='fields' [popupHeight]='height' >
+                    </ejs-dropdownlist>
+                  </ng-template>
+                  <ng-template #template let-data>
+                    <span
+                    class="label bg-green shadow-style"
+                      *ngIf="data.customerState ==0"
+                      >Actif</span
+                    >
+                    <span class="label bg-red shadow-style"
+                      *ngIf="data.customerState ==1"
+                      >Bloqué</span
+                    >
+                  </ng-template>
+                  </e-column>
+                  <e-column
+                  [width]="80"
+                  headerText="Actions"
+                  [allowFiltering]="false"
+                  isPrimaryKey="true"
+                  [allowSorting]="false"
+                  
+                >
+                  <ng-template #template let-row>
+                    <button
+                      mat-icon-button
+                      class="button-action"
+                      [matMenuTriggerFor]="menu"
+                      aria-label="Click to see more actions"
+                    >
+                      <i class="material-icons">more_vert</i>
+                    </button>
+                    <mat-menu #menu="matMenu" style="height: 25px">
+                      <button mat-menu-item (click)="edit(row)">
+                        <mat-icon aria-label="Edit">delete</mat-icon> Libérer
+                      </button>
+                    </mat-menu>
+                  </ng-template>
+                </e-column>
+                </e-columns>
+              </ejs-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  

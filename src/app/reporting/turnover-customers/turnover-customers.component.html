@@ -1,0 +1,123 @@
+<section class="content">
+    <div class="container-fluid" style="min-height: 50%;">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul class="breadcrumb breadcrumb-style ">
+                        <li class="breadcrumb-item">
+                            <h4 class="page-title">Reporting</h4>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-1">
+                            <a routerLink="/dashboard/main">
+                                <i class="fas fa-home"></i>Chiffre d'affaires</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="spinner-container" *ngIf="loading">
+            <mat-spinner color="primary"></mat-spinner>
+        </div>
+        <input   style="width: 150px;"  autocomplete="off" (dateChange)="onStrtChange($event)" placeholder="Période"  [matDatepicker]="picker1" [(ngModel)]="start">
+               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+               <mat-datepicker #picker1></mat-datepicker>
+               <button style="margin-top: -5px;" mat-raised-button class="personlized-button"  (click)='refresh()' #btnRef><mat-icon>refresh</mat-icon>Rafraîchir </button>
+               <br>
+               <br>
+           
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                
+                    <mat-tab-group>
+                        <mat-tab label="CA / clients"> 
+                            <div class="body ">
+                                <h4>CA global:  {{totalAmount| number: '.2' }} DZD</h4>
+                                <br>
+                            <ejs-grid
+                                #grid
+                                showColumnMenu="true"
+                                (toolbarClick)="toolbarClick($event)" 
+                                allowExcelExport='true'
+                                [toolbar]="toolbar"
+                                [gridLines]="gridLines"
+                                [dataSource]="turnoverOfAllCustomers"
+                                [allowPaging]="true"
+                                (dataBound)="dataBound($event)"
+                                [filterSettings]='filterSettings'
+                                [allowFiltering]="true"
+                                [allowSorting]="true">
+                                <e-columns>
+                                    <e-column width="150"  field='customerName' headerText='Client' type="string" isPrimaryKey=true ></e-column> 
+                                    <e-column width="150" type='number' format="N2" field='dailyTurnover' headerText='CA journalier' ></e-column> 
+                                    <e-column width="150"  format="N2" field='monthlyTurnover' headerText='CA mensuel' isPrimaryKey=true type='number'></e-column> 
+                                    <e-column width="150" format="N2" field='quarterTurnover' headerText='CA trimestriel' isPrimaryKey=true type='number'></e-column> 
+                                    <e-column width="150" field='salesPersonName' headerText='Commercial(e)' type="string" isPrimaryKey=true ></e-column> 
+                                    <e-column width="150" field='salesGroup' headerText='Superviseur' type="string" isPrimaryKey=true ></e-column> 
+                                 </e-columns>
+                            </ejs-grid>
+                        </div> 
+                        </mat-tab>
+                        <mat-tab label="CA / Commercial(e)"> 
+                            <ng-template matTabContent>  
+                            <div class="body ">
+                                <ejs-grid
+                                    #grid2
+                                    showColumnMenu="true"
+                                    (toolbarClick)="toolbarClickSP($event)" 
+                                    allowExcelExport='true'
+                                    [toolbar]="toolbar"
+                                    [gridLines]="gridLines"
+                                    [dataSource]="turnoverOfAllSalesPeron"
+                                    [allowPaging]="true"
+                                
+                                    [filterSettings]='filterSettings'
+                                    [allowFiltering]="true"
+                                    [allowSorting]="true">
+                                    <e-columns>
+                                        <e-column width="150" field='salesPersonName' headerText='Commercial(e)' type="string" isPrimaryKey=true ></e-column> 
+                                        <e-column width="150" field='dailyTurnover' headerText='CA journalier' ></e-column> 
+                                        <e-column width="150" field='monthlyTurnover' headerText='CA mensuel'  isPrimaryKey=true type='number'></e-column> 
+                                        <e-column width="150" field='quarterTurnover' headerText='CA trimestriel'  isPrimaryKey=true type='number'></e-column> 
+                                        <e-column width="150" field='salesGroup' headerText='Superviseur' type="string" isPrimaryKey=true ></e-column> 
+                                     </e-columns>
+                                </ejs-grid>
+                            </div> 
+                        </ng-template>   
+                        </mat-tab>
+                        <mat-tab  label="CA / Superviseur"> 
+                            <ng-template matTabContent>  
+                            <div class="body " [hidden]="isSalesPesron">
+                                <ejs-grid
+                                    #grid3
+                                    showColumnMenu="true"
+                                    (toolbarClick)="toolbarClickSv($event)" 
+                                    allowExcelExport='true'
+                                    [toolbar]="toolbar"
+                                    [gridLines]="gridLines"
+                                    [dataSource]="turnoverOfAllSalesGroup"
+                                    [allowPaging]="true"
+                                    [allowGrouping] = "true"
+                                    [filterSettings]='filterSettings'
+                                    [allowFiltering]="true"
+                                    [allowSorting]="true">
+                                    <e-columns>
+                                        <e-column width="150" field='salesGroup' headerText='Superviseur' type="string" isPrimaryKey=true ></e-column> 
+                                        <e-column width="150" field='dailyTurnover' headerText='CA journalier' ></e-column> 
+                                        <e-column width="150" field='monthlyTurnover' headerText='CA mensuel' isPrimaryKey=true type='number'></e-column> 
+                                        <e-column width="150" field='quarterTurnover' headerText='CA trimestriel' isPrimaryKey=true type='number'></e-column> 
+                                        
+                                     </e-columns>
+                                </ejs-grid>
+                            </div> 
+                        </ng-template>   
+                        </mat-tab>
+                      </mat-tab-group>   
+                   
+                </div>
+            </div>
+        </div>
+        
+    </div>
+   
+</section>

@@ -1,0 +1,31 @@
+
+<div>
+    <h6 mat-dialog-title>Nouveau</h6>
+    <div>
+        <form class="form-form m-5" [formGroup]="form">
+           
+            <div>
+                <mat-form-field >
+                    <mat-label>Email </mat-label>
+                    <input matInput formControlName="email"  required>
+  
+                    <mat-error *ngIf="form.get('email').hasError('required')">
+                        email is required
+                    </mat-error>
+                    <mat-error *ngIf="form.get('email').hasError('pattern')">Invalid email.</mat-error>
+             
+                </mat-form-field>
+            </div>
+           
+          <br>
+          <br>
+            <div class="text-left">
+                <button mat-raised-button  color="primary" style="margin-right:2px;" 
+                    (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                </button>
+            </div>
+        </form>
+    </div>
+  </div>
+

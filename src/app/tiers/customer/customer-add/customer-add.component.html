@@ -1,0 +1,152 @@
+<section class="content" style="width: 100;">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul class="breadcrumb breadcrumb-style ">
+                        <li class="breadcrumb-item">
+                            <h4 class="page-title">Organisations</h4>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-1">
+                            <a routerLink="/dashboard/main">
+                                <i class="fas fa-home"></i>Tiers</a>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-2">
+                            <a routerLink="/tiers/customer/customer-list">Organisations</a>
+                        </li>
+                        <li class="breadcrumb-item active">Nouveau</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                <div class="card">
+                    <div class="header">
+                        <h3>Créer</h3>
+                        <ul class="header-dropdown m-r--5">
+                            <li class="dropdown">
+                                <a href="#" onClick="return false;" data-toggle="dropdown" role="button"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    <i class="material-icons">more_vert</i>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li>
+                                        <a routerLink="/tiers/customer/customer-list">Fermer</a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <form class="register-form " [formGroup]="form">
+                            <div class="row">
+                                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" >
+                                        <mat-label>Nom</mat-label>
+                                        <input oninput="this.value = this.value.toUpperCase()" matInput formControlName="name" required>
+
+                                        <mat-error *ngIf="form.get('name').hasError('required')">
+                                            Nom is required
+                                        </mat-error>
+                                    </mat-form-field>
+
+
+                                </div>
+                                <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field style="margin-right:2px;">
+                                        <mat-label>Code</mat-label>
+                                        <input oninput="this.value = this.value.toUpperCase()" matInput formControlName="code" required>
+
+                                        <mat-error *ngIf="form.get('code').hasError('required')">
+                                            Code is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field  >
+                                        <mat-label>NIF</mat-label>
+                                        <input  showMaskTyped="true"  matInput mask="000000000000000" formControlName="nif" required>
+                                        <mat-error *ngIf="form.get('nif').hasError('required')">
+                                           NIF is required
+                                        </mat-error>
+                                        <mat-error *ngIf="form.get('nif').hasError('pattern')">Invalid NIF.</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field  style="margin-right:2px;">
+                                        <mat-label>NIS</mat-label>
+                                        <input  showMaskTyped="true"  matInput mask="000000000000000" formControlName="nis" >
+                                        <mat-error *ngIf="form.get('nif').hasError('pattern')">Invalid NIS.</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field style="margin-right:2px;">
+                                        <mat-label>RC</mat-label>
+                                        <input showMaskTyped="true" matInput formControlName="rc" [patterns]="customPatterns" required mask="0000000000">
+                                        <mat-error *ngIf="form.get('rc').hasError('required')">
+                                           RC is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field  style="margin-right:2px;">
+                                        <mat-label>AI</mat-label>
+                                        <input  showMaskTyped="true"  matInput formControlName="ai" mask="00000000000" required>
+                                        <mat-error *ngIf="form.get('ai').hasError('required')">
+                                           AI is required
+                                        </mat-error>
+                                        <mat-error *ngIf="form.get('nif').hasError('pattern')">Invalid AI.</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field style="margin-right:2px;">
+                                        <mat-label>Date de création </mat-label>
+                                        <input matInput [matDatepicker]="picker" (focus)="picker.open()"  formControlName="establishmentDate" >
+                                        <mat-datepicker #picker></mat-datepicker>
+
+                                    </mat-form-field>
+                                </div>
+                                <br>
+                                <br>
+                            <div class="row">
+                                <div style="margin-left:15px;" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-label>Activité: </mat-label>
+                                    <mat-radio-group  formControlName="activity"  class="example-full-width" aria-label="Activité">
+                                        <mat-radio-button (change)="onSelectionChange($event)" [value]="0">Répartiteur</mat-radio-button>
+                                        <mat-radio-button (change)="onSelectionChange($event)" [value]="1">Officine</mat-radio-button>
+                                        <mat-radio-button (change)="onSelectionChange($event)" [value]="2">Médecin</mat-radio-button>
+                                        <mat-radio-button (change)="onSelectionChange($event)" [value]="3">Hôpital</mat-radio-button>
+                                      </mat-radio-group>
+                                      <mat-slide-toggle formControlName="eCommerce" style="margin-left:5px;margin-top:-5px">E-Commerce</mat-slide-toggle>
+                                </div>
+
+
+                            </div>
+                            <br>
+                            <br>
+                            </div>
+
+                           <div class="row">
+                               <div class="col-md-6">
+                                   <app-bank-account-list (bankAccountChanged) = "bankAccountChanged($event)"></app-bank-account-list>
+                               </div>
+                               <div class="col-md-6">
+                                <app-address-list (addressChanged)="addressChanged($event)"></app-address-list>
+                               </div>
+                           </div>
+
+                           <div class="row">
+                           <div class="col-md-6">
+                            <app-phone-list  (phoneChanged)="phonesChanged($event)"></app-phone-list>
+                           </div>
+                           <div class="col-md-6">
+                            <app-email-list (emailChanged)="emailChanged($event)" ></app-email-list>
+                           </div>
+                           </div>
+                            <br>
+                            <div class="text-right">
+                                <button class="mat-focus-indicator personlized-button mat-raised-button mat-button-base" style="margin-right:2px;"
+                                    (click)="save()">Enregistrer </button>
+                                <button class="mat-focus-indicator personlized-button mat-raised-button mat-button-default" style="margin-left:2px;" (click)="close()">Annuler
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </div>
+</section>
+

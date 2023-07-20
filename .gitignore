@@ -1,0 +1,11 @@
+node_modules
+src/environments/environment.ts
+/dist/
+dist
+debug.log
+package-lock.json
+/src/environments/environment.ts
+/platforms
+config.xml
+/www
+src/environments/environment.prod.ts

@@ -1,0 +1,85 @@
+
+<form [formGroup]="formGroup" *ngIf='formGroup'>
+<br>  
+<div class="form-group mt-1">
+    <ng-select id="productId" autofocus  
+    placeholder="Liste des articles"
+    #productId 
+    formControlName="productId"
+    class="dropdown-grid"
+    (search)="onProductSearch($event)"
+    (blur)="onProductBlurSelection($event)"
+    [items]="products"
+    [markFirst]="true"
+    bindValue="productId" 
+    bindLabel="productName" 
+    [searchFn]="customProductSearchFn"
+    [virtualScroll]	='true'
+    (change)='onProductSelection($event)'> 
+
+        <ng-template ng-header-tmp class="table-dropdown-no-scroll" >
+            <table class="table table-striped" style=" overflow-x: hidden;">
+            <thead>
+                <tr class="row dropdown-line-table" >
+                    <th width="10%" sortable="code" (sort)="onSortProduct($event)"> Code</th>
+                    <th width="30%" sortable="fullName" (sort)="onSortProduct($event)"> Designation</th>
+                    <th width="20%" sortable="vendorBatchNumber" > Lot Fr</th>
+                    <th width="20%" sortable="internalBatchNumber" > Lot Interne</th>
+                    <th width="20%" sortable="remainingQuantity" > Quantité restante</th>
+                </tr>
+            </thead>
+            </table>
+        </ng-template>
+        <ng-template let-item="item" ng-option-tmp class="table-dropdown "  let-itemIndex="itemIndex" >
+            <table class="table table-striped" style=" overflow-x: hidden;" >
+                <tr class="row  dropdown-line-table ">
+                    <td #select style="display: none;">{{item.productId}}</td>
+                    <td  width="10%">{{item.productCode}}</td>
+                    <td width="30%" style="text-overflow: ellipsis;overflow: hidden;">{{item.productName}}</td>
+                    <td width="20%" style="text-overflow: ellipsis;overflow: hidden;">{{item.vendorBatchNumber}}</td>
+                    <td width="20%" style="text-overflow: ellipsis;overflow: hidden;">{{item.internalBatchNumber}}</td>
+                    <td width="20%" style="text-overflow: ellipsis;overflow: hidden;">{{item.remainingQuantity}}</td>
+
+                </tr>
+            </table> 
+        </ng-template>
+    </ng-select>
+</div>
+<div class="form-group " >
+    <mat-form-field style="margin-left: 2px;">
+        <mat-label>Colisage </mat-label>
+        <input autocomplete="off"   #packing type="number" min="1" matInput  formControlName="packing" required (keyup.enter)="onPackingKeyEnter($event)">
+        <mat-error *ngIf="formGroup.get('packing').hasError('required')">
+            Nombre de colis est obligatoire
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field style="margin-left: 2px;">
+        <mat-label>Nombre de colis </mat-label>
+        <input autocomplete="off"   #packingNumber type="number" min="1" matInput  formControlName="packingNumber" required (keyup.enter)="onPackingNumberKeyEnter($event)">
+        <mat-error *ngIf="formGroup.get('packingNumber').hasError('required')">
+            Nombre de colis est obligatoire
+        </mat-error>
+    </mat-form-field>
+</div>
+<div>
+    <mat-form-field style="margin-left: 2px;">
+        <mat-label>PPA </mat-label>
+        <input autocomplete="off"   #ppa type="number" min="1" matInput  formControlName="ppa" (keyup.enter)="onPpaKeyEnter($event)">
+
+    </mat-form-field>
+    
+    <mat-form-field style="margin-left: 2px;">
+        <mat-label>Quantité vrac </mat-label>
+        <input   #bulk type="number" min="0" max="100" matInput  formControlName="bulk" (keyup.enter)="onBulkKeyEnter($event)">
+        <mat-error *ngIf="formGroup.get('bulk').hasError('required')">
+            Quantité vrac 
+        </mat-error>
+        </mat-form-field>
+</div>
+
+<div class="text-left">
+    <button mat-raised-button  #saveButton [disabled]="!formGroup.valid" [class.personlized-button]="formGroup.valid" [class.disabled-personlized-button]="!formGroup.valid" style="margin-right:2px;" 
+        (click)="save()">Enregistrer </button>
+    <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">Fermer (Echap)</button>
+</div>
+</form>

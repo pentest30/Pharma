@@ -1,0 +1,158 @@
+#flex-container {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  #flex-container > .flex-item {
+    flex: auto;
+  }
+  
+  #flex-container > .raw-item {
+    width: 5rem;
+  }
+  .mat-card {
+    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+    position: relative;
+    padding: 16px;
+    border-radius: 4px;
+}
+.mat-card {
+    background: white;
+    color: #000000de;
+}
+.mat-card:hover .docs-homepage-guides-card {
+    background: rgba(0,0,0,.04);
+}
+input {
+  font-size: 18px!important;
+}
+.op .ng-select.ng-select-single .ng-select-container .ng-value-container {
+  font-size: 18px!important;
+    line-height: 20px!important;
+    font-weight: 400;
+    color: #555555;
+}
+::ng-deep .op .ng-value {
+  font-size: 18px!important;
+}
+.op .ng-placeholder {
+  font-size: 14px;
+}
+.op-select .ng-value-container {
+  font-size: 18px;line-height:20px
+}
+.barcode-scanner-livestream-overlay {
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+
+  .barcode-scanner-livestream-overlay-content {
+    top: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    .barcode-scanner-livestream-overlay-close {
+      position: absolute;
+      right: 0;
+      padding: 0.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      line-height: 1.5rem;
+      text-align: center;
+      background-color: white;
+      cursor: pointer;
+      border: 2px solid black;
+      font-size: 1.3rem;
+      margin: -1rem;
+      border-radius: 2rem;
+      z-index: 100;
+      box-sizing: content-box;
+    }
+  }
+}
+::ng-deep .op .ng-dropdown-panel .ng-dropdown-panel-items .ng-option{  
+  margin-bottom: 8px;
+  background: #dce2f2!important;
+  padding: 8px
+}
+::ng-deep .op .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+  background-color: #d6e5fa!important;;
+  margin-bottom: 8px;
+
+}
+::ng-deep .op .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  line-height: 1em;
+}
+.border-top-none {
+  border-top: none;
+}
+
+.mat-success {
+  background-color: rgba(26, 137, 23, 1);
+  color: #fff;
+}
+/* 
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  
+  //CSS
+    /* contain overscroll behaviour only in vertical direction */
+    body {
+      overscroll-behavior-y: contain!important;
+    }
+}
+
+/* 
+  ##Device = Tablets, Ipads (landscape)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  
+  //CSS
+    /* contain overscroll behaviour only in vertical direction */
+    body {
+      overscroll-behavior-y: contain!important;
+    }
+}
+
+/* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+  
+  //CSS
+    /* contain overscroll behaviour only in vertical direction */
+  body {
+    overscroll-behavior-y: contain!important;
+  }
+}
+
+/* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {
+  
+  //CSS
+  
+
+  /* contain overscroll behaviour only in vertical direction */
+  body {
+    overscroll-behavior-y: contain!important;
+  }
+}

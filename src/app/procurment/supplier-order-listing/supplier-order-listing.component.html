@@ -1,0 +1,230 @@
+<section class="content" (window:resize)="onResize($event)">
+    <div class="container-fluid">
+      <div class="block-header">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="breadcrumb breadcrumb-style ">
+                    <li class="breadcrumb-item">
+                        <h4 class="page-title">Achat</h4>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-1">
+                        <a routerLink="/dashboard/main">
+                            <i class="fas fa-home"></i>Commandes Fournisseurs</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+      </div>
+      <mat-tab-group backgroundColor="primary">
+        <mat-tab label="Liste de comamndes"> 
+          <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="card">
+                <div class="header">
+                  <div class="row">
+                      <div class="col-sm-12 col-md-3">
+                        <button mat-raised-button class="personlized-button"  (click)='add()' #btnRef><mat-icon>add</mat-icon>Nouvelle Commande (F4)</button>
+                      </div>
+                      <div class="col-sm-12 col-md-9 dataTables_filter" >
+                        <mat-slide-toggle color="primary" (change)="toggleSearch($event)" style="float: right;"  >Recherche avancée</mat-slide-toggle>
+                      </div>
+                  </div>
+                                              
+                </div>
+        
+                <div class="body table-responsive">
+                  <ejs-grid
+                    #grid
+                    (commandClick)='ListingCommandClick($event)' 
+                    [filterSettings]='filterSettings'
+                    (actionBegin)='begin($event)'
+                    showColumnMenu="true"
+                    [allowSelection]="false"
+                    [gridLines]="gridLines"
+                    [dataSource]="data"
+                    [allowPaging]="true"
+                    [allowFiltering]="true"
+                    [allowSorting]="true"
+                    (dataBound)="dataBound($event)"
+                    [childGrid]="childGrid"
+                  >
+                    <e-columns>
+                      <e-column headerText='#'  [allowFiltering]="false" isPrimaryKey="false">
+                        <ng-template #template let-row>
+                          <button mat-icon-button [matMenuTriggerFor]="menu" class="button-action" aria-label="Actions">
+                            <mat-icon>more_vert</mat-icon>
+                          </button>
+                          <mat-menu  #menu="matMenu">
+                            <button mat-menu-item (click)="view(row)">
+                              <mat-icon>remove_red_eye</mat-icon>
+                              <span>Détail</span>
+                            </button>
+                            <button *ngIf="isBuyer|| isBuyerGroup" mat-menu-item (click)="printOrder(row)">
+                              <mat-icon>print</mat-icon>
+                              <span>Imprimer</span>
+                            </button>
+                            <button  *ngIf="row.supplierOrderStatus == 20 && (isBuyer || isBuyerGroup)" mat-menu-item (click)="edit(row)">
+                              <mat-icon>edit</mat-icon>
+                              <span>Editer</span>
+                            </button>
+                            <button *ngIf="row.supplierOrderStatus == 20 && (isBuyer|| isBuyerGroup)" mat-menu-item (click)="validate(row)">
+                              <mat-icon>check</mat-icon>
+                              <span>Valider</span>
+                            </button>
+                            <button *ngIf="row.supplierOrderStatus == 20 && (isBuyer|| isBuyerGroup)" mat-menu-item (click)="reject(row)">
+                              <mat-icon>cancel</mat-icon>
+                              <span>Rejeter</span>
+                            </button>
+                            <button *ngIf="row.supplierOrderStatus == 20 && (isBuyer|| isBuyerGroup)" mat-menu-item (click)="cancel(row)">
+                              <mat-icon>cancel</mat-icon>
+                              <span>Annuler</span>
+                            </button>
+                            <button *ngIf="row.supplierOrderStatus == 40 && (isBuyer|| isBuyerGroup)" mat-menu-item (click)="backToSavedStatus(row)">
+                              <mat-icon>back</mat-icon>
+                              <span>En Rédition</span>
+                            </button>
+                            <button *ngIf="row.supplierOrderStatus == 40 && (isBuyer|| isBuyerGroup)" mat-menu-item (click)="finishOrder(row)">
+                              <mat-icon>close</mat-icon>
+                              <span>Clôturer</span>
+                            </button>
+                            <button *ngIf="row.supplierOrderStatus == 20" mat-menu-item (click)="delete(row)">
+                              <mat-icon>delete</mat-icon>
+                              <span>Supprimer</span>
+                            </button>
+                   
+                       
+                            <button  *ngIf="row.supplierOrderStatus == 40 && (isBuyer || isBuyerGroup)" mat-menu-item (click)="generateInvoice(row)">
+                              <mat-icon>note_add</mat-icon>
+                              <span>Nouvelle Facture</span>
+                            </button>
+                          </mat-menu>
+                        </ng-template>
+                      </e-column>
+                      <e-column [width]="180" field="sequenceNumber"  headerText="N° Cmd" type="string" >
+                        <ng-template #template let-data>{{data.orderNumber}}</ng-template>
+                      </e-column>
+                      <e-column [width]="120" field="orderDate" format="dd/MM/yyyy" type="date" headerText="Date"
+                      ></e-column>
+                      <e-column [width]="130" field="supplierName" headerText="Fournisseur"></e-column>
+                      <e-column [width]="220" field="orderStatus" headerText="Etat" >
+                        <ng-template #filterTemplate let-data>
+                          <ejs-dropdownlist id='orderStatus' [(ngModel)]="data.Name" [enabled]="data.column.allowFiltering" showClearButton="true"
+                            (change)=onChange($event) [dataSource]='dropStates' [fields]='fields'[popupHeight]='height' >
+                          </ejs-dropdownlist>
+                        </ng-template>
+                        <ng-template #template let-data>
+                          <span *ngIf="data.orderStatus == 10" class="label l-bg-green shadow-style" style="margin-right: 5px">En attente </span>
+                          <span *ngIf="data.orderStatus == 20" class="label bg-red shadow-style" style="margin-right: 5px">Enregistré</span>
+                          <span *ngIf="data.orderStatus == 30" class="label l-bg-purple shadow-style" style="margin-right: 5px">Acceptée</span>
+                          <span *ngIf="data.orderStatus == 40" class="label l-bg-purple shadow-style" style="margin-right: 5px">En cours de traitement</span>
+                          <span *ngIf="data.orderStatus == 50" class="label l-bg-purple shadow-style" style="margin-right: 5px">En route</span>
+                          <span *ngIf="data.orderStatus == 60" class="label l-bg-purple shadow-style" style="margin-right: 5px">Terminée</span>
+                          <span *ngIf="data.orderStatus == 70" class="label l-bg-purple shadow-style" style="margin-right: 5px">Annulée</span>
+                          <span *ngIf="data.orderStatus == 80" class="label l-bg-purple shadow-style" style="margin-right: 5px">Rejetée</span>
+                          <span *ngIf="data.orderStatus == 90" class="label l-bg-purple shadow-style" style="margin-right: 5px">Confirmée / Imprimée</span>
+                        </ng-template>
+                      </e-column>
+                      <e-column [width]="120" field="psychotropic" headerText="Type" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" type="string"> 
+                        <ng-template #filterTemplate let-data>
+                          <ejs-dropdownlist id='psychotropic' [(ngModel)]="data.Name" [enabled]="data.column.allowFiltering" showClearButton="true"
+                            (change)=onChange($event) [dataSource]='dropTypesOrder' [fields]='fieldType'[popupHeight]='height' >
+                          </ejs-dropdownlist>
+                        </ng-template>
+                        <ng-template #template let-data>
+                          <span
+                            *ngIf="data.psychotropic"
+                            class="label bg-red shadow-style"
+                            style="margin-right: 5px"
+                            >Psychotrope</span
+                          >
+                          <span
+                            *ngIf="!data.psychotropic"
+                            class="label bg-green shadow-style"
+                            style="margin-right: 5px"
+                            >Non Psychotrope</span
+                          >
+                        </ng-template>
+                      </e-column>
+                      <!-- <e-column [width]="120" field="refDocument" headerText="N° BCMD" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column> -->
+                      <e-column [width]="120" field="orderDiscount" format="N2" headerText="Total HT" [allowFiltering]="true" isPrimaryKey="true"[allowSorting]="true" type="string"></e-column>
+                      <e-column [width]="120" field="orderTotal" format="N2" headerText="Total TTC" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" type="string"></e-column>
+                      <e-column [width]="120" field="expectedShippingDate" headerText="Date de livraison prévue" format="dd/MM/yyyy" type="date"></e-column>
+                     
+                      <e-column [width]="120" field="createdBy" headerText="Créée par"></e-column>
+                      <e-column [width]="120" field="createdDateTime"  headerText="Date de création" format="dd/MM/yyyy" type="date"></e-column>
+                      <e-column [width]="120" field="updatedBy" headerText="Modifiée par"></e-column>
+                      <e-column [width]="120" field="updatedDateTime" headerText="Date de modification" format="dd/MM/yyyy" type="date"></e-column>
+                    </e-columns>
+                  </ejs-grid>
+              
+                </div>
+              </div>
+            </div>    
+          </div>  
+        </mat-tab>
+        <mat-tab label="Commandes en attente">
+          <ng-template matTabContent>  
+            <div class="row clearfix">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                  <div class="header">
+                    <div class="row"></div>
+                  </div>
+                  <div class="body table-responsive">
+                    <ejs-grid
+                      #grid2
+                      showColumnMenu="true"
+                      [allowSelection]="true"
+                      [gridLines]="gridLines"
+                      [dataSource]="pendingSupplierOrders"
+                      [allowPaging]="true"
+                      [allowFiltering]="true"
+                      [editSettings]="editSettings"
+                      (rowSelected)="rowSelected($event)"
+                      (commandClick)="pendingCommandClick($event)"
+                      [allowGrouping] = "true"
+                    >
+                      <e-columns>
+                        <e-column field="id" headerText="N°" [visible]="false" textAlign="Center"isPrimaryKey="true"></e-column>
+                        <e-column [width]="180" field="orderNumber" headerText="N°"></e-column>
+                        <e-column field='psychotropic'  [width]='200' headerText='Ref'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'>
+                          <ng-template #template let-data >
+                            <span *ngIf="data.psychotropic" class="label bg-red shadow-style" style='margin-right: 5px;'>Psychotrope</span>
+                            <span *ngIf="!data.psychotropic"class="label bg-green shadow-style" style='margin-right: 5px;'>Non Psychotrope</span>
+              
+                          </ng-template>
+                        </e-column>
+                        <e-column headerText='#'  [commands]='commandPending'></e-column>
+  
+                      </e-columns>
+                    </ejs-grid>
+                    <h4 class="page-title">Lignes Commande</h4>
+                    <ejs-grid
+                    #detailgrid
+                    [allowSelection]="false"
+                    [allowSelection]="true"
+                    [gridLines]="gridLines"
+                    [allowPaging]="true"
+                    [allowFiltering]="true"
+                    (commandClick)="pendingCommandClick($event)"
+                    >
+                      <e-columns>
+                          <e-column field='productCode' headerText='Code' [width]='130' textAlign='Center' isPrimaryKey='true'>
+                          </e-column>
+                          <e-column field='productName' headerText='Article'></e-column>
+                          <e-column field='internalBatchNumber' headerText='Lot'></e-column>
+                           <e-column  type="date"  format="dd/MM/yyyy" field='minExpiryDate' headerText='DDP'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+                          <e-column field='quantity' headerText='Quantité'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+                      </e-columns>
+                    </ejs-grid>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+         
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </section>
+  

@@ -1,0 +1,141 @@
+<section >
+<div >
+  <h4> Demande </h4>
+  <hr>
+    <ng-select [(ngModel)]="selectedProduct" 
+
+    [items]="products" 
+    bindValue="id" 
+    bindLabel="fullName"  
+    [virtualScroll]	='true' 
+    labelForId='Client' 
+    placeholder='Produit' 
+    [searchFn]="customSearchFn"
+    (change)="onPorductSelection($event)"
+    >
+    <ng-template ng-header-tmp class="table-dropdown-no-scroll" >
+    
+    <table class="table table-striped" style=" max-width: 95.5%;overflow-x: hidden;">
+      <thead>
+        <tr class="row dropdown-line-table" >
+          <th width="40%" >Code</th>
+          <th width="60%" >Nom </th>
+         
+        </tr>
+      </thead>
+    </table>
+    </ng-template>
+    <ng-template let-item="item" ng-option-tmp class="table-dropdown "  let-itemIndex="itemIndex" >
+    <table class="table table-striped" style="max-width: 95.5%;overflow-x: hidden;" >
+      <tr  class="row  dropdown-line-table ">
+        <td  width="40%">{{item.code}}</td>
+        <td width="60%">{{item.fullName}}</td>
+      </tr>
+    </table> 
+    </ng-template>
+    </ng-select> 
+    <br>
+    <ng-select [(ngModel)]="selectedCustomer" 
+                                  
+                                    [items]="customers" 
+                                    bindValue="id" 
+                                    bindLabel="name"  
+                                    [virtualScroll]	='true' 
+                                  
+                                    labelForId='Client' 
+                                    placeholder='Client'
+                                    (change)="onClientSelection($event)">
+                                  <ng-template ng-header-tmp class="table-dropdown-no-scroll" >
+                                  
+                                    <table class="table table-striped" style=" max-width: 95.5%;overflow-x: hidden;">
+                                      <thead>
+                                        <tr class="row dropdown-line-table" >
+                                          <th width="40%" >Code</th>
+                                          <th width="60%" >Nom </th>
+                                         
+                                        </tr>
+                                      </thead>
+                                    </table>
+                                  </ng-template>
+                                  <ng-template let-item="item" ng-option-tmp class="table-dropdown "  let-itemIndex="itemIndex" >
+                                    <table class="table table-striped" style="max-width: 95.5%;overflow-x: hidden;" >
+                                      <tr  class="row  dropdown-line-table ">
+                                        <td  width="40%">{{item.code}}</td>
+                                        <td width="60%">{{item.name}}</td>
+                                      </tr>
+                                    </table> 
+                                  </ng-template>
+                                </ng-select> 
+    <br>
+    <div >
+        <mat-form-field style="margin-left: 2px">
+          <mat-label>Quota </mat-label>
+        <input
+          type="number"
+          matInput
+          autocomplete="off"
+         [disabled]="!selectedProduct"
+         [(ngModel)] ="quotaValue"
+         (ngModelChange)="filterByQnt($event)"
+          
+        />
+        </mat-form-field>
+      
+      </div>
+      <mat-radio-group  aria-label="Select an option" [(ngModel)]="destination" >
+      
+        <mat-radio-button   [value]="1">Commercial(e)</mat-radio-button>
+        <mat-radio-button  [value]="3">Achteur</mat-radio-button>
+      </mat-radio-group>
+     
+    <br>
+      <div class="text-right">
+ 
+        <button  [disabled]="!selectedQuota&&destination==1|| !selectedCustomer&&destination>1 "  mat-raised-button (click)="save()" class="personlized-button" style="margin-right:2px;" 
+            >Enregistrer </button>
+        <button  style="margin-left:2px;" (click)="close()" mat-raised-button class="personlized-button-blue" >Fermer
+        </button>
+        </div>
+        <br>
+      <div *ngIf="destination==1" class="body table-responsive">
+        <ejs-grid
+          #grid
+          showColumnMenu="true"
+          [allowSelection]="true"
+          [dataSource]="data"
+          [allowPaging]="true"
+          [allowFiltering]="true"
+          (rowSelected)="rowSelected($event)"
+          (dataBound)='load($event)'
+          
+        >
+          <e-columns>
+            <e-column
+            [width]="130"
+            field="salesPersonId"
+            headerText="Commercial(e)"
+            [visible]="false"
+          ></e-column>
+            <e-column
+            [width]="130"
+            field="salesPersonName"
+            headerText="Commercial(e)"
+           
+          ></e-column>
+            
+            <e-column
+              [width]="130"
+              field="availableQuantity"
+              headerText="Quantité disponible"
+            >
+            </e-column>
+          
+         
+          </e-columns>
+        
+        </ejs-grid>
+      </div>
+    
+     
+</div>
+</section>

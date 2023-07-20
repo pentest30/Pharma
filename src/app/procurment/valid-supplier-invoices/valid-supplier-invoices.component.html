@@ -1,0 +1,44 @@
+<span >
+    <h4 class="page-title">Fournisseurs </h4> 
+    <p style="float: right;margin-top: -35px;">
+      <span class="label bg-green shadow-style" style='margin-right: 5px;'>F9: Filtrer</span>
+      <span class="label bg-green shadow-style" >Enter: Selectionner</span>
+    
+    </p>
+
+  
+  </span>
+  
+  <ejs-grid 
+    style="padding: 5px"
+    (load)='load($event)'
+    (dataBound)="dataBound($event)"
+    (rowSelected)="rowSelected($event)"
+    (recordDoubleClick)="Doubleclick($event)"
+    #grid
+    [dataSource]="data"
+    [gridLines]="gridLines"
+    [allowSelection]="true"
+    [allowSorting]="true"
+    [allowFiltering]='true' 
+    [allowPaging]='true'
+    (keyPressed)="keyPressed($event)"
+    [selectionSettings]='selectionOptions'
+  >
+    <e-columns>
+        <e-column [width]="120" field="invoiceSequenceNumber"  headerText="N°" ></e-column>
+        <e-column [width]="120" field="invoiceDate" format="dd/MM/yyyy" type="date" headerText="Date"></e-column>
+        <e-column [width]="140" field="supplierName" headerText="Fournisseur"></e-column>
+        <e-column [width]="120" field="refDocument" headerText="Ref Facture" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+        <e-column [width]="120" field="totalAmountExlTax" format="N2" headerText="Total HT" [allowFiltering]="true" isPrimaryKey="true"[allowSorting]="true"></e-column>
+        <e-column [width]="120" field="totalAmount" format="N2" headerText="Total TTC" [allowFiltering]="true" isPrimaryKey="true"[allowSorting]="true"></e-column>
+  
+        <e-column [width]="120" field="remainingAmount" format="N2" headerText="montant restant" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+        <e-column [width]="120" field="status" headerText="Etat"></e-column>
+    </e-columns>
+  </ejs-grid>
+  <br>
+  
+
+  
+  

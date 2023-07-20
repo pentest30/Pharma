@@ -1,0 +1,146 @@
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul class="breadcrumb breadcrumb-style ">
+                        <li class="breadcrumb-item">
+                            <h4 class="page-title">Client</h4>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-1">
+                            <a routerLink="/dashboard/main">
+                                <i class="fas fa-home"></i>Tiers</a>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-2">
+                            <a href="#" onClick="return false;">Client</a>
+                        </li>
+                        <li class="breadcrumb-item active">Liste</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-3">
+                              <button class="mat-focus-indicator personlized-button mat-raised-button mat-button-base"   (click)="assignClient()">
+                                 + Nouveau client
+                              </button>
+                            </div>
+                            <div class="col-sm-12 col-md-9 dataTables_filter" >
+                              <mat-slide-toggle color="primary" (change)="toggleSearch($event)" style="float: right;"  >Recherche avancée</mat-slide-toggle>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <ejs-grid
+                    style="padding: 5px; margin: 10px;"
+                    [filterSettings]='filterSettings'
+                    (dataBound)="dataBound($event)"
+                    showColumnMenu="true"
+                    #grid
+                    [dataSource]="data"
+                    [gridLines]="gridLines"
+                    [allowSelection]="true"
+                    [allowSorting]="true"
+                    [allowFiltering]='true'
+                    [allowPaging]='true'
+                  >
+                    <e-columns>
+                      <e-column  [width]="150" field="code" headerText="Code" [allowSorting]="true" type="string" ></e-column>
+                      <e-column [width]="150" field="organizationGroupCode" headerText="Code Grp"[allowSorting]="true" type="string"></e-column>
+                      <e-column [width]="200" field="name" headerText="Nom" [allowSorting]="true" type="string"></e-column>
+                      <e-column field="phoneNumber" [width]="180" headerText="N° Tél" [allowSorting]="true"></e-column>
+                      <e-column field="sector" [width]="180" headerText="Secteur" [allowSorting]="true" type="string"></e-column>
+                      <e-column [width]="150" field="sectorCode" headerText="Code Secteur" [allowSorting]="true" type="string"></e-column>
+                      <e-column [width]="150" field="debt" headerText="Créance" [allowFiltering]="true" type="number"  format="N2" [allowSorting]="true"></e-column>
+                      <e-column [width]="150" field="limitCredit" headerText="Limite crédit" [allowFiltering]="true" type="number" format="N2" [allowSorting]="true"></e-column>
+                      <e-column [width]="150" field="paymentDeadline" headerText="Echéance/jrs" [allowFiltering]="true" [allowSorting]="true" type="number" ></e-column>
+                      <e-column [width]="150" field="monthlyObjective" headerText="Obj mensuel" [allowFiltering]="true" type="number" format="N2" [allowSorting]="true"></e-column>
+                      <e-column [width]="180" field="paymentMode" headerText="Type de paiement">
+                        <ng-template #filterTemplate let-data>
+                          <ejs-dropdownlist id='paymentMode' [(ngModel)]="data.Name" [enabled]="data.column.allowFiltering" showClearButton="true"
+                          ngDefaultControl (change)=onChange($event) [dataSource]='paymentMode' [fields]='fields' [popupHeight]='height' >
+                          </ejs-dropdownlist>
+                        </ng-template>
+                        <ng-template #template let-data>
+                          <span
+                            *ngIf="data.paymentMode ==0"
+                            >Chèque</span
+                          >
+                          <span
+                            *ngIf="data.paymentMode ==1"
+                            >Transfert</span
+                          >
+                          <span
+                          *ngIf="data.paymentMode ==2"
+                          >Carte de crédit</span
+                        >
+                        <span
+                        *ngIf="data.paymentMode ==3"
+                        >Virement/Versement</span
+                      >
+                      <span
+                      *ngIf="data.paymentMode ==4"
+                      >Traite</span>
+                      <span
+                      *ngIf="data.paymentMode ==5"
+                      >Espèce</span>
+                        </ng-template>
+                      </e-column>
+                      <e-column [width]="150" field="customerState" headerText="Statut" [allowSorting]="true">
+                        <ng-template #filterTemplate let-data>
+                        <ejs-dropdownlist id='customerState' [(ngModel)]="data.Name" [enabled]="data.column.allowFiltering" showClearButton="true"
+                        ngDefaultControl (change)=onChange($event) [dataSource]='customerState' [fields]='fields' [popupHeight]='height' >
+                        </ejs-dropdownlist>
+                      </ng-template>
+                      <ng-template #template let-data>
+                        <span
+                        class="label bg-green shadow-style"
+                          *ngIf="data.customerState ==0"
+                          >Actif</span
+                        >
+                        <span class="label bg-red shadow-style"
+                          *ngIf="data.customerState ==1"
+                          >Bloqué</span
+                        >
+                      </ng-template>
+                      </e-column>
+                      <e-column [width]="120" headerText="Actions">
+                        <ng-template  #template let-data>
+                            <button  class="button-action" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Click to see more actions">
+                                <i class="material-icons">more_vert</i>
+                              </button>
+                              <mat-menu #menu="matMenu" class="box-sizing: border-box;">
+
+                                <button mat-menu-item (click)="edit(data)">
+                                  <mat-icon aria-label="Edit">create</mat-icon> Modifier
+                                </button>
+                                <button  mat-menu-item (click)="view(data)">
+                                  <mat-icon aria-label=" Fiche Client">check</mat-icon> Fiche Client
+                                </button>
+                                <button *ngIf="data.organizationStatus==1" mat-menu-item (click)="switchState(data)">
+                                    <mat-icon aria-label="Enable">check</mat-icon> Activer
+                                  </button>
+                                  <button *ngIf="data.organizationStatus==0" mat-menu-item (click)="switchState(data)">
+                                    <mat-icon aria-label="Disable">clear</mat-icon> Désactiver
+                                  </button>
+                              </mat-menu>
+                        </ng-template>
+                      </e-column>
+                    </e-columns>
+                  </ejs-grid>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+

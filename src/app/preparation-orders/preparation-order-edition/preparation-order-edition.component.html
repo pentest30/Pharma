@@ -1,0 +1,118 @@
+<table  class="table table-bordered" *ngIf="op && currentZone" (window:resize)="onResize($event)">
+  <tr>
+    <td rowspan="2" style="font-size: 50px;font-weight: 600;text-align: center;vertical-align: middle;"><span >{{ currentZone ? currentZone.name : op.zoneGroupName }}</span></td>
+    <td>Client: <strong>{{ op.customerName }}</strong></td>
+    <td>Cmd N° :  <strong>{{op.orderIdentifier}}</strong></td>
+  </tr>
+  <tr>
+    <td>Secteur : <strong>{{ op.sectorName }}</strong></td>
+    <td>Date : <strong>{{ op.createdDateTime |  date:'medium' }}</strong></td>
+  </tr>
+  <tr> 
+    <td> Nombre de colis<span *ngIf="this.currentZone?.zoneType != 10"> ambiants</span><span *ngIf="this.currentZone?.zoneType == 10"> frigos</span> : <span style="font-size: 25px;font-weight: 300;">{{ op.packingPickingZoneControl }}</span></td>  
+    <td>
+      Préparateur : <span style="font-size: 15px;font-weight: 100;">{{ op.preparationOrderExecuters|join:',':'executedByName' }} </span>
+
+    </td>
+  </tr>
+</table>
+<div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="error">
+  <strong *ngIf="error">Oooops! </strong>{{errorMessage}}
+
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<ejs-grid 
+  id="grid"
+  class="bodyGrid2" 
+  height='100%'
+  #grid 
+  (load)='load($event)'
+  [gridLines]='gridLines'
+  (toolbarClick)='clickHandler($event)'
+  showColumnMenu="true"
+  (dataBound)="dataBound($event)"
+  (commandClick)='commandClick($event)' 
+  [editSettings]='editOptions' 
+  [allowSelection]='true' 
+  [allowSorting]='true'
+  [allowFiltering]='true' 
+  [dataSource]="items"
+  [filterSettings]="filterSettings"
+  
+  (keyPressed)="keyPressed($event)"
+  (rowSelected)="rowSelected($event)"
+   
+  [toolbar]='toolbarItems' >
+  <e-columns >
+    <e-column  [width]='40' field='id'  headerText='N°' 
+    isPrimaryKey='true' textAlign='Left'>
+    <ng-template #template let-data >
+      {{ getIndexRow(data.index)}} 
+    </ng-template>
+  </e-column>
+      <e-column field='isControlled' headerText='Contrôle'
+      isPrimaryKey='true' textAlign='Left'
+        [width]='100' >
+        <ng-template #template let-data>
+          <span *ngIf="data.isControlled && (data.controlError==null||data.controlError=='')" 
+          class="label bg-green shadow-style" 
+          style="margin-right: 5px">Contrôlé</span>
+
+          <span *ngIf="data.controlError!=null &&data.controlError!=''"
+          class="label bg-red shadow-style" 
+          style="margin-right: 5px">
+            {{data.controlError}}</span>
+          </ng-template>
+      </e-column>
+
+      <e-column field='status' width='120' headerText='Status' isPrimaryKey='true' textAlign='Left'>
+        <ng-template #template let-data>
+          <span *ngIf="data.status == 10" class="label bg-green shadow-style" style="margin-right: 5px">Valide</span>
+          <span *ngIf="data.status == 20" class="label bg-red shadow-style" style="margin-right: 5px">Barré</span>
+          <span *ngIf="data.status == 30" class="label l-bg-purple shadow-style" style="margin-right: 5px">Nouvelle</span>
+          <span *ngIf="data.status == 40" class="label bg-green shadow-style" style="margin-right: 5px">Modifié</span>
+          <span *ngIf="data.status == 100" class="label bg-light-blue shadow-style" style="margin-right: 5px">Controllé</span>
+        </ng-template>
+      </e-column>
+      <e-column field='productCode' width='150' headerText='Code'   isPrimaryKey='true' textAlign='Left'></e-column>
+      <e-column  field='productName'  isPrimaryKey='true'  width='350' headerText='Nom' [customAttributes]='customAttributes'> 
+        <ng-template #template let-data>
+          <ejs-dropdownlist   *ngIf="data.status == 90" #samples id="productList" [dataSource]='filledProduct' (change)='onProductSelection($event)' [text]="data.productName" [fields]='fields' [value]='fullName' (created)="onCreateDropDowProduct($event)"></ejs-dropdownlist> 
+          <span  *ngIf="data.status != 90">{{data.productName}}</span>
+        </ng-template>
+      </e-column>
+      <e-column  field='internalBatchNumber' width='200' headerText='Lot'
+      editType="dropdownedit" >
+    <!-- [edit]="batchesParams"> -->
+        <ng-template #template let-data>
+          <ejs-dropdownlist *ngIf="data.status == 90" 
+          id='internalBatchNumber' #dropDownBatch [dataSource]='batchs' 
+          (change)='onBatchSelection($event)' 
+          [text]="data.internalBatchNumber"
+           [fields]='fieldsBatch' 
+          [value]='internalBatchNumber'></ejs-dropdownlist> 
+
+          <span  *ngIf="data.status != 90">{{data.internalBatchNumber}}</span>
+        </ng-template>
+      </e-column>
+      <e-column field='expiryDate'  isPrimaryKey='true' [width]='120' 
+      isPrimaryKey='true' format="dd/MM/yyyy" type="date" headerText='DDP'>
+    </e-column>
+      <e-column  field='quantity'  [validationRules]='quantityRules' 
+       editType= 'numericedit' headerText='Qnt' width='120'>
+        <ng-template #template let-data>
+          <input *ngIf="data.status == 90"  (change)='onChange($event)'  (keydown.enter)="onQuantityChange($event)"  class="e-input" min="1" type="number" />
+          <span  *ngIf="data.status != 90" >{{data.quantity}}</span>
+        </ng-template>
+      </e-column>
+      <e-column  field='packingQuantity'  width='150' headerText='Nbr Colis'  isPrimaryKey='true'  ></e-column>
+      <e-column  field='packing' width='120'  headerText='Colisage'  isPrimaryKey='true'  ></e-column>
+      <e-column field='ppaHT' width='150' headerText='PPA'    isPrimaryKey='true' textAlign='Left'></e-column>
+      <e-column field='discount' width='120' headerText='Remise'  isPrimaryKey='true' textAlign='Left' editType= 'numericedit'></e-column>
+
+
+  </e-columns>
+</ejs-grid>
+

@@ -1,0 +1,41 @@
+<div>
+    <h4 mat-dialog-title>Nouvelle classe</h4>
+    <div>
+        <form class="form-form m-5" [formGroup]="form">
+            <input type="hidden" formControlName="id">
+            <div class="row">
+                <mat-form-field class="col-md-6">
+                    <mat-label>Nom </mat-label>
+                    <input matInput formControlName="name" style="text-transform:uppercase" required>
+
+                    <mat-error *ngIf="form.get('name').hasError('required')">
+                        name is required
+                    </mat-error>
+                </mat-form-field>
+                <mat-slide-toggle class="col-md-6" formControlName="isMedicamentClass" >Classe médicament</mat-slide-toggle>
+            </div>
+            <div>
+                <mat-form-field >
+                    <mat-label>Description </mat-label>
+                    <textarea rows="5" matInput formControlName="description"></textarea>
+
+                </mat-form-field>
+            </div>
+            <div>
+                <ng-select [dropdownPosition]="'top'"  style="display: inline-block;"  class="mat-form-field-infix ng-tns-c110-56" placeholder="Classe mère" formControlName="parentProductClassId">
+                    <ng-option *ngFor="let car of productClasses" [value]="car.id">{{car.name}}</ng-option>
+
+                </ng-select>
+
+            </div>
+
+
+            <div class="mt-5 text-left">
+                <button mat-raised-button  color="primary" style="margin-right:2px;"
+                    (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

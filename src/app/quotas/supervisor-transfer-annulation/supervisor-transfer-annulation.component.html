@@ -1,0 +1,16 @@
+<section >
+    <div  >
+        <h3 mat-dialog-title>Annuler les réafféctations des clients</h3>
+        <hr>
+<ng-select [multiple]='true'  [dropdownPosition]="'bottom'" (change)="onSelectSalesPerson($event)"  style="display: inline-block;width: 450px;"  class="mat-form-field-infix ng-tns-c110-56"  placeholder="Commercial(e)"  [(ngModel)]="salespersonsSource">
+    <ng-option *ngFor="let car of salespersons" [value]="car.id">{{car.userName}}</ng-option>
+
+</ng-select>
+<div class="mt-5 text-left">
+    <button mat-raised-button  [disabled]="!canSave"  class="personlized-button" style="margin-right:2px;"
+        (click)="save()">Enregistrer </button>
+    <button style="margin-left:2px;" mat-raised-button color="default" class="personlized-button-blue" (click)="close()">Fermer
+    </button>
+</div>
+    </div>
+</section>

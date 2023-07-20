@@ -1,0 +1,40 @@
+
+<div>
+    <h6 mat-dialog-title>Téléphone / Fax</h6>
+    <div>
+        <form class="form-form m-5" [formGroup]="form">
+            <input type="hidden" formControlName="id">
+            <div>
+                <ng-select   style="display: inline-block;"   class="mat-form-field-infix ng-tns-c110-56" placeholder="Code pays" formControlName="countryCode">
+                    <ng-option *ngFor="let brand of countryCodes" [value]="brand.dial_code"> {{brand.name}} {{brand.dial_code}}</ng-option>
+                   
+                </ng-select>
+              
+            </div>
+            <div>
+                <mat-form-field >
+                    <mat-label>Numéro </mat-label>
+                    <input matInput formControlName="number"  required>
+  
+                    <mat-error *ngIf="form.get('number').hasError('required')">
+                        number is required
+                    </mat-error>
+                    <mat-error *ngIf="form.get('number').hasError('pattern')">Invalid phone number.</mat-error>
+                </mat-form-field>
+            </div>
+            
+            <div>
+              <mat-slide-toggle formControlName="isFax" >Fax</mat-slide-toggle>
+              <!-- <mat-checkbox formControlName="isMedicamentClass">Classe médicament</mat-checkbox> -->
+          </div>
+          <br>
+          <br>
+            <div class="text-left">
+                <button mat-raised-button  color="primary" style="margin-right:2px;" 
+                    (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                </button>
+            </div>
+        </form>
+    </div>
+  </div>

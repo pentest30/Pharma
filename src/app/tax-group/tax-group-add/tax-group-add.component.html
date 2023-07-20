@@ -1,0 +1,62 @@
+<div>
+    <h4 mat-dialog-title>{{title}}</h4>
+    <div>
+        <form class="form-form m-5" [formGroup]="form">
+            <input type="hidden" formControlName="id">
+            <div>
+                <mat-form-field >
+                    <mat-label>Nom </mat-label>
+                    <input matInput formControlName="name" style="text-transform:uppercase" required>
+
+                    <mat-error *ngIf="form.get('name').hasError('required')">
+                        name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field >
+                    <mat-label>Code </mat-label>
+                    <input matInput formControlName="code" required>
+                    <mat-error *ngIf="form.get('code').hasError('required')">
+                        code is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field >
+                    <mat-label>Valeur </mat-label>
+                    <input matInput type="number" formControlName="taxValue" required>
+                    <mat-error *ngIf="form.get('taxValue').hasError('required')">
+                        Tax value is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field >
+                    <mat-label>Date de début </mat-label>
+                    <input matInput [matDatepicker]="picker" (focus)="picker.open()"  formControlName="validFrom" required>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="form.get('validFrom').hasError('required')">
+                        date de début is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field >
+                    <mat-label>Date de fin </mat-label>
+                    <input matInput  [matDatepicker]="picker1" (focus)="picker1.open()" formControlName="validTo" >
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+           
+            <br>
+
+            <div class="text-left">
+                <button mat-raised-button  color="primary" style="margin-right:2px;" 
+                    (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

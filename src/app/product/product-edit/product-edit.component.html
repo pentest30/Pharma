@@ -1,0 +1,374 @@
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul class="breadcrumb breadcrumb-style ">
+                        <li class="breadcrumb-item">
+                            <h4 class="page-title">Produits</h4>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-1">
+                            <a routerLink="/dashboard/main">
+                                <i class="fas fa-home"></i> Géstion des produits</a>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-2">
+                            <a routerLink="/product/product-list" >Produits</a>
+                        </li>
+                        <li class="breadcrumb-item active">Modifier</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+       <div class="spinner-container" *ngIf="isLoading">
+        <mat-progress-spinner
+        class = "tp-margin"
+        [color] = "color"
+        [mode] = "mode"
+        [value] = "value">
+     </mat-progress-spinner>
+       </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card ">
+                    <div class="header">
+                        <h2>Modifier {{fullName}}</h2>
+
+                    </div>
+                    <div class="body">
+                        <form class="register-form " [formGroup]="form">
+
+                        <mat-accordion *ngIf="perm.canUpdateDraft|| perm.canUpdate ">
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Information générale
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                     
+                                <div>
+                                    <div *ngIf="product && product.images" style="float: right;"><img width="150px" [src]="'data:image/png;base64,' + product.images[0]" class="img-responsive" /> </div>
+                                    <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 mb-2">
+                                        <ng-select    style="display: inline-block;width:350px" (change)="onSelectProductClass($event)" class="mat-form-field-infix ng-tns-c110-56" placeholder="Classe" formControlName="productClassId">
+                                            <ng-option *ngFor="let brand of productClasses" [value]="brand.id">{{brand.name}}</ng-option>
+                                           
+                                        </ng-select>
+                                     
+                                        <button mat-button (click)="addClass()" color="primary">
+                                            <mat-icon>add</mat-icon>
+                                        </button>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Désignation</mat-label>
+                                            <input matInput formControlName="fullName" [(value)]="fullName">
+                                            <mat-error *ngIf="form.get('fullName').hasError('required')">
+                                                name is required
+                                             </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                 
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field style="margin-right:2px;">
+                                        <mat-label>Code</mat-label>
+                                        <input matInput formControlName="code" [(value)]="code">
+                                        <mat-error *ngIf="form.get('code').hasError('required')">
+                                            code is required
+                                         </mat-error>
+                                    </mat-form-field>
+                                    <ng-select    style="display: inline-block;width:350px"  class="mat-form-field-infix ng-tns-c110-56" placeholder="Fabriquant" formControlName="manufacturerId">
+                                        <ng-option *ngFor="let brand of manufacturers" [value]="brand.id">{{brand.name}}</ng-option>
+                                       
+                                    </ng-select>
+                                    <button
+                                    style="display: inline-block;"
+                                    mat-button
+                                    (click)="addManufacturer()"
+                                    class="small"
+                                    color="primary"
+                                  >
+                                    <mat-icon>add</mat-icon>
+                                  </button> 
+                                    <mat-form-field style="margin-right:2px;">
+                                        <mat-label>Colisage</mat-label>
+                                        <input formControlName="packaging" [(value)]="packaging" matInput type="number">
+                                        <mat-error *ngIf="form.get('packaging').hasError('required')">
+                                            Colisage is required
+                                         </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <br>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-label>TVA: </mat-label>
+
+                                    <mat-radio-group aria-label="Select an option" [(value)]="taxGroupId" formControlName="taxGroupId">
+                                        <mat-radio-button *ngFor="let item of taxGroups" [value]="item.id">{{item.name}}
+                                        </mat-radio-button>
+                                       
+                                    </mat-radio-group>
+                                  
+
+                                </div>
+                            </mat-expansion-panel>
+
+                            <mat-expansion-panel *ngIf="perm.canUpdate">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Classification du produit
+                                    </mat-panel-title>
+
+                                </mat-expansion-panel-header>
+
+                                <div>
+                                    
+                                    <ng-select    style="display: inline-block;width:350px"  class="mat-form-field-infix ng-tns-c110-56" placeholder="Marque" formControlName="brandId">
+                                        <ng-option *ngFor="let brand of brands" [value]="brand.id">{{brand.name}}</ng-option>
+                                       
+                                    </ng-select>
+                                    <button
+                                    style="display: inline-block;"
+                                    mat-button
+                                    (click)="addBrand()"
+                                    class="small"
+                                    color="primary"
+                                  >
+                                    <mat-icon>add</mat-icon>
+                                  </button> 
+                                    <mat-form-field style="margin-right:2px;">
+                                        <mat-label>DE</mat-label>
+                                        <input formControlName="registrationNumber" [(value)]="registrationNumber" placeholder="" matInput >
+                                       
+                                    </mat-form-field>
+                                    <mat-form-field *ngIf="isDrug" style="margin-right:2px;">
+                                        <mat-label>CNAS</mat-label>
+                                        <input  formControlName="externalCode" placeholder="" matInput >
+                                       
+                                    </mat-form-field>
+                                </div>
+                                <div>
+                                    <ng-select   (change)="onSelectDciCode($event)" style="display: inline-block;width:350px"  class="mat-form-field-infix ng-tns-c110-56" placeholder="Code DCI" formControlName="innCodeId">
+                                        <ng-option *ngFor="let car of dciCodes" [value]="car.id">{{car.name}}</ng-option>
+                                       
+                                    </ng-select>
+                                    <button
+                                    style="display: inline-block;"
+                                    mat-button
+                                    (click)="addCodeDci()"
+                                    class="small"
+                                    color="primary"
+                                  >
+                                    <mat-icon>add</mat-icon>
+                                  </button> 
+                                    <mat-form-field>
+                                        <mat-label>DCI</mat-label>
+                                        <input [(value)]="dciConcat" matInput>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="isDrug">
+                                    <ng-select  style="display: inline-block;width:350px"  class="mat-form-field-infix ng-tns-c110-56" placeholder="Forme" formControlName="formId">
+                                        <ng-option *ngFor="let car of forms" [value]="car.id">{{car.name}}</ng-option>
+                                       
+                                    </ng-select>
+                                    <button
+                                    style="display: inline-block;"
+                                    mat-button
+                                    (click)="addForm()"
+                                    class="small"
+                                    color="primary"
+                                  >
+                                    <mat-icon>add</mat-icon>
+                                  </button> 
+                                    <mat-form-field>
+                                        <mat-label>Dosage</mat-label>
+                                        <input [(value)]="dosageConcat"  matInput>
+                                    </mat-form-field>
+
+                                </div>
+                                <div *ngIf="isDrug">
+                                    <span class="parent">
+                                        <ng-select  style="display: inline-block;width:350px" [appendTo]="'body'" class="mat-form-field-infix ng-tns-c110-56" placeholder="Packaging" formControlName="packagingId">
+                                          <ng-option *ngFor="let car of packagings" [value]="car.id">{{car.name}}</ng-option>
+                                         
+                                      </ng-select>
+                                      <button
+                                      style="display: inline-block;"
+                                      mat-button
+                                      (click)="addPackaging()"
+                                      class="small"
+                                      color="primary"
+                                    >
+                                      <mat-icon>add</mat-icon>
+                                    </button> 
+                                      </span>
+                                    <mat-form-field>
+                                        <mat-label>Contenu</mat-label>
+                                        <input formControlName="packagingContent"  [(value)]="packagingContent" matInput>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-label>Unité de mesure</mat-label>
+                                        <input formControlName="packagingContentUnit" [(value)]="packagingContentUnit" matInput>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="isDrug">
+                                    <ng-select  style="display: inline-block;width:350px" [appendTo]="'body'" class="mat-form-field-infix ng-tns-c110-56" placeholder="Classe thérapeutique" formControlName="therapeuticClassId">
+                                        <ng-option *ngFor="let car of therapeuticCalsses" [value]="car.id">{{car.name}}</ng-option>
+                                       
+                                    </ng-select>
+                                    <button
+                                    style="display: inline-block;"
+                                    mat-button
+                                    (click)="addtherapeuticCalsse()"
+                                    class="small"
+                                    color="primary"
+                                  >
+                                    <mat-icon>add</mat-icon>
+                                  </button> 
+                                  <ng-select
+                                  placeholder="Classe pharmacologique"
+                                  [items]="pharmacologicalClasses"
+                                  bindValue="id"
+                                  bindLabel="name"
+                                   formControlName="pharmacologicalClassId"
+                                   style="display: inline-block;width: 550px;" 
+                                   [appendTo]="'body'"
+                                 >
+                                 
+                                 </ng-select>
+                                    <button mat-button (click)="addPharmacologicalClasses()" class="small" color="primary">
+                                        <mat-icon>add</mat-icon>
+                                    </button>
+                                </div>
+                            </mat-expansion-panel>
+
+                            <mat-expansion-panel *ngIf="perm.canUpdate">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Attribues
+                                    </mat-panel-title>
+
+                                </mat-expansion-panel-header>
+
+                               <div>
+                                <mat-slide-toggle formControlName="psychotropic"  *ngIf="isDrug" style="margin-left:5px;">Psychotropique</mat-slide-toggle>
+                                <mat-slide-toggle formControlName="thermolabile"   *ngIf="isDrug" style="margin-left:5px;">Thermolabile</mat-slide-toggle>
+                                <mat-slide-toggle formControlName="imported"  style="margin-left:5px;">Importé</mat-slide-toggle>
+                                <mat-slide-toggle formControlName="removed" style="margin-left:5px;">Supprimé</mat-slide-toggle>
+                               </div>
+                               <br>
+                               <div>
+                                <mat-slide-toggle formControlName="forHospital"  style="margin-left:5px;">Pour hopital</mat-slide-toggle>
+                                <mat-slide-toggle formControlName="refundable"   *ngIf="isDrug" style="margin-left:5px;">Remboursable</mat-slide-toggle>
+                                <mat-slide-toggle formControlName="princeps"  style="margin-left:5px;">Princeps</mat-slide-toggle>
+                                <mat-slide-toggle
+                                formControlName="hasQuota"
+                                style="margin-left: 5px"
+                                >Quota</mat-slide-toggle
+                              >
+                               </div>
+                               <br>
+                               <div>
+                                <mat-form-field style="margin-left:2px;">
+                                    <mat-label>Hauteur </mat-label>
+                                    <input type="number" [(value)]="height" formControlName="height" matInput>
+                                </mat-form-field>
+                                <mat-form-field style="margin-left:2px;">
+                                    <mat-label>Longueure</mat-label>
+                                    <input type="number" [(value)]="width" formControlName="width" matInput>
+                                </mat-form-field>
+                                <mat-form-field style="margin-left:2px;">
+                                    <mat-label>Volume</mat-label>
+                                    <input type="number" [(value)]="length" formControlName="length" matInput>
+                                </mat-form-field>
+                               </div>
+                               <br>
+                               <div>
+                                <ng-select  dropdownPosition ="top" style="display: inline-block;width:350px"  class="auto-grow mat-form-field-infix ng-tns-c110-56" placeholder="Zone de préparation" formControlName="pickingZoneId">
+                                    <ng-option *ngFor="let car of pickingZones" [value]="car.id">{{car.name}}</ng-option>
+                                   
+                                </ng-select>
+                                <button mat-button (click)="addPikingZone()" class="small" color="primary">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                                <mat-form-field>
+                                    <mat-label>Emplacement</mat-label>
+                                    <input matInput formControlName="defaultLocation" [(value)]="defaultLocation">
+                                </mat-form-field>
+                               </div>
+                            </mat-expansion-panel>
+                            <mat-expansion-panel *ngIf="perm.canUpdate">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Tarification
+                                    </mat-panel-title>
+
+                                </mat-expansion-panel-header>
+
+                                
+                                <div>
+                                    <mat-form-field style="margin-right:2px;">
+                                        <mat-label>Prix d'achat</mat-label>
+                                        <input formControlName="purchasePrice"  [(value)]="purchasePrice" matInput type="number">
+                                    </mat-form-field>
+                                    <mat-form-field style="margin-right:2px;">
+                                        <mat-label>Prix de vente</mat-label>
+                                        <input formControlName="salePrice" [(value)]="salePrice" matInput type="number">
+                                    </mat-form-field>
+                                </div>
+                                <br>
+                                <br>
+                                <div>
+                                    <mat-form-field style="margin-right:2px;">
+                                        <mat-label>Prix de référence</mat-label>
+                                        <input formControlName="referencePrice" [(value)]="referencePrice" matInput type="number">
+                                    </mat-form-field>
+                                    <mat-form-field style="margin-right:2px;">
+                                        <mat-label>PPA sans SHP</mat-label>
+                                        <input formControlName="publicPrice" [(value)]="publicPrice" matInput type="number">
+                                    </mat-form-field>
+                                    <ng-select  *ngIf="isDrug" dropdownPosition ="top" style="display: inline-block;width:350px" (change)="onSelectList($event)" class="auto-grow mat-form-field-infix ng-tns-c110-56" placeholder="Listes" formControlName="listId">
+                                        <ng-option *ngFor="let car of lists" [value]="car.id">{{car.name}}</ng-option>
+                                       
+                                    </ng-select>
+                                    <button *ngIf="isDrug" mat-button (click)="addList()" class="small" color="primary">
+                                        <mat-icon>add</mat-icon>
+                                    </button>
+                                    <mat-form-field *ngIf="isDrug">
+                                        <mat-label>SHP</mat-label>
+                                        <input formControlName="shp"  [(value)]="shp" matInput type="number">
+                                    </mat-form-field>
+                                </div>
+                            </mat-expansion-panel>
+                           
+                        </mat-accordion>
+                        <br>
+                        <br>
+                        <div class="text-right">
+                        
+                            <button  class="mat-focus-indicator personlized-button mat-raised-button mat-button-base" style="margin-right:2px;"
+                                (click)="save()">Enregistrer </button>
+                            <a style="margin-left:2px;"  class="mat-focus-indicator personlized-button mat-raised-button mat-button-base" routerLink="/product/product-list">Fermer
+                            </a>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .mat-icon-button.small {
+
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+    }
+
+    .mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+    }
+</style>

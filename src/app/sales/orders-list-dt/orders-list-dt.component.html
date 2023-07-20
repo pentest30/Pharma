@@ -1,0 +1,88 @@
+
+ <div class="row clearfix" [hidden]="!isDt">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+        <button  mat-raised-button class="personlized-button" style="margin: 10px;"  (click)='refresh()' #btnRef><mat-icon>refresh</mat-icon>Rafraîchir </button>
+          <br>  
+        <div class="card" style="margin-bottom: 0px!important; border-radius: 0px;">
+            
+            <div class="body table-responsive" style="padding-bottom: 0px;">
+              
+                <ejs-grid
+                #grid
+                isResPonsive="true" 
+                [filterSettings]='filterSettings'
+                (commandClick)='ListingCommandClick($event)' 
+                showColumnMenu="true"
+                [allowSelection]="false"
+                [filterSettings]='filterOptions' 
+                [gridLines]="gridLines"
+                [dataSource]="data"
+                
+                [allowPaging]="true"
+                [allowFiltering]="true"
+                [allowSorting]="true"
+                (dataBound)="dataBound($event)"
+                (actionBegin)='begin($event)'
+                [pageSettings]='pageSettings'
+                
+              >
+                <e-columns>
+                  <e-column headerText='#' [width]="150" [commands]='commandListing'></e-column>
+                  <e-column [width]="180" field="orderNumberSequence" headerText="N°">
+                    <ng-template #template let-data>{{data.orderNumber}}</ng-template>
+                  </e-column>
+                  <e-column [width]="180"  headerText="Code AX" field="codeAx"></e-column>
+                  <e-column [width]="180"  headerText="Réf Document" field="refDocument"></e-column> 
+                 
+                  <e-column [width]="120" field="orderDate" format="dd/MM/yyyy" type="date" headerText="Date"></e-column>
+                  <e-column [width]="350" field="customerName" headerText="Client"></e-column>
+                  <e-column [width]="200" field="orderStatus" headerText="Etat" >
+                    <ng-template #filterTemplate let-data>
+                      <ejs-dropdownlist id='orderStatus' [(ngModel)]="data.Name" [enabled]="data.column.allowFiltering" showClearButton="true"
+                        (change)=onChange($event) [dataSource]='dropStates' [fields]='fields'[popupHeight]='height' >
+                      </ejs-dropdownlist>
+                    </ng-template>
+                    <ng-template #template let-data>
+                      <span *ngIf="data.orderStatus == 10" class="label l-bg-green shadow-style" style="margin-right: 5px">En attente </span>
+                      <span *ngIf="data.orderStatus == 20" class="label bg-red shadow-style" style="margin-right: 5px">Enregistrée</span>
+                      <span *ngIf="data.orderStatus == 30" class="label  l-bg-green shadow-style" style="margin-right: 5px">Acceptée</span>
+                      <span *ngIf="data.orderStatus == 40" class="label l-bg-purple shadow-style" style="margin-right: 5px">En cours de traitement</span>
+                      <span *ngIf="data.orderStatus == 50" class="label l-bg-purple shadow-style" style="margin-right: 5px">Expédiée</span>
+                      <span *ngIf="data.orderStatus == 60" class="label  l-bg-green shadow-style" style="margin-right: 5px">Terminée</span>
+                      <span *ngIf="data.orderStatus == 70" class="label  bg-red shadow-style" style="margin-right: 5px">Annulée</span>
+                      <span *ngIf="data.orderStatus == 80" class="label  bg-red shadow-style" style="margin-right: 5px">Rejetée</span>
+                      <span *ngIf="data.orderStatus == 90" class="label l-bg-purple shadow-style" style="margin-right: 5px">{{data.status}}</span>
+                      <span *ngIf="data.orderStatus == 100" class="label l-bg-purple shadow-style" style="margin-right: 5px">Consolidée</span>
+                      <span *ngIf="data.orderStatus == 110" class="label l-bg-purple shadow-style" style="margin-right: 5px">{{data.status}}</span>
+                      <span *ngIf="data.orderStatus == 120" class="label l-bg-purple shadow-style" style="margin-right: 5px">{{data.status}}</span>
+                      <span *ngIf="data.orderStatus == 130" class="label l-bg-purple shadow-style" style="margin-right: 5px">{{data.status}}</span>
+                      <span *ngIf="data.orderStatus == 140" class="label l-bg-purple shadow-style" style="margin-right: 5px">{{data.status}}</span>
+                      <span *ngIf="data.orderStatus == 150" class="label l-bg-purple shadow-style" style="margin-right: 5px">{{data.status}}</span>
+                      <span *ngIf="data.orderStatus == 160" class="label l-bg-purple shadow-style" style="margin-right: 5px">{{data.status}}</span>
+                      <span *ngIf="data.orderStatus == 170" class="label l-bg-purple shadow-style" style="margin-right: 5px">{{data.status}}</span>
+                      <span *ngIf="data.orderStatus == 180" class="label bg-red shadow-style" style="margin-right: 5px">{{data.status}}</span>
+                      <span *ngIf="data.orderStatus == 190" class="label l-bg-green shadow-style" style="margin-right: 5px">{{data.status}}</span>
+                      <span *ngIf="data.orderStatus == 200" class="label bg-red shadow-style" style="margin-right: 5px">{{data.status}}</span>
+                      <span *ngIf="data.orderStatus == 210" class="label bg-red shadow-style" style="margin-right: 5px">{{data.status}}</span>
+                    </ng-template>
+                  </e-column>
+                                         
+                  <e-column [width]="200" field="totalBrut" format="N2" headerText="Total sans.R" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" textAlign='Right' ></e-column>
+                  <e-column [width]="200" field="totalDiscountHT" format="N2" headerText="Total remises" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" textAlign="Right"></e-column>
+                  <e-column [width]="150" field="orderDiscount" format="N2" headerText="Total HT" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" textAlign="Right"></e-column>
+          
+                  <e-column [width]="150" field="orderTotal" format="N2" headerText="Total TTC" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" textAlign="Right"></e-column>
+                  <e-column [width]="150" field="createdBy" headerText="Créée par" ></e-column>
+                  <e-column [width]="180" field="createdDateTime" headerText="Date de création" format="dd/MM/yyyy"type="date"></e-column>
+                 
+          
+                </e-columns>
+              </ejs-grid>
+              
+            </div>
+           
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,28 @@
+<div style="width: 750px; height: 300px;">
+    <mat-form-field style="margin-left: 2px">
+        <mat-label>Code Produit</mat-label>
+        <input disabled type="text" matInput autocomplete="off" [(ngModel)]="productCode" />
+      </mat-form-field>
+      <br>
+      <mat-form-field style="width: 750px;margin-left: 2px">
+        <mat-label>Produit</mat-label>
+        <input disabled type="text" matInput autocomplete="off" [(ngModel)]="productName" />
+      </mat-form-field>
+      <br>
+    <mat-form-field style="margin-left: 2px">
+        <mat-label>Qantité demandée</mat-label>
+        <input  type="number" matInput autocomplete="off" [(ngModel)]="qntQuota" />
+      </mat-form-field>
+      <br>
+      <mat-form-field style="margin-left: 2px">
+        <mat-label>Qantité disponible</mat-label>
+        <input disabled   type="number" matInput autocomplete="off" [(ngModel)]="availableQnt" />
+      </mat-form-field>
+      <div class="text-right">
+ 
+       
+        <button   style="margin-left:2px;" (click)="save()" mat-raised-button class="personlized-button-blue" >Enregistrer
+        </button>
+        </div>
+        <br>
+</div>

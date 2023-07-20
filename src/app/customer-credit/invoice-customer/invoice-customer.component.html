@@ -1,0 +1,43 @@
+<span style="margin-bottom: 20px; display: block;">
+    <h4 class="page-title">Clients </h4> 
+    <p style="float: right;margin-top: -35px;">
+      <span class="label bg-green shadow-style" style='margin-right: 5px;'>F9: Filtrer</span>
+      <span class="label bg-green shadow-style" >Enter: Selectionner</span>
+      <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">Fermer (Echap)</button>
+    </p>
+  </span>
+<ejs-grid
+showColumnMenu="true"
+style="padding: 5px"
+(load)='load($event)'
+[filterSettings]='filterOptions' 
+(dataBound)="dataBound($event)"
+(recordDoubleClick)="Doubleclick($event)"
+#grid
+[dataSource]="data"
+[gridLines]="gridLines"
+[allowSelection]="true"
+[allowSorting]="true"
+[allowFiltering]='true' 
+[allowPaging]='true'
+(keyPressed)="keyPressed($event)"
+[selectionSettings]='selectionOptions'
+(actionComplete)='complete($event)'
+(actionBegin)=begin($event) 
+
+>
+    <e-columns>
+        <e-column [width]="180" field="sequenceNumber" headerText="N°Facture" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" type="string">
+            <ng-template #template let-data>{{data.invoiceNumber}}</ng-template>
+        </e-column>
+        <e-column [width]="200" field="customerName" headerText="Client"></e-column>
+        <e-column [width]="200" field="invoiceDate" format="dd/MM/yyyy" type="date" headerText="Date"></e-column>
+        <e-column [width]="180" field="totalTax" format="N2" headerText="Total tva" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+        <e-column [width]="180" field="totalTTC" format="N2" headerText="Total TTC" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+        <e-column [width]="180" field="createdBy" headerText="Créée par"></e-column>
+        <e-column [width]="180" field="createdDateTime"  headerText="Date de création" format="dd/MM/yyyy hh:mm" type="date"></e-column>
+        <e-column [width]="180" field="updatedBy" headerText="Modifiée par"></e-column>
+        <e-column [width]="180" field="updatedDateTime" headerText="Date de modification" format="dd/MM/yyyy hh:mm" type="date"></e-column>
+    </e-columns>
+</ejs-grid>
+  

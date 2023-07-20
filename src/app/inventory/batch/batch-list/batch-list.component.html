@@ -1,0 +1,66 @@
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul class="breadcrumb breadcrumb-style ">
+                        <li class="breadcrumb-item">
+                            <h4 class="page-title">Stocks</h4>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-1">
+                            <a routerLink="/dashboard/main">
+                                <i class="fas fa-home"></i>Liste des lots</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <div class="row">
+                           
+                        </div>                
+                    </div> 
+                    <div class="body table-responsive" style="padding-top: 0px;">
+                        <ejs-grid
+                            #grid
+                            style="margin-left: 10px; margin-right: 10px;"
+                            showColumnMenu="true"
+                            [gridLines]="gridLines"
+                            [dataSource]="data"
+                            [allowPaging]="true"
+                            (dataBound)="dataBound($event)"
+                            (commandClick)='ListingCommandClick($event)' 
+                            [allowGrouping] = "true"
+                            [allowFiltering]="true">
+                            <e-columns>
+                                <!-- <e-column field='id' headerText='Id' isPrimaryKey=true ></e-column>  -->
+                                <e-column field='productCode' headerText='Code' width='110' isPrimaryKey=true ></e-column> 
+                                <e-column field='productFullName' headerText='Désignation' width='250' isPrimaryKey=true ></e-column> 
+                                <e-column field='supplierName' headerText='Fournisseur' width='150' isPrimaryKey=true ></e-column> 
+                                <e-column field='internalBatchNumber' headerText='Lot Interne' width='150' isPrimaryKey=true ></e-column> 
+                                <e-column field='vendorBatchNumber' headerText='Lot Fournisseur' width='150' isPrimaryKey=true ></e-column> 
+                                <e-column field='expiryDateShort' headerText='DDP' isPrimaryKey=true width='150' type='string'></e-column>
+                                <e-column field='purchaseUnitPrice'    format="N2" headerText='P.U.A' width='150' isPrimaryKey=true></e-column> 
+                                <e-column field='purchaseDiscountRatio' headerText='Remise' width='150' isPrimaryKey=true ></e-column> 
+                                <e-column field='salesUnitPrice'    format="N2"width='150'  headerText='P.U.V' isPrimaryKey=true ></e-column> 
+                                <e-column field='pfs' headerText='SHP' width='150' isPrimaryKey=true ></e-column> 
+                                <e-column field='ppaHT' headerText='PPA' width='150' isPrimaryKey=true ></e-column> 
+                                <e-column field='packing' headerText='Colisage' width='150' isPrimaryKey=true ></e-column> 
+                                <e-column field='createdBy' headerText='Créé par' isPrimaryKey=true ></e-column> 
+                                <e-column format="dd/MM/yyyy hh:mm" type="date" field='createdDateTime' headerText='Date de Création ' isPrimaryKey=true ></e-column> 
+                            </e-columns>
+                        </ejs-grid>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+   
+</section>
+
+
+

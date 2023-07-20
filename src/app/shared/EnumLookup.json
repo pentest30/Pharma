@@ -1,0 +1,129 @@
+{
+    "orderType" : {
+        "Psychotrope":"1",
+        "Non Psychotrope":"0"
+    },
+    "productState" : {
+        "Brouillon":"0",
+        "Validé":"1",
+        "Désactivé":"2"
+    },
+    "psychotropic" : {
+        "Psychotrope":true,
+        "Non Psychotrope":false
+    },
+    "orderStatus": {
+        "En attente":"10",
+        "Enregistrée":"20",
+        "Acceptée/Confirmée":"30",
+        "En cours de traitement":"40",
+        "En route":"50",
+        "Terminée":"60",
+        "Annulée":"70",
+        "Rejetée":"80",
+        "En cours de préparation":"90",
+        "Consolidée":"100",
+        "En zone d'expédition":"110",
+        "Créée sur AX":"120",
+        "En cours de chargement" : "130",
+        "Facturée":"140",
+        "En cours de prélèvement":"150",
+        "Prélevée":"160",
+        "Accusé de réception":"170",
+        "Erreur de syncronisation" :"180",
+        "Expédiée" :"190",
+        "Annulée sur AX":"200",
+        "Partiellement créée sur AX": "210"
+
+       
+    },
+    "invoiceStatus":{
+        "Créé":"0",
+        "Enregistré":"1",
+        "En cours de traitement":"2",
+        "Cloturé":"3",
+        "Validé":"4"
+    }, 
+    "status":{
+        "Créé":"0",
+        "Enregistré":"1",
+        "En cours de traitement":"2",
+        "Cloturé":"3",
+        "Validé":"4"
+    },
+    "customerState":{
+        "Actif":"0",
+        "Bloqué":"1"
+    },
+    "zoneType": {
+        "Vendable": "6BD42E21-E657-4F99-AFEF-1AFE5CEACB16",
+        "Non vendable": "6AD42E21-E657-4F99-AFEF-1AFE5CEACB16"
+    },
+    "zoneId": {
+        "Zone Vendable": "7bd42e21-e657-4f99-afef-1afe5ceacb16",
+        "Zone non vendable": "7bd42e22-e657-4f99-afef-1afe5ceacb16",
+        "Zone Chez le fournisseur": "7BD42E23-E657-4F99-AFEF-1AFE5CEACB16"
+    },
+    "stockStateId": {
+        "Libéré": "7BD32E21-E657-4F99-AFEF-1AFE5CEACB16",
+        "Non libéré": "7BD52E22-E657-4F99-AFEF-1AFE5CEACB16",
+        "Abîmé": "7BD62E23-E657-4F99-AFEF-1AFE5CEACB16",
+        "Périmé": "7BD72E23-E657-4F99-AFEF-1AFE5CEACB16",
+        "Sans vignette": "7BD82E23-E657-4F99-AFEF-1AFE5CEACB16",
+        "Instance": "7BD92E23-E657-4F99-AFEF-1AFE5CEACB16",
+        "RAL": "7BD13E23-E657-4F99-AFEF-1AFE5CEACB16"
+    },
+    "transactionType": {
+        "Réception fournisseur": "10",
+        "Facture fournisseur": "20",
+        "Retour Fournisseur/ Client": "30",
+        "Réajustement inventaire": "40",
+        "Transfert inter-filiale": "50",
+        "Bon de livraison client": "60",
+        "Facture Client": "70",
+        "Incineration":"80",
+        "Transfert":"90"
+
+    },
+    "financialTransactionType" : {
+        "Facture Client": "10",
+        "Facture Achat": "20",
+        "Rembourssement": "30"
+    },
+    "preparationOrderStatus": {
+        "Consolidé": "30",
+        "Contrôlé": "20",
+        "Valid": "40",
+        "Préparé": "10",   
+        "En Zone d'expédition":"50",
+        "En préparation":"0",
+        "Commande annulée":"500"
+    },
+    "consolidated":{
+        "Consolidé":true,
+        "Non Consolidé":false
+    },
+    "quota":{
+      "Quota": true,
+      "Non Quota": false
+    },
+    "paymentMode":{
+      "Transfert":"1",
+      "Chèque": "0",
+      "Carte de crédit" : "2",
+      "Virement/Versement" : "3",
+      "Traite" : "4",
+      "Espèce" : "5"
+    },
+    "activity":{
+      "Répartiteur":"0",
+      "Officine":"1",
+      "Médecin":"2",
+      "Hôpital":"3"
+    },
+    "requestStatus":{
+        "Demande validée": "Validate",
+        "Demande en attente" : "Wait",
+        "Demande rejetée" : "Rejected"
+    }
+}

@@ -1,0 +1,122 @@
+<section class="content">
+    <div style="margin-top: -65px;" >
+        <h4 mat-dialog-title>Réafféctation des clients</h4>
+        <hr>
+           
+        <div class="form-form " >
+            <div>
+                <ng-select [dropdownPosition]="'bottom'" (change)="onSelectSalesPerson($event)"  style="display: inline-block;width: 450px;"  class="mat-form-field-infix ng-tns-c110-56"  placeholder="Commercial(e)"  [(ngModel)]="salespersonsSourceId">
+                    <ng-option *ngFor="let car of salespersons" [value]="car.id">{{car.userName}}</ng-option>
+
+                </ng-select>
+                <span style="margin-left: 15px;margin-top: -25px;display: inline-block!important;">
+                  <mat-slide-toggle
+                  [(ngModel)]="withLiberation"
+                (change)="toggle($event)"
+                color="primary"
+                
+                >Libérer les quantités distribuées
+          </mat-slide-toggle>
+                </span>
+            </div>
+           
+            <div>
+                <ng-select [dropdownPosition]="'bottom'"  (change)="onSelectSalesPersonDest($event)"   style="display: inline-block;width: 450px"  class="mat-form-field-infix ng-tns-c110-56" placeholder="Commercial(e) destination"  [(ngModel)]="salespersonsDestinationId">
+                    <ng-option *ngFor="let car of salespersons" [value]="car.id">{{car.userName}}</ng-option>
+
+                </ng-select>
+                
+              
+            </div>
+         
+            <div>
+                <ng-select 
+                [items]="customers"
+                bindLabel="name"
+                [multiple]='true' 
+                [dropdownPosition]="'bottom'" 
+                 (change)="onSelectCustomers($event)"  
+                 style="display: inline-block;width: 750px" 
+                 groupBy="selectedAllGroup"
+                 [selectableGroup]="true"
+                 [selectableGroupAsModel]="false" 
+                 [closeOnSelect]="false"
+                 bindValue="id"
+                 [(ngModel)] ="listCustomers"
+                 class="mat-form-field-infix ng-tns-c110-56" 
+                 placeholder="Liste des clients" >
+                 <ng-template
+                 ng-optgroup-tmp
+                 let-item="item"
+                 let-item$="item$"
+                 let-index="index"
+               >
+                 <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected" />
+                Sélectionner tout
+               </ng-template>
+             
+               <ng-template
+                 ng-option-tmp
+                 let-item="item"
+                 let-item$="item$"
+                 let-index="index"
+               >
+                 <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected" />
+                 {{ item.name }}
+               </ng-template>
+
+                </ng-select>
+                
+            </div>
+            
+
+            <div class="mt-5 text-left">
+                <button mat-raised-button  [disabled]="!canSave"  class="personlized-button" style="margin-right:2px;"
+                    (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" class="personlized-button-blue" (click)="close()">Fermer
+                </button>
+            </div>
+        </div>
+        <br>
+        <ejs-grid
+                showColumnMenu="true"
+                #grid
+                [filterSettings]='filterSettings'
+                [gridLines]="gridLines"
+                showColumnMenu="true"
+                [allowSelection]="false"
+                [dataSource]="data"
+                [allowPaging]="true"
+                [allowFiltering]="true"
+                [allowGrouping]="false"
+              >
+                <e-columns>
+                    <e-column [width]="100" field="code" headerText="Code client" ></e-column>
+                   <e-column [width]="170" field="name" headerText="Client" ></e-column>
+                 
+                  <e-column [width]="170" field="defaultSalesPersonName" headerText="Commercial(e) par défault"></e-column>
+                  <e-column [width]="170" field="actualSalesPersonName" headerText="Commercial(e) intérimaire"></e-column>
+                  <e-column [width]="150" field="customerState" headerText="Statut" [allowSorting]="true">
+                    <ng-template #filterTemplate let-data>
+                    <ejs-dropdownlist id='customerState' [(ngModel)]="data.Name" [enabled]="data.column.allowFiltering" showClearButton="true"
+                    ngDefaultControl (change)=onChange($event) [dataSource]='customerState' [fields]='fields' [popupHeight]='height' >
+                    </ejs-dropdownlist>
+                  </ng-template>
+                  <ng-template #template let-data>
+                    <span
+                    class="label bg-green shadow-style"
+                      *ngIf="data.customerState ==0"
+                      >Actif</span
+                    >
+                    <span class="label bg-red shadow-style"
+                      *ngIf="data.customerState ==1"
+                      >Bloqué</span
+                    >
+                  </ng-template>
+                  </e-column>
+                
+                </e-columns>
+              </ejs-grid>
+       
+    </div>
+</section>

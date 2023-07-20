@@ -1,0 +1,40 @@
+<div *ngIf="form">
+    <h6 mat-dialog-title>{{modalTitle}}</h6>
+    <div>
+        <form class="form-form m-5" [formGroup]="form">
+            <input type="hidden" formControlName="id">
+            <div>
+                <mat-form-field >
+                    <mat-label>Nom </mat-label>
+                    <input matInput formControlName="name"  required>
+
+                    <mat-error *ngIf="form.get('name').hasError('required')">
+                        name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <ng-select style="display: inline-block;width: 350px;margin-top: -5px;margin-bottom: 15px;"   class="auto-grow mat-form-field-infix ng-tns-c110-56" placeholder="Groupe de zone" formControlName="zoneGroupId">
+                <ng-option *ngFor="let zone of zoneGroups" [value]="zone.id">{{zone.name}}</ng-option>       
+            </ng-select>
+            <div>
+                <mat-form-field >
+                    <mat-label>Ordre </mat-label>
+                    <input matInput type="number" formControlName="order"  required>
+
+                    <mat-error *ngIf="form.get('order').hasError('required')">
+                        Ordre est obligatoire est obligatoire
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <ng-select style="display: inline-block;width: 350px;margin-top: -5px;margin-bottom: 15px;"   class="auto-grow mat-form-field-infix ng-tns-c110-56" placeholder="Code Type transaction" formControlName="zoneType">
+                <ng-option *ngFor="let item of zoneTypeList" [value]="item">{{zoneTypes[item]}}</ng-option>       
+            </ng-select>
+            <div class="text-left">
+                <button mat-raised-button  color="primary" style="margin-right:2px;" 
+                    (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

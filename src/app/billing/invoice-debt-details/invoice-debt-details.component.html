@@ -1,0 +1,28 @@
+<div style="height: 100%;margin: 15px;padding-top: 10px;">
+  
+    
+    <ejs-grid
+#grid
+(actionBegin)='begin($event)'
+showColumnMenu="true"
+[allowSelection]="true"
+[gridLines]="gridLines"
+[dataSource]="debtDetails"
+[allowPaging]="true"
+[allowSorting]="true"
+(dataBound)="dataBound($event)"
+>
+<e-columns>
+  <e-column [width]="100" field="invoiceNumber"  [visible]="!customerCode" headerText="N° de facture"></e-column>
+  <e-column [width]="200" field="invoiceDate" [visible]="!customerCode"  format="dd/MM/yyyy" type="date" headerText="Date de facturation"></e-column>
+  <e-column [width]="200" field="invoiceYear" [visible]="!customerId"  headerText="Année"></e-column>
+  <e-column [width]="200" field="invoiceMonth" [visible]="!customerId"  headerText="Mois"></e-column>
+  <e-column [width]="180" field="invoiceAmount" format="N2" headerText="Montant TTC" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+  <e-column [width]="180" field="paymentAmount" format="N2" headerText="Montant payé" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+  <e-column [width]="180" field="dept" format="N2" headerText="Mantant restant" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column> 
+</e-columns>
+</ejs-grid>
+<div class="text-left mt-2">
+    <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">Fermer (Echap)</button>
+</div>
+</div>

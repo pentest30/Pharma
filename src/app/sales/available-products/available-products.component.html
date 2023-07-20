@@ -1,0 +1,29 @@
+<ejs-grid 
+#grid2 id='grid2' class="bodyGrid" 
+
+style="padding: 5px;"   
+[gridLines]='gridLines'  
+[dataSource]="cachedProduct" 
+height='350'   
+[allowSelection]='true' 
+[allowSorting]='true'
+[allowFiltering]='true' 
+[allowPaging]='true'
+
+>
+  <e-columns>
+      <e-column field='code' headerText='Code'></e-column>
+      <e-column field='fullName' headerText='Article'></e-column>
+       <e-column field='innCodeName' headerText='DCI'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+      <e-column field='manufacturer' headerText='Laboratoire'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+      <e-column field='quantity' headerText='Quantité'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+      <e-column field='taxGroup' headerText='G.Tax'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+      <e-column field='psychotropic'  [width]='200' headerText='Ref'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'>
+        <ng-template #template let-data >
+          <span *ngIf="data.psychotropic" class="label bg-red shadow-style" style='margin-right: 5px;'>Psychotrope</span>
+          <span *ngIf="!data.psychotropic"class="label bg-green shadow-style" style='margin-right: 5px;'>Non Psychotrope</span>
+
+        </ng-template>
+      </e-column>
+  </e-columns>
+</ejs-grid>

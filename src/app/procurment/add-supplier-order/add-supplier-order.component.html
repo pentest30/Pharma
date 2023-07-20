@@ -1,0 +1,195 @@
+
+<section class="content" style="overflow: auto;overflow-y: hidden;">
+    <mat-tab-group *ngIf="this.selectedTab != null"  backgroundColor="primary"  class="searchProduct" style="min-height: 500px;" [(selectedIndex)]="this.selectedTab" (selectedTabChange)="onTabChanged($event);">
+      <mat-tab  id="article1"  label="Commande en cours (F1)" > 
+        <div class="container-fluid no-padding" >
+          <div class="" >
+              <div>
+                  <div class="card " style="margin-bottom: 0px!important;">
+                      <div class="header" class="no-padding">
+  
+                        <div class="padding-bottom-3x mb-1" style="font-size: 12px;" id="headerElement">
+                          <div class="card mb-1" >
+                            <form [formGroup]="form" *ngIf='form' style="margin-top: 5px;">
+                              <div class="row">
+                                <mat-form-field appearance="fill"  class="col-md-3 col-lg-3 col-lg-3" >
+                                  <mat-label>Type de commande</mat-label>
+                                  <mat-select autoFocus formControlName="orderType" (selectionChange)="onCommandTypeSelection($event.value)" [disabled]="rows[0]" #orderType >
+                                    <mat-option  [value]=0>Non Psychotrope</mat-option>
+                                    <mat-option  [value]=1>Psychotrope</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                                <div class="col-md-3 col-lg-3 col-lg-3"  >
+                                  <ng-select [(ngModel)]="selectedSupplier" 
+                                      [items]="suppliers" 
+                                      bindValue="id" 
+                                      bindLabel="name"  
+                                      [virtualScroll]	='true' 
+                                      [dropdownPosition]='bottom' 
+                                      formControlName="supplierId" 
+                                      labelForId='Fournisseur' 
+                                      placeholder='Fournisseur' 
+                                      [searchFn]="supplierSearchFn"
+                                      (change)="onSupplierSelection($event)">
+                                    <ng-template ng-header-tmp class="table-dropdown-no-scroll" >
+                                    
+                                      <table class="table table-striped" style=" max-width: 95.5%;overflow-x: hidden;">
+                                        <thead>
+                                          <tr class="row dropdown-line-table" >
+                                            <th width="40%" >Code</th>
+                                            <th width="60%" >Nom </th>
+                                           
+                                          </tr>
+                                        </thead>
+                                      </table>
+                                    </ng-template>
+                                    <ng-template let-item="item" ng-option-tmp class="table-dropdown "  let-itemIndex="itemIndex" >
+                                      <table class="table table-striped" style="max-width: 95.5%;overflow-x: hidden;" >
+                                        <tr  class="row  dropdown-line-table ">
+                                          <td  width="40%">{{item.code}}</td>
+                                          <td width="60%">{{item.name}}</td>
+                                        </tr>
+                                      </table> 
+                                    </ng-template>
+                                  </ng-select> 
+                                </div> 
+                                <!-- <mat-form-field appearance="fill" class="col-md-2 col-lg-2 col-lg-2"  >
+                                  <mat-label>Réf BC </mat-label>
+                                  <input formControlName="refDocument" #refDocument required matInput />
+                                </mat-form-field> -->
+                              
+                                <mat-form-field color="accent" appearance="fill"  class="col-md-3 col-lg-3 col-lg-3"   >
+                                  <mat-label>Date prévue de livraison</mat-label>
+                                  <input matInput [matDatepicker]="picker1" formControlName="expectedDeliveryDate">
+                                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                  <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field>
+                                <mat-form-field color="accent" appearance="fill"  class="col-md-3 col-lg-3 col-lg-3" >
+                                  <mat-label>Date BC</mat-label>
+                                  <input matInput [matDatepicker]="picker2" formControlName="orderDate">
+                                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                  <mat-datepicker #picker2></mat-datepicker>
+                                </mat-form-field>
+                              </div>
+                            </form>  
+                          </div>
+
+                        
+                        </div>
+                          <div class="padding-bottom-3x mb-1">
+                            <div class="card mb-1" *ngIf="currentSupplier != null">
+                              <ejs-grid  #batchgrid id='batchgrid' class="bodyGrid" 
+                                (created)="created()"  style="padding: 5px;"  
+                                [gridLines]='gridLines'  
+                                (load)='load($event)'
+                                (dataBound)="dataBound($event)"
+                                (toolbarClick)='clickHandler($event)'
+                                showColumnMenu='true'
+                                [dataSource]='rows'
+                                [allowSelection]='true' 
+                                [allowSorting]='true'
+                                [pageSettings]="pageSettings" 
+                                [allowFiltering]='true' 
+                                (keyPressed)="keyPressed($event)"
+                                (commandClick)='commandClick($event)' 
+                                
+                                (actionComplete)="actionComplete($event)"
+                                [editSettings]='editOptions' 
+                                
+                                [toolbar]='toolbarItems'  >
+                                <e-columns>
+                                  <e-column field='id' headerText='N°' [width]='80' textAlign='Center' isPrimaryKey='true'>
+                                    <ng-template #template let-data >
+                                       {{ getIndexRow(data.index)}} 
+                                    </ng-template>
+                                  </e-column>
+                                  <e-column field='productCode' headerText='Code'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                                  <e-column field='productName' headerText='Nom'  [allowFiltering]='true' [allowSorting]='true' [width]='300'  isPrimaryKey='true'></e-column>
+                                  <e-column field='quantity' editType= 'numericedit' headerText='Qnt'  [validationRules]='quantityRules'  [allowFiltering]='true' [allowSorting]='true' ></e-column>
+                                  <e-column field='unitPrice'  headerText='Prix'   [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' textAlign='Left'></e-column>
+                                  <e-column field='discount' editType= 'numericedit' headerText='Remise Proposée'  [allowFiltering]='false' isPrimaryKey='true' [allowSorting]='true'   textAlign='Left'></e-column>
+                                  <e-column field='minExpiryDate'  headerText='DDP souhaitée'  [allowFiltering]='true' [allowSorting]='true' type='date' editType= 'datepickeredit' format='dd/MM/yyyy'>
+                                  </e-column>
+                                  <e-column field='totalExlTax'  headerText='Total HT'  [allowFiltering]='true' isPrimaryKey='true' type="number" format="N2" [allowSorting]='true'></e-column>
+                                  <e-column field='totalInlTax'  headerText='Total TTC'  [allowFiltering]='true' isPrimaryKey='true' type="number" format="N2" [allowSorting]='true'></e-column>
+                                 
+                                  <e-column headerText='#' [width]='80' [commands]='commands'></e-column>
+                                
+                                </e-columns>
+                            
+                              </ejs-grid>
+                            </div>
+                          </div>
+                    
+                      </div>
+                    
+                  </div>
+              </div>
+          </div>
+      </div>
+      </mat-tab>
+      <mat-tab  id="article2"  label="Historiques commandes (F1)" style="height: 500px;"> 
+        <ejs-grid  #pendingGrid id='pendingGrid' class="bodyGrid" 
+        style="padding: 5px;"   
+        [gridLines]='gridLines'  
+        (dataBound)="dataBoundPending($event)"
+        [dataSource]='cachedOrders' height='350'   
+        [allowSelection]='true' 
+        [allowSorting]='true'
+        [pageSettings]="pageSettings" 
+        [allowFiltering]='true' 
+        (commandClick)='pendingCommandClick($event)' 
+        [editSettings]='editPendingOptions' 
+        [allowPaging]='true'
+        (keyPressed)="keyPressed($event)"
+        [selectionSettings]='selectionOptions'
+        (rowSelected)="rowSelected($event)"
+        (dataStateChange)= 'dataStateChange($event)'
+        (toolbarClick)='clickPendingHandler($event)'
+        [toolbar]='pendingToolbarItems'
+        >
+        <e-columns>
+          <e-column field='id' headerText='N°' [width]='80' textAlign='Center' isPrimaryKey='true'>
+            <ng-template #template let-data >
+              {{ getIndexRow(data.index)}} 
+            </ng-template>
+          </e-column>
+          <e-column field='orderNumber'  [width]='200' headerText='Ref'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+          <e-column field='createdBy'  [width]='200' headerText='Ref'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+          <e-column field='psychotropic'  [width]='200' headerText='Ref'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'>
+            <ng-template #template let-data >
+              <span *ngIf="data.psychotropic" class="label bg-red shadow-style" style='margin-right: 5px;'>Psychotrope</span>
+              <span *ngIf="!data.psychotropic"class="label bg-green shadow-style" style='margin-right: 5px;'>Non Psychotrope</span>
+
+            </ng-template>
+          </e-column>
+          <e-column headerText='#'  [commands]='commandPending'></e-column>
+
+        </e-columns>
+      </ejs-grid>
+      <h4 class="page-title">Lignes Commande</h4>
+      <ejs-grid #detailgrid  [allowSelection]='false' [dataSource]="items">
+        <e-columns>
+            <e-column field='id' headerText='N°' [width]='80' textAlign='Center' isPrimaryKey='true'>
+              <ng-template #template let-data >
+                {{ getIndexRow(data.index)}} 
+              </ng-template>
+            </e-column>
+            <e-column field='productName' headerText='Article'></e-column>
+            <e-column field='internalBatchNumber' headerText='Lot'></e-column>
+             <e-column field='expiryDate' headerText='DDP'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+            <e-column field='quantity' headerText='Quantité'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+         
+        </e-columns>
+      </ejs-grid>
+
+       
+      </mat-tab>
+    </mat-tab-group>
+     
+  </section>
+  
+  
+  
+  
+  

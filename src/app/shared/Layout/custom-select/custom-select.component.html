@@ -1,0 +1,63 @@
+<ng-select 
+              id="productId" autofocus  
+              placeholder="Liste des articles"
+              #productId
+            [items]="products$ | async" 
+            bindLabel="fullName" 
+            [minTermLength]="minLengthTerm" 
+            [loading]="productsLoading"
+            typeToSearchText="Veuillez saisir {{minLengthTerm}} caractères ou plus pour commencer la recherche." 
+            [typeahead]="productsInput$"
+              (keydown)="onKeyDown($event)"  
+              class="dropdown-grid"
+              (blur)="onProductBlurSelection($event)"
+              (clear)="onClearSelection()"
+              (change)='onProductSelection($event)'  
+              bindValue="productId"
+            >
+            
+            <ng-template ng-header-tmp class="table-dropdown-no-scroll" >
+              <p *ngIf="equivalenceOn && equivalenceProduct"> Liste des Equivalences : {{equivalenceProduct.fullName}}</p>
+              <table class="table table-striped" style=" overflow-x: hidden;">
+                <thead>
+                  <tr class="row dropdown-line-table" >
+                    <th width="6%" sortable="code" (sort)="onSortProduct($event)"> Code</th>
+                    <th width="40%" sortable="fullName" (sort)="onSortProduct($event)"> Designation</th>
+                    <th width="10%" sortable="innCodeName" (sort)="onSortProduct($event)"> DCI </th>
+                    <th width="18%" sortable="manufacturer" (sort)="onSortProduct($event)"> Laboratoire</th>
+                    <th width="10%" sortable="available" (sort)="onSortProduct($event)"> Qte</th>
+                  
+                    <th width="10%" sortable="taxGroup" (sort)="onSortProduct($event)"> Gr.Tax</th>
+                    <th class="" width="6%" sortable="hasQuota" > Quota</th>
+  
+                  </tr>
+                </thead>
+              </table>
+              </ng-template>
+              <ng-template let-item="item" ng-option-tmp class="table-dropdown "  let-itemIndex="itemIndex" >
+              <table class="table table-striped" style=" overflow-x: hidden;" >
+                <tr class="row  dropdown-line-table ">
+                  <td #select style="display: none;">{{item.id}}</td>
+                  <td  width="6%">{{item.code}}</td>
+                  <td width="40%">
+                    <span class="badge" [class.bg-success-border]="item.quantity > 0" [class.bg-danger-border]="item.quantity == 0" style="font-size:14px;white-space: break-spaces;line-height: normal;margin-top: -5px;">
+                      {{item.fullName}}
+                    </span>
+                  </td>
+                  <td width="10%">{{item.innCodeName}}</td>
+                  <td width="18%" style="white-space: break-spaces;line-height: 1em;">{{item.manufacturer}}</td>
+                  <td width="10%">
+                    <a  style="text-decoration:none;color:red;" *ngIf="item.quantity == 0">  {{item.quantity}}</a>
+                    <a style="text-decoration:none;color:green;" *ngIf="item.quantity > 0">  {{item.quantity}}</a>
+                  </td>
+                
+                  <td width="10%"><span style="white-space: break-spaces;line-height: 1em;margin-top: -5px;">{{item.taxGroup}}</span></td>
+                  <td class="" width="6%">
+                    <span style="line-height: normal;" *ngIf="item.hasQuota" class="label bg-green shadow-style">Oui</span>
+                    <span style="line-height: normal;" *ngIf="!item.hasQuota" class="label bg-red shadow-style">Non</span>
+                  </td>
+                </tr>
+              </table> 
+              </ng-template>
+          </ng-select>
+                  

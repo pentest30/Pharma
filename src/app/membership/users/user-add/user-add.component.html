@@ -1,0 +1,100 @@
+
+<div style="width: 800px;">
+    <h6 mat-dialog-title>Nouveau</h6>
+    <div>
+        <form class="form-form m-5" [formGroup]="form">
+          
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                <mat-form-field style="margin-right:2px;">
+                    <mat-label>Pseudo </mat-label>
+                    <input matInput formControlName="userName"  required>
+  
+                    <mat-error *ngIf="form.get('userName').hasError('required')">
+                        userName is required
+                    </mat-error>
+                  
+                </mat-form-field >
+                <mat-form-field style="margin-right:2px;">
+                    <mat-label>Email </mat-label>
+                    <input matInput formControlName="email"  required>
+  
+                    <mat-error *ngIf="form.get('email').hasError('required')">
+                        email is required
+                    </mat-error>
+                    <mat-error *ngIf="form.get('email').hasError('pattern')">Invalid email.</mat-error>
+                   
+                </mat-form-field>
+                <mat-form-field style="margin-right:2px;" >
+                    <mat-label>N° de Tél </mat-label>
+                    <input matInput formControlName="phoneNumber"  >
+                    
+                </mat-form-field>
+                <mat-form-field style="margin-right:2px;" >
+                    <mat-label>Nom </mat-label>
+                    <input matInput formControlName="firstName">
+                    
+                </mat-form-field>
+                <mat-form-field style="margin-right:2px;" >
+                    <mat-label>Prénom </mat-label>
+                    <input matInput formControlName="lastName" >
+                    
+                </mat-form-field>
+                <mat-form-field *ngIf="!id" style="margin-right:2px;" >
+                    <mat-label>Mot de pass </mat-label>
+                    <input  type="password" matInput formControlName="password" >
+                    
+                </mat-form-field>
+              
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+               <div>
+                <ng-select [multiple]='true' (change)="onSelectRole($event)"  style="display: inline-block;width: 350px;margin-top: -25px;" class="mat-form-field-infix ng-tns-c110-56" placeholder="Roles" formControlName="userRoles">
+                    <ng-option *ngFor="let car of roles" [value]="car.id">{{car.name}}</ng-option>
+                   
+                </ng-select>
+               <br>
+               
+                <div *ngIf="isSuperAdmin" class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <ng-select  style="display: inline-block;width: 250px;" class="mat-form-field-infix ng-tns-c110-56" placeholder="Liste des entités" formControlName="organizationId">
+                        <ng-option *ngFor="let car of organizations" [value]="car.id">{{car.name}}</ng-option>
+                       
+                    </ng-select>
+                    
+                  
+                </div>
+               </div>
+              
+            </div>
+            <br>
+               <br>
+
+           <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <ng-select  style="display: inline-block;width: 350px;margin-top: -25px;" class="mat-form-field-infix ng-tns-c110-56" placeholder="Superviseurs" formControlName="managerId">
+                <ng-option *ngFor="let car of supervisors" [value]="car.id">{{car.userName}}</ng-option>
+               
+            </ng-select>
+           
+           </div>
+           <br>
+           <br>
+         
+           <mat-slide-toggle class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2"  style="margin-top:-5px;" formControlName="emailConfirmed" >Email confirmé</mat-slide-toggle>
+          
+           
+          
+            <div>
+               
+            </div>
+        
+          <br>
+          <br>
+            <div class="text-right">
+                <button mat-raised-button  color="primary" style="margin-right:2px;" 
+                    (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                </button>
+            </div>
+        </form>
+    </div>
+  </div>
+

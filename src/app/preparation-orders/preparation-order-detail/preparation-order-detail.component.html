@@ -1,0 +1,39 @@
+
+<table  class="table table-bordered">
+  <tr>
+    <td rowspan="2" style="font-size: 50px;font-weight: 600;text-align: center;vertical-align: middle;"><span >{{ bl.zoneGroupName }}</span></td>
+    <td>Client: <strong>{{ bl.customerName }}</strong></td>
+    <td>Cmd N° :  <strong>{{bl.orderIdentifier}}</strong></td>
+  </tr>
+  <tr>
+    <td>Secteur : <strong>{{ bl.sectorName }}</strong></td>
+    <td>Date : <strong>{{ bl.createdDateTime |  date:'medium' }}</strong></td>
+  </tr>
+</table>
+<ejs-grid #detailgrid  [allowSelection]='false' [dataSource]="items">
+    <e-columns>
+       
+        <e-column field='productCode'  [width]='120' headerText='Code'    isPrimaryKey='true' textAlign='Left'></e-column>
+        <e-column field='productName' headerText='Produit'   [width]='250'  isPrimaryKey='true'></e-column>
+        <e-column field='internalBatchNumber' headerText='Lot' isPrimaryKey='true' textAlign='Left'></e-column>
+        <e-column field='quantity'   headerText='Qnt' ></e-column>
+        <!-- <e-column  field='packingQuantity'   headerText='Nbr Colis'  isPrimaryKey='true'  ></e-column>
+        <e-column  field='packing'   headerText=' Colisage'  isPrimaryKey='true'  ></e-column> -->
+        <e-column field='ppaHT'  headerText='PPA'    isPrimaryKey='true' textAlign='Left'></e-column>
+        <e-column field='expiryDate'  format="dd/MM/yyyy" type="date" headerText='DDP' ></e-column>
+        <e-column field='discount' headerText='% Remise'   textAlign='Left'></e-column>      
+        <e-column  field='pickingZoneName'   headerText='Zone'  isPrimaryKey='true'  ></e-column>
+
+        <e-column field='status'  headerText='Status' isPrimaryKey='true' textAlign='Left'>
+          <ng-template #template let-data>
+            <span *ngIf="data.status == 10" class="label bg-green shadow-style" style="margin-right: 5px">Valide</span>
+            <span *ngIf="data.status == 20" class="label bg-red shadow-style" style="margin-right: 5px">Ligne Barré</span>
+            <span *ngIf="data.status == 30" class="label l-bg-purple shadow-style" style="margin-right: 5px">Nouvelle Ligne</span>
+            <span *ngIf="data.status == 40" class="label bg-green shadow-style" style="margin-right: 5px">Modifié</span>
+          </ng-template>
+        </e-column>
+    </e-columns>
+</ejs-grid>
+<div class="mt-5">
+  <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue mt-2" (click)="close()">Fermer (Echap)</button>
+</div>

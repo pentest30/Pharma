@@ -1,0 +1,146 @@
+<section class="content">
+    <div class="container-fluid">
+        <mat-tab-group backgroundColor="primary" class="">
+            <mat-tab label="Liste des comamndes en attente"> 
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                          <mat-progress-bar  style="padding-top: 15px;width: 100%; margin: 5px;" *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+        <div class="body table-responsive">
+        
+            <ejs-grid
+              #grid2
+              showColumnMenu="true"
+              [allowSelection]="true"
+              [gridLines]="gridLines"
+              [dataSource]="pendingOrder"
+              [allowPaging]="true"
+              [allowFiltering]="true"
+              [editSettings]="editSettings"
+              (rowSelected)="rowSelected($event)"
+              (commandClick)="pendingCommandClick($event)"
+              [allowGrouping] = "true"
+            >
+              <e-columns>
+                <e-column
+                  field="id"
+                  headerText="N°"
+                  [visible]="false"
+                  textAlign="Center"
+                  isPrimaryKey="true"
+                  [width]="180"
+                ></e-column>
+                <e-column
+                  [width]="180"
+                  field="orderNumber"
+                  headerText="Ref"
+                ></e-column>
+                <e-column
+                  [width]="120"
+                  field="orderDate"
+                  format="dd/MM/yyyy"
+                  type="date"
+                  headerText="Date"
+                ></e-column>
+                <e-column
+                [width]="120"
+                field="createdBy"
+                headerText="Commercial(e)"
+                [width]="180"
+              ></e-column>
+                <e-column
+                  [width]="220"
+                  field="customerName"
+                  headerText="Client"
+                ></e-column>
+                <e-column
+                  field="psychotropic"
+                  [width]="200"
+                  headerText="Type"
+                  [allowFiltering]="true"
+                  [allowSorting]="true"
+                  isPrimaryKey="true"
+                  textAlign="Left"
+                >
+                  <ng-template #template let-data>
+                    <span
+                      *ngIf="data.psychotropic"
+                      class="label bg-red shadow-style"
+                      style="margin-right: 5px"
+                      >Psychotrope</span
+                    >
+                    <span
+                      *ngIf="!data.psychotropic"
+                      class="label bg-green shadow-style"
+                      style="margin-right: 5px"
+                      >Non Psychotrope</span
+                    >
+                  </ng-template>
+                </e-column>
+                <e-column
+                  [width]="180"
+                  field="orderDiscount"
+                  format="N2"
+                  headerText="Total HT"
+                  [allowFiltering]="true"
+                  isPrimaryKey="true"
+                  [allowSorting]="true"
+                ></e-column>
+                <e-column
+                  [width]="180"
+                  field="orderTotal"
+                  format="N2"
+                  headerText="Total TTC"
+                  [allowFiltering]="true"
+                  isPrimaryKey="true"
+                  [allowSorting]="true"
+                ></e-column>
+                <e-column
+                  headerText="Actions"
+                  [commands]="commandPending"
+                  [width]="120"
+                ></e-column>
+              </e-columns>
+            </ejs-grid>
+            <br />
+            <h5>Lignes</h5>
+            <ejs-grid
+              #detailgrid
+              [editSettings]='editSettings' 
+              [allowSelection]="false"
+              [allowSelection]="true"
+              [gridLines]="gridLines"
+              [allowPaging]="true"
+              [allowFiltering]="true"
+              (commandClick)="pendingLineCommandClick($event)"
+              (toolbarClick)="toolbarClick($event)" 
+              allowExcelExport='true'
+              [toolbar]="toolbar"
+              (actionComplete)="actionComplete($event)"
+
+            >
+              <e-columns>
+                <e-column field="productCode" headerText="Code" [width]="120" isPrimaryKey="true"
+                ></e-column>
+                <e-column [width]="220" field="productName" headerText="Porduit" isPrimaryKey="true"></e-column>
+                <e-column field="internalBatchNumber" headerText="Lot" [width]="150" isPrimaryKey="true"></e-column>
+                <e-column field="expiryDate" headerText="DDP" format="dd/MM/yyyy" type="date" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" [width]="150" ></e-column>
+                <e-column field="unitPrice" headerText="P.U" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" [width]="150"></e-column>
+                <e-column field="quantity" headerText="Quantité" [allowFiltering]="true"  [allowSorting]="true" [width]="150"></e-column>
+
+                <e-column field="discount" headerText="Remise" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" [width]="150" ></e-column>
+                <e-column field="extraDiscount" headerText="R.M" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" [width]="150" ></e-column>
+                <e-column headerText="Actions" [commands]="commandPendingLine" [width]="150"></e-column>
+              </e-columns>
+            </ejs-grid>
+          </div>
+                </div>
+                    </div>
+                </div>
+        </mat-tab>
+    
+    </mat-tab-group>
+    </div>
+   
+</section>
+

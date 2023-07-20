@@ -1,0 +1,106 @@
+<mat-tab-group *ngIf="this.formGroup && this.selectedTab != null"   backgroundColor="primary" style="height: 500px;" class="searchProduct" [(selectedIndex)]="this.selectedTab" (selectedTabChange)="onTabChanged($event);">
+    <mat-tab label="Article (F10)" style="height: 500px;"  > 
+
+      <form [formGroup]="formGroup">
+        <br>  
+        <div class="form-group ">
+            <mat-slide-toggle  color="primary" *ngIf="rows.length == 0"
+                formControlName="orderType"
+                (change)="onCommandTypeSelection($event)"
+                style="margin-left: 5px" >Psychotrope
+            </mat-slide-toggle>
+        </div>
+        <div class="form-group mt-1">
+            <ng-select id="productId" autofocus  
+            placeholder="Liste des articles"
+            #productId 
+            formControlName="productId"
+            class="dropdown-grid"
+            [items]="products$ | async" 
+            bindLabel="fullName" 
+            [minTermLength]="minLengthTerm" 
+            [loading]="productsLoading"
+            typeToSearchText="Veuillez saisir {{minLengthTerm}} caractères ou plus pour commencer la recherche." 
+            [typeahead]="productsInput$"
+            (blur)="onProductBlurSelection($event)"
+            [markFirst]="true"
+            bindValue="id" 
+            [searchFn]="customProductSearchFn"
+            [virtualScroll]	='true'
+            (change)='onProductSelection($event)'> 
+        
+                <ng-template ng-header-tmp class="table-dropdown-no-scroll" >
+                    <table class="table table-striped" style=" overflow-x: hidden;">
+                    <thead>
+                        <tr class="row dropdown-line-table" >
+                        <th width="10%" sortable="code" (sort)="onSortProduct($event)"> Code</th>
+                        <th width="30%" sortable="fullName" (sort)="onSortProduct($event)"> Designation</th>
+                        <th width="10%" sortable="innCodeName" (sort)="onSortProduct($event)"> DCI </th>
+                        <th width="20%" sortable="manufacturer" (sort)="onSortProduct($event)"> Laboratoire</th>
+                        <th width="5%" sortable="available" (sort)="onSortProduct($event)"> Qte</th>
+                        <th width="5%" sortable="totalQnt" (sort)="onSortProduct($event)">Total</th>
+                        <th width="10%" sortable="totalRQ" (sort)="onSortProduct($event)">Ral</th>
+                        <th width="10%" sortable="taxGroup" (sort)="onSortProduct($event)"> Gr.Tax</th>
+                        </tr>
+                    </thead>
+                    </table>
+                </ng-template>
+                <ng-template let-item="item" ng-option-tmp class="table-dropdown "  let-itemIndex="itemIndex" >
+                    <table class="table table-striped" style=" overflow-x: hidden;" >
+                    <tr class="row  dropdown-line-table ">
+                        <td #select style="display: none;">{{item.id}}</td>
+                        <td  width="10%">{{item.code}}</td>
+                        <td width="30%" style="text-overflow: ellipsis;overflow: hidden;">{{item.fullName}}</td>
+                        <td width="10%">{{item.innCodeName}}</td>
+                        <td width="20%" style="text-overflow: ellipsis;overflow: hidden;">{{item.manufacturer}}</td>
+                        <td width="5%">
+                        <a  style="text-decoration:none;color:red;" *ngIf="item.quantity == 0">  {{item.quantity}}</a>
+                        <a style="text-decoration:none;color:green;" *ngIf="item.quantity > 0">  {{item.quantity}}</a>
+                        </td>
+                        <td width="5%" style="text-overflow: ellipsis;overflow: hidden;">{{item.totalQnt}}</td>
+                        <td width="10%" style="text-overflow: ellipsis;overflow: hidden;">{{item.totalRQ}}</td>
+                        <td width="10%">{{item.taxGroup}}</td>
+                
+                    </tr>
+                    </table> 
+                </ng-template>
+            </ng-select>
+        </div>
+        <div class="form-group " >
+            <mat-form-field style="margin-left: 2px;">
+                <mat-label>Quantité </mat-label>
+                <input autocomplete="off"   #quantity type="number" min="1" matInput  formControlName="quantity" required (keyup.enter)="onQuantityKeyEnter()">
+                <mat-error *ngIf="formGroup.get('quantity').hasError('required')">
+                    La quantité est obligatoire
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field style="margin-left: 2px;">
+                <mat-label>Prix </mat-label>
+                <input autocomplete="off"   #unitPrice type="number" min="1" matInput  formControlName="unitPrice" (keyup.enter)="onUnitPriceKeyEnter()">
+        
+            </mat-form-field>
+            <mat-form-field color="accent" appearance="fill"  [ngClass]="{'col-md-2 col-lg-2 col-xl-2': isPsy, 'col-md-3 col-lg-3 col-xl-3':!isPsy}"  (keyup.enter)="onExpiryDateKeyEnter()" >
+                <mat-label>Min DDP souhaité</mat-label>
+                <input matInput [matDatepicker]="picker1" id="minExpiryDate" formControlName="minExpiryDate">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field style="margin-left: 2px;">
+                <mat-label>Remise Proposée </mat-label>
+                <input   #discount type="number" min="0" max="100" matInput  formControlName="discount" (keyup.enter)="onDiscountKeyEnter($event)">
+                <mat-error *ngIf="formGroup.get('discount').hasError('min')">
+                  La remise doit être supérieur à 0
+                </mat-error>
+              </mat-form-field>
+        </div>
+    
+        <div class="text-left">
+            <button mat-raised-button  #saveButton [disabled]="!formGroup.valid" [class.personlized-button]="formGroup.valid" [class.disabled-personlized-button]="!formGroup.valid" style="margin-right:2px;" 
+                (click)="save($event)">Enregistrer </button>
+            <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">Fermer (Echap)</button>
+        </div>
+        </form>
+    </mat-tab>
+</mat-tab-group>

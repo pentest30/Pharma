@@ -1,0 +1,43 @@
+<div class="card">
+    <div class="header">
+      <h6>Comptes bancaires</h6>
+    </div>
+    <div class="body">
+      <button (click)="openDialog()" class="mat-focus-indicator personlized-button mat-raised-button mat-button-base"  aria-label="Example icon button with a bookmark icon">
+        + Ajouter
+      </button>
+      <br>
+      <br>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="row"  style="display: none;"></th>
+            <th scope="col">Banque</th>
+            <th scope="col">Code</th>
+            <th scope="col">N° de compte</th>
+           <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of bankAccounts">
+            <th scope="row"  style="display: none;">{{item.id}}</th>
+            <th scope="row">{{item.bankName}}</th>
+            <td>{{item.bankCode}}</td>
+            <td>{{item.number}}</td>
+           
+            <td > 
+                <!-- Edition button -->
+               
+                <!-- Edition button -->
+                <a   mat-icon-button color="danger" aria-label="Supprimer"  (click)="delete(item)">
+                 <i class="fa fa-trash"></i>
+                </a>
+            </td>
+          </tr>
+         
+        </tbody>
+      </table>
+    
+    </div>
+  </div>
+  

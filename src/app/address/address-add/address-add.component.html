@@ -1,0 +1,76 @@
+
+<div>
+  <h6 mat-dialog-title>Nouvelle adresse</h6>
+  <div>
+      <form class="form-form m-5" [formGroup]="form">
+          <input type="hidden" formControlName="id">
+          
+            <div class="parent">
+                <ng-select    style="display: inline-block;"  (change)="onSelectCountry($event)" class="mat-form-field-infix ng-tns-c110-56" placeholder="Pays" formControlName="country">
+                  <ng-option *ngFor="let brand of countries" [value]="brand.name">{{brand.name}}</ng-option>
+                 
+              </ng-select>
+              
+          </div>
+          <div>
+            <ng-select    style="display: inline-block;"  (change)="onSelectState($event)" class="mat-form-field-infix ng-tns-c110-56" placeholder="Département" formControlName="state">
+                <ng-option *ngFor="let brand of states" [value]="brand.name">{{brand.name}}</ng-option>
+               
+            </ng-select>
+           
+        </div>
+        <div>
+            <ng-select   style="display: inline-block;"  (change)="onSelectState($event)" class="mat-form-field-infix ng-tns-c110-56" placeholder="Commune" formControlName="township">
+                <ng-option *ngFor="let brand of cities" [value]="brand.name">{{brand.name}}</ng-option>
+               
+            </ng-select>
+          
+        </div>
+          <div>
+              <mat-form-field >
+                  <mat-label>Ville </mat-label>
+                  <input matInput formControlName="city"  required>
+
+                  <mat-error *ngIf="form.get('city').hasError('required')">
+                    city is required
+                  </mat-error>
+              </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field >
+                <mat-label>Code postal </mat-label>
+                <input  matInput formControlName="zipCode"  >
+
+             
+            </mat-form-field>
+        </div>
+          <div>
+              <mat-form-field >
+                  <mat-label>Rue </mat-label>
+                  <textarea rows="5" matInput formControlName="street"></textarea>
+
+              </mat-form-field>
+          </div>
+          <div>
+            <mat-slide-toggle formControlName="main" >Adresse principale</mat-slide-toggle>
+            
+            <!-- <mat-checkbox formControlName="isMedicamentClass">Classe médicament</mat-checkbox> -->
+        </div>
+        <br>
+        <div>
+            <mat-slide-toggle formControlName="billing" >Adresse de facturation</mat-slide-toggle>
+           
+        </div>
+        <br>
+        <mat-slide-toggle formControlName="shipping" >Adresse de livraison</mat-slide-toggle>
+        <br>
+        <br>
+          <div class="text-left">
+              <button mat-raised-button  color="primary" style="margin-right:2px;" 
+                  (click)="save()">Enregistrer </button>
+              <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+              </button>
+          </div>
+      </form>
+  </div>
+</div>

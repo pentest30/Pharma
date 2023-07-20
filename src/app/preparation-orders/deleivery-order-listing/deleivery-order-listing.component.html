@@ -1,0 +1,54 @@
+<section class="content">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="header">
+          <div class="row">
+              <div class="col-sm-12 col-md-3">
+                <!-- <button mat-raised-button class="personlized-button"  (click)='add()' #btnRef><mat-icon>add</mat-icon>Créer un bon de livraison(F4)</button> -->
+              </div>
+              <div class="col-sm-12 col-md-9 dataTables_filter" >
+                <mat-slide-toggle color="primary" (change)="toggleSearch($event)" style="float: right;"  >Recherche avancée</mat-slide-toggle>
+              </div>
+          </div>
+        </div>
+  
+        <div class="body table-responsive">
+          <ejs-grid
+            style="margin-left: 10px; margin-right: 10px;"
+            #grid
+            showColumnMenu="true"
+            [filterSettings]='filterSettings'
+            (commandClick)='ListingCommandClick($event)' 
+            [allowSelection]="false"
+            [gridLines]="gridLines"
+            [dataSource]="data"
+            [allowPaging]="true"
+            [allowFiltering]="true"
+            (actionBegin)='begin($event)' 
+            (actionComplete)='complete($event)' 
+            (dataBound)="dataBound($event)"
+            [childGrid]="childGrid"
+          >
+            <e-columns>
+              <e-column headerText='#' [width]="80" [commands]='commandListing'></e-column>
+              <e-column [width]="180" field="sequenceNumber" format="N2" headerText="N°BL" [allowFiltering]="true" isPrimaryKey="true"[allowSorting]="true" type="string">
+                <ng-template #template let-data>{{data.deleiveryOrderNumber}}</ng-template>
+              </e-column>
+              <e-column [width]="320" field="customerName"  headerText="Client" ></e-column>
+              <e-column [width]="130" field="deleiveryOrderDate" format="dd/MM/yyyy" type="date" headerText="Date BL"></e-column>
+              <e-column [width]="130" field="totalPackage" headerText="Nbr Colis" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+              <e-column [width]="160" field="totalPackageThermolabile" format="N2" headerText="Nbr Colis Froid" [allowFiltering]="true" isPrimaryKey="true"[allowSorting]="true"></e-column>
+              <e-column [width]="120" field="validated" headerText="Etat">
+                <ng-template #template let-data>
+                  <span *ngIf="data.validated" class="label l-bg-orange shadow-style" style="margin-right: 5px">Validé</span>
+                  <span *ngIf="!data.validated" class="label bg-green shadow-style" style="margin-right: 5px">Annulée</span>
+                </ng-template>
+              </e-column>
+            </e-columns>
+          </ejs-grid>
+      
+        </div>
+      </div>
+    </div>
+  </section>
+    

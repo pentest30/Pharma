@@ -1,0 +1,41 @@
+<div class="card">
+    <div class="header">
+        <h6>Téléphone et fax</h6>
+    </div>
+    <div class="body">
+        <button (click)="openDialog()" class="mat-focus-indicator personlized-button mat-raised-button mat-button-base" aria-label="Example icon button with a bookmark icon">
+            + Ajouter
+          </button>
+          <br>
+          <br>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Code Pays</th>
+                <th scope="col">Numéro</th>
+                <th scope="col">Fax</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of phones">
+                <th scope="row">{{item.countryCode}}</th>
+                <td>{{item.number}}</td>
+                <td *ngIf="item.isFax == true" >Oui</td>
+                <td *ngIf="item.isFax == false" >Non</td>
+                <td >
+                    <!-- Edition button -->
+
+                    <!-- Edition button -->
+                    <a   mat-icon-button color="danger" aria-label="Supprimer"  (click)="delete(item)">
+                     <i class="fa fa-trash"></i>
+                    </a>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+
+    </div>
+</div>

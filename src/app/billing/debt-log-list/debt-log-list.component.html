@@ -1,0 +1,66 @@
+<div style="height: 100%;margin: 15px;padding-top: 10px;">
+    <div class="row">
+        <div class="col-md-4">
+          <h4>
+            Montant Facture: {{totalInvoice| number: '.2' }} DZD
+        </h4>
+       
+        </div>
+        <div class="col-md-4">
+            <h4>
+              Montant Payé: {{totalPayed| number: '.2' }} DZD
+          </h4>
+         
+          </div>
+          <div class="col-md-4">
+            <h4>
+              Reste à payer: {{totalDebt| number: '.2' }} DZD
+          </h4>
+         
+          </div>
+      </div>
+      <br>
+      <div class="spinner-container" *ngIf="isLoading">
+        <mat-progress-bar color="primary" mode="indeterminate"> </mat-progress-bar>
+       </div>
+    <br>
+    <ejs-grid
+#grid
+(actionBegin)='begin($event)'
+showColumnMenu="true"
+[allowSelection]="true"
+[selectionSettings]='selectionOptions'
+[gridLines]="gridLines"
+[dataSource]="listOfDebts"
+[allowPaging]="true"
+[allowSorting]="true"
+[allowFiltering]="true"
+(dataBound)="dataBound($event)"
+[toolbar]="toolbar"
+>
+<e-columns>
+  
+  <e-column headerText='#' [width]="70">
+    <ng-template #template let-row>
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="button-action" aria-label="Actions">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+       
+        <button  mat-menu-item (click)="view(row)">
+          <mat-icon>remove_red_eye</mat-icon>
+          <span>Détail Facture</span>
+        </button>
+      </mat-menu>
+    </ng-template>
+  </e-column>
+  <e-column [width]="200" field="invoiceMonth"  headerText="Mois"></e-column>
+  <e-column [width]="180" field="invoiceYear"  headerText="Année" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+  <e-column [width]="180" field="invoiceAmount" format="N2" headerText="Montant facture" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+  <e-column [width]="180" field="paymentAmount" format="N2" headerText="Montant payé" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+  <e-column [width]="180" field="dept" format="N2" headerText="Reste à payer" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+ 
+</e-columns>
+</ejs-grid>
+
+</div>

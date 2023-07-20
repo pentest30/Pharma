@@ -1,0 +1,243 @@
+<section class="content">
+  <div class="container-fluid">
+
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">Dashboard</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/dashboard/main">
+                <i class="fas fa-home"></i> Home</a>
+            </li>
+            <li class="breadcrumb-item active">Tableau de bord</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Widgets -->
+    <div class="row">
+      <div class="col-lg-3 col-sm-6">
+        <div class="counter-box text-center">
+          <div class="text font-17 m-b-5">Chiffre d'affaire</div>
+          <div class="spinner__loading" *ngIf="daily_loading">
+            <div>
+              <mat-spinner></mat-spinner>
+            </div>
+          </div>
+          <h3 *ngIf="!daily_loading" class="totalEarning" class="m-b-10 ">{{ca| thousandSuff :2 }} DZD
+          </h3>
+
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="counter-box text-center">
+
+          <div class="text font-17 m-b-5">Taux de contact</div>
+          <div class="spinner__loading" *ngIf="daily_loading">
+            <div>
+              <mat-spinner></mat-spinner>
+            </div>
+          </div>
+          <h3 *ngIf="!daily_loading" class="m-b-10">{{ rate }} %
+          </h3>
+          <!-- <div class="d-inline-block">
+                        <mwl-gauge   [max]="100"
+                        [dialStartAngle]="-90"
+                        [dialEndAngle]="-90.001"
+                        [value]="rate"
+                        [animated]="true"
+                        [label]="percentageValue"
+                        [animationDuration]="1">
+                        </mwl-gauge>
+                    </div> -->
+          <!-- <div class="icon">
+                        <span class="chart chart-line"></span>
+                    </div> -->
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="counter-box text-center">
+          <div class="text font-17 m-b-5">Clients Actifs</div>
+          <div class="spinner__loading" *ngIf="customers_loading">
+            <div>
+              <mat-spinner></mat-spinner>
+            </div>
+          </div>
+          <h3 *ngIf="!customers_loading" class="m-b-10">{{(customers.length) ? customers.length : 0}}
+          </h3>
+          <div class="icon">
+            <div class="chart chart-pie"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="counter-box text-center">
+          <div class="text font-17 m-b-5"> Objectif Mensuel</div>
+          <div class="spinner__loading" *ngIf="monthly_loading">
+            <div>
+              <mat-spinner></mat-spinner>
+            </div>
+          </div>
+          <h3 *ngIf="!monthly_loading" class="m-b-10">{{monthlyObj | thousandSuff : 2 }} DZD
+          </h3>
+          <!-- <div class="icon">
+                        <div class="chart" id="liveChart">Loading..</div>
+                    </div> -->
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="counter-box text-center">
+          <div class="text font-17 m-b-5">Résultat mensuel</div>
+          <div class="spinner__loading" *ngIf="monthly_loading">
+            <div>
+              <mat-spinner></mat-spinner>
+            </div>
+          </div>
+          <h3 *ngIf="!monthly_loading" class="m-b-10">{{monthlyResult | thousandSuff : 2 }} DZD
+          </h3>
+          <!-- <div class="icon">
+                        <div class="chart" id="liveChart">Loading..</div>
+                    </div> -->
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="counter-box text-center">
+          <div class="text font-17 m-b-5">Ecart</div>
+          <div class="spinner__loading" *ngIf="monthly_loading">
+            <div>
+              <mat-spinner></mat-spinner>
+            </div>
+          </div>
+          <h3 *ngIf="!monthly_loading" class="m-b-10">{{ecart | thousandSuff : 2 }} DZD
+          </h3>
+          <!-- <div class="icon">
+                        <div class="chart" id="liveChart">Loading..</div>
+                    </div> -->
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="counter-box text-center">
+          <div class="text font-17 m-b-5">Taux d'atteinte de l'objectif</div>
+          <div class="spinner__loading" *ngIf="monthly_loading">
+            <div>
+              <mat-spinner></mat-spinner>
+            </div>
+          </div>
+          <h3 *ngIf="!monthly_loading" class="m-b-10">{{resultRate | thousandSuff : 2 }} %
+          </h3>
+          <!-- <div class="icon">
+                      <div class="chart" id="liveChart">Loading..</div>
+                  </div> -->
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="counter-box text-center">
+          <div class="text font-17 m-b-5">MARGE MENSUELLE</div>
+          <div class="spinner__loading" *ngIf="monthly_loading">
+            <div>
+              <mat-spinner></mat-spinner>
+            </div>
+          </div>
+          <h3 *ngIf="!monthly_loading" class="m-b-10">{{marge}} %
+          </h3>
+          <!-- <div class="icon">
+                        <div class="chart" id="liveChart">Loading..</div>
+                    </div> -->
+        </div>
+      </div>
+
+    </div>
+    <!-- #END# Widgets -->
+
+    <div class="row clearfix">
+      <!-- Task Info -->
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <div class="card">
+          <div class="header">
+            <h2 class="mt-2"> <strong>Clients</strong> contactés</h2>
+          </div>
+          <ejs-grid #grid id='grid' class="bodyGrid" style="padding: 5px;" [dataSource]="data" height='700px'
+            showColumnMenu="true" [allowSorting]="false" [allowPaging]="true" [groupSettings]='groupOptions'>
+            <e-columns>
+              <ng-template #groupSettingsCaptionTemplate let-data>
+                <div class="groupdiv">
+                  <span class="groupspan"> Commercial(e) {{data.key}} - {{data.count}} Clients </span>
+                </div>
+              </ng-template>
+              <e-column field='defaultSalesPersonName' headerText='Commercial'></e-column>
+              <e-column [width]="200" field='name' headerText='Client'></e-column>
+              <e-column [width]="150" field='customerStatus' headerText='Statut client
+                            ' [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+              <e-column field='totalOrdersMonthly' [width]="200" headerText='Chiffre d`affaire HT portefeuille clients'
+                type="number" format="N2" [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+              <e-column field='hasOrderToDay' [width]="200" headerText='Contacts portefeuille clients' type="number"
+                format="N2" [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'>
+                <ng-template #template let-data>
+                  <span *ngIf="data.hasOrderToDay" class="label bg-green shadow-style">Oui</span>
+                  <span *ngIf="!data.hasOrderToDay" class="label bg-red shadow-style">Non</span>
+                </ng-template>
+              </e-column>
+              <e-aggregates>
+                <e-aggregate>
+                  <e-columns>
+                    <e-column field="hasOrderToDay" type="custom">
+                      <ng-template #footerTemplate let-data>
+                        <strong>Total : {{ rate}} %</strong>
+                      </ng-template>
+                    </e-column>
+                  </e-columns>
+                </e-aggregate>
+              </e-aggregates>
+            </e-columns>
+          </ejs-grid>
+
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <div class="card">
+          <div class="header">
+            <h2 class="mt-2"> <strong>Quotas</strong> distribués</h2>
+          </div>
+          <ejs-grid #grid class="bodyGrid" style="padding: 5px;" [filterSettings]='filterSettings' showColumnMenu="true"
+            [allowSelection]="true" [dataSource]="quotas" [allowPaging]="true" [allowGrouping]="true"
+            [groupSettings]='groupOptions2' (dataBound)="dataBound($event)" (rowSelected)="rowSelected($event)">
+            <e-columns>
+              <e-column [width]="130" field="productCode" headerText="Code produit"></e-column>
+              <e-column [width]="200" field="productName" headerText="Produit"></e-column>
+
+              <e-column [width]="130" field="customerName" headerText="Client" [visible]="false"></e-column>
+              <e-column [width]="130" field="customerCode" headerText="Code client" [visible]="false"></e-column>
+              <e-column [width]="130" field="salesPersonName" headerText="Commercial(e)" [visible]="SupervisorAndSales">
+              </e-column>
+              <e-column [width]="180" field="initialQuantity" headerText="Quantité initiale">
+              </e-column>
+              <e-column [width]="180" field="reservedQuantity" headerText="Quantité réservée">
+              </e-column>
+              <e-column [width]="120" field="quotaDateShort" type="string" headerText="Date" [visible]="false">
+              </e-column>
+              <e-aggregates>
+                <e-aggregate>
+                  <e-columns>
+                    <e-column field="reservedQuantity" type="sum">
+                      <ng-template #footerTemplate let-data>
+                        <strong>Total : {{ data.sum}} </strong>
+                      </ng-template>
+                    </e-column>
+                    <e-column [visible]="!isSales" [width]="120" field="reservedQuantity" type="sum">
+                      <ng-template #groupFooterTemplate let-data>Quantité réservée : {{data.sum}}</ng-template>
+                    </e-column>
+                  </e-columns>
+                </e-aggregate>
+              </e-aggregates>
+            </e-columns>
+          </ejs-grid>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>

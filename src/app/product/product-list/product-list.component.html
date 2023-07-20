@@ -1,0 +1,126 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">Produits</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/dashboard/main">
+                <i class="fas fa-home"></i>Gestion des produits</a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Produits</a>
+            </li>
+            <li class="breadcrumb-item active">Liste</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <div class="row">
+              <div class="col-sm-12 col-md-6">
+                <button class="mat-focus-indicator personlized-button mat-raised-button mat-button-base"
+                  routerLink="/product/product-add">
+                  + Nouvel article
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <ejs-grid #grid id="grid" showColumnMenu="true" style="padding: 5px; margin: 10px;" [gridLines]="gridLines"
+            [dataSource]="data" [allowSelection]="true" [allowSorting]="true" [allowFiltering]="true"
+            [allowPaging]="true">
+            <e-columns>
+              <e-column field="code" headerText="Code"></e-column>
+              <e-column field="fullName" headerText="Article"></e-column>
+              <e-column field="productClassName" headerText="Classe"></e-column>
+
+              <e-column field="manufacturerName" headerText="Laboratoire" [allowFiltering]="true" isPrimaryKey="true"
+                [allowSorting]="true"></e-column>
+
+              <e-column field="productState" headerText="Statut">
+                <ng-template #filterTemplate let-data>
+                  <ejs-dropdownlist id='productState' [(ngModel)]="data.Name" ngDefaultControl
+                    [enabled]="data.column.allowFiltering" showClearButton="true" (change)=onChange($event)
+                    [dataSource]='productState' [fields]='fields' [popupHeight]='height'>
+                  </ejs-dropdownlist>
+                </ng-template>
+
+                <ng-template #template let-element>
+                  <span class="label bg-red shadow-style" *ngIf="element.state == 2">{{ element.productState }}</span>
+                  <span class="label bg-green shadow-style" *ngIf="element.state == 1">{{ element.productState }}</span>
+                  <span class="label bg-orange shadow-style" *ngIf="element.state == 0">{{ element.productState
+                    }}</span>
+                </ng-template>
+              </e-column>
+              <e-column field="quota" headerText="Quota">
+                <ng-template #filterTemplate let-data>
+                  <ejs-dropdownlist id='quota' [(ngModel)]="data.Name" ngDefaultControl
+                    [enabled]="data.column.allowFiltering" showClearButton="true" (change)=onChange($event)
+                    [dataSource]='Quotas' [fields]='fieldType' [popupHeight]='height'>
+                  </ejs-dropdownlist>
+                </ng-template>
+
+                <ng-template #template let-data>
+                  <span *ngIf="!data.quota"></span>
+                  <span class="label bg-primary shadow-style" *ngIf="data.quota">Quota</span>
+                </ng-template>
+              </e-column>
+              <e-column headerText="Actions" [allowFiltering]="false" isPrimaryKey="true" [allowSorting]="false">
+                <ng-template #template let-row>
+                  <button mat-icon-button class="button-action" [matMenuTriggerFor]="menu"
+                    aria-label="Click to see more actions">
+                    <i class="material-icons">more_vert</i>
+                  </button>
+                  <mat-menu #menu="matMenu" style="height: 25px;">
+
+
+                    <button *ngIf="perm.canUpdateDraft&&row.state==0" mat-menu-item (click)="edit(row)">
+                      <mat-icon aria-label="Edit">create</mat-icon> Modifier
+                    </button>
+                    <button *ngIf="perm.canUpdate&&(row.state==1 || row.state==2)" mat-menu-item (click)="edit(row)">
+                      <mat-icon aria-label="Edit">create</mat-icon> Modifier
+                    </button>
+                    <button *ngIf="perm.canActivate&& row.state ==0" mat-menu-item (click)="validate(row)">
+                      <mat-icon aria-label="Edit">check</mat-icon> Valider
+                    </button>
+                    <button *ngIf="perm.canActivate&&row.state ==1" mat-menu-item (click)="deactivate(row)">
+                      <mat-icon aria-label="Edit">clear</mat-icon> Désactiver
+                    </button>
+                    <button *ngIf="perm.canActivate&&row.state ==2" mat-menu-item (click)="activate(row)">
+                      <mat-icon aria-label="Edit">done</mat-icon> Activer
+                    </button>
+                    <button *ngIf="row.quota == false" mat-menu-item (click)="quota(row)">
+                      <mat-icon aria-label="Edit">add</mat-icon> Quota
+                    </button>
+                    <button *ngIf="row.quota == true" mat-menu-item (click)="removeQuota(row)">
+                      <mat-icon aria-label="Edit">remove</mat-icon> Quota
+                    </button>
+                    <button mat-menu-item (click)="uploadImages(row)">
+                      <mat-icon aria-label="Delete">file_upload</mat-icon> Images
+                    </button>
+                    <button *ngIf="perm.canUpdateDraft&&row.state==0" mat-menu-item (click)="delete(row)">
+                      <mat-icon aria-label="Delete">delete</mat-icon> Supprimer
+                    </button>
+                    <button *ngIf="perm.canDelete&&(row.state==1 || row.state==2)" mat-menu-item (click)="delete(row)">
+                      <mat-icon aria-label="Delete">delete</mat-icon> Supprimer
+                    </button>
+
+                  </mat-menu>
+                </ng-template>
+              </e-column>
+            </e-columns>
+          </ejs-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

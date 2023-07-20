@@ -1,0 +1,92 @@
+
+<section class="content" style="overflow: auto;overflow-y: hidden;" (window:resize)="onResize($event)">
+    <div class="container-fluid no-padding" >
+        <div class="card " style="margin-bottom: 0px!important;">
+            <div class="header" class="no-padding">
+              
+                <div class="padding-bottom-3x mb-1">
+                    <div class="card mb-1" >
+                        <form [formGroup]="form" *ngIf='form' style="margin-top: 5px;">
+                            <div class="row" style="margin-right: 0px;margin-left: 0px; ">
+                                <mat-form-field appearance="fill" class="col-md-3 col-lg-3 col-xl-3 "  >
+                                    <mat-label>Numéro de réclamation  </mat-label>
+                                    <input formControlName="claimNumber"  type="text" #claimNumber matInput />
+                                  
+                                </mat-form-field>
+                                <mat-form-field appearance="fill" class="col-md-3 col-lg-3 col-xl-3 " >
+                                    <mat-label>Motif de réclamation</mat-label>
+                                    <mat-select autoFocus formControlName="claimReason"  #claimReason >
+                                      <mat-option  [value]=0>Endommagé</mat-option>
+                                      <mat-option  [value]=1>Non Commandé</mat-option>
+                                      <mat-option  [value]=2>Expiré</mat-option>
+
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field color="accent" appearance="fill"  class="col-md-3 col-lg-3 col-xl-3 "  >
+                                    <mat-label>Date de réclamation </mat-label>
+                                    <input matInput [matDatepicker]="picker3" id="claimDate" formControlName="claimDate" >
+                                    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker3></mat-datepicker>
+                                </mat-form-field>
+                             
+                                <mat-form-field appearance="fill" class="col-md-3 col-lg-3 col-xl-3 "  >
+                                    <mat-label>Note réclamation </mat-label>
+                                    <input formControlName="claimNote"  type="text" #claimNote matInput />
+                                  
+                                </mat-form-field>
+                            
+                                <div class="col-md-3 col-lg-3 col-xl-3 " >
+                                    <mat-slide-toggle color="primary" formControlName="productReturn" class="col-md-2 col-lg-2 col-xl-2">Retour Produit</mat-slide-toggle> 
+                                </div>
+
+                            </div>
+                         
+                        </form>  
+                        <ejs-grid  
+                        #grid 
+                        (created)="created()"  style="padding: 5px;"  
+                         [gridLines]='gridLines'  
+                        (load)='load($event)'
+                        (dataBound)="dataBound($event)"
+                        (toolbarClick)='clickHandler($event)'
+                        showColumnMenu='true'
+                        [dataSource]='rows'
+                        [allowSelection]='true' 
+                        [allowFiltering]='true' 
+                        (commandClick)='commandClick($event)' 
+                        (actionComplete)="actionComplete($event)"
+                        [editSettings]='editOptions' 
+                        (recordDoubleClick)='onDoubleClick($event)' 
+                        [toolbar]='toolbarItems'  >
+                        <e-columns>
+                            <e-column field='id' headerText='N°' [width]='100' textAlign='Center' isPrimaryKey='true'>
+                            <ng-template #template let-data >
+                                {{ getIndexRow(data.id)}} 
+                            </ng-template>
+                            </e-column>
+                            <e-column field='productCode' headerText='Code' [width]='120' [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                            <e-column field='productName' headerText='Nom'  [allowFiltering]='true' [allowSorting]='true' [width]='250'  isPrimaryKey='true'></e-column>
+                            <e-column field='internalBatchNumber' [width]='150' headerText='Lot Interne'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                            <e-column field='vendorBatchNumber' [width]='150' headerText='Lot Fr'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true'  textAlign='Left'></e-column>
+                            <e-column field='unitPrice' isPrimaryKey='true' [width]='150' headerText='Prix'  [allowFiltering]='true' [allowSorting]='true' textAlign='Left'></e-column>
+                            <e-column field='expiryDate' isPrimaryKey='true' [width]='150' headerText='DDP'  [allowFiltering]='true' [allowSorting]='true' type='date'  format='dd/MM/yyyy'></e-column>
+                            <e-column field='ppa'  isPrimaryKey='true'  [width]='150'  headerText='PPA HT'   [allowFiltering]='true' [allowSorting]='true'  textAlign='Left'></e-column>
+
+                            <e-column field='quantity' [validationRules]='quantityRules'  [width]='180'  headerText='Quantité Retourné'  [allowFiltering]='true' [allowSorting]='true' ></e-column>
+                         
+                            <e-column headerText='#' [width]='80' [commands]='commands'></e-column>
+                           
+                        </e-columns>
+                    
+                        </ejs-grid>
+                       </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+  
+  
+  
+  
+  

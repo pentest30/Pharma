@@ -1,0 +1,328 @@
+
+<section class="content" *ngIf="form" style="overflow: auto;overflow-y: hidden;" (window:resize)="onResize($event)">
+  <mat-tab-group *ngIf="this.selectedTab != null"  backgroundColor="primary"  class="searchProduct"  [(selectedIndex)]="this.selectedTab" (selectedTabChange)="onTabChanged($event);">
+    <mat-tab  id="article1"  label="Commande en cours (F1) " > 
+      <div class="container-fluid no-padding" >
+        <div class="" >
+            <div>
+                <div class="card " style="margin-bottom: 0px!important; border-radius: 0px;">
+                    <div class="header" class="no-padding">
+
+                      <div class="padding-bottom-3x mb-1" style="font-size: 12px;" id="headerElement">
+                        <div class="card mb-1" >
+                          <form [formGroup]="form" >
+
+                          <!-- <div class="p-4  text-white text-lg bg-dark rounded-top"><span class="text-uppercase">Tracking Order No - </span><span class="text-medium">34VB5540K83</span></div> -->
+                            <div *ngIf="currentClient != null" class="d-flex flex-wrap flex-sm-nowrap justify-content-between  px-2">
+                              <div class="w-100  py-1 px-2"><span class="text-medium" style="color: #343a40;font-weight: 600;">Code :</span> {{currentClient.code}}</div>
+                              <div class="w-100  py-1 px-2"><span class="text-medium" style="color: #343a40;font-weight: 600;">Code Grp :</span> {{currentClient.organizationGroupCode}} </div>
+                              
+                              <div class="w-100  py-1 px-2"><span class="text-medium" style="color: #343a40;font-weight: 600;">N° Tél :</span> {{currentClient.phoneNumber}}</div>
+                              <div class="w-100  py-1 px-2"><span class="text-medium" style="color: #343a40;font-weight: 600;">Adresse :</span> {{currentClient.addressDto.street}} {{currentClient.addressDto.township}}</div>
+                              <div class="w-100  py-1 px-2"><span class="text-medium" style="color: #343a40;font-weight: 600;">Sect :</span> <span *ngIf="currentClient && currentClient.sectorCode"> {{currentClient.sectorCode}} </span></div>
+                            </div>
+                            <div *ngIf="currentClient != null" class="d-flex flex-wrap flex-sm-nowrap justify-content-between  px-2">
+                              <div class="w-100  py-1 px-2">
+                                <span class="text-medium" style="color: #343a40;font-weight: 600;">Commercial(e) : </span> 
+                                  <span *ngIf="defaultSalesPerson && defaultSalesPerson.firstName!= null">{{defaultSalesPerson.firstName}} {{defaultSalesPerson.lastName}} </span>
+                                  <span  *ngIf="defaultSalesPerson && defaultSalesPerson.firstName == null">{{defaultSalesPerson.normalizedUserName}}</span>
+                              </div>
+                              <div class="w-100  py-1 px-2"><span class="text-medium" style="color: #343a40;font-weight: 600;">Créée par: </span> {{this.createdBy}}  </div>
+                              <div class="w-100  py-1 px-2"><span class="text-medium" style="color: #343a40;font-weight: 600;">Modifiée par</span> {{this.updatedBy}} </div>
+                              <div class="w-100  py-1 px-2"></div>
+                              <div class="w-100  py-1 px-2"></div>
+                            </div>
+                            <div *ngIf="currentClient != null" class="d-flex flex-wrap flex-sm-nowrap justify-content-between  px-2">
+                              <div class="w-100  py-1 px-2"><span class="text-medium" style="color: #343a40;font-weight: 600;">Limite de credit :</span> {{currentClient.limitCredit | currencyFormat :'DZD'}}</div>
+                              <div class="w-100  py-1 px-2"><span class="text-medium" style="color: #343a40;font-weight: 600;">Créances :</span> {{currentClient.debt | currencyFormat :'DZD'}}</div>
+                              <div class="w-100  py-1 px-2"><span class="text-medium" style="color: #343a40;font-weight: 600;">Délai de paiement :</span> {{currentClient.paymentDeadline}} J</div>
+                              <div class="w-100  py-1 px-2"><mat-slide-toggle color="primary" (change)="specialOrder($event)" formControlName="isSpecialOrder"  class="col-md-2 col-lg-2 col-xl-2">Commande Spéciale</mat-slide-toggle> </div>
+                              <div class="w-100  py-1 px-2"><mat-slide-toggle color="primary" formControlName="toBeRespected" class="col-md-2 col-lg-2 col-xl-2">Commande à respecter</mat-slide-toggle></div>
+
+                            </div>
+          
+                          
+                            <div class="row">
+                              <mat-form-field appearance="fill"  [ngClass]="{'col-md-2 col-lg-2 col-xl-2': isPsy, 'col-md-3 col-lg-3 col-xl-3':!isPsy}" >
+                                <mat-label>Type de commande</mat-label>
+                                <mat-select autoFocus formControlName="orderType" (selectionChange)="onCommandTypeSelection($event.value)" [disabled]="rows[0] && rows[0].internalBatchNumber" #orderType >
+                                  <mat-option  [value]=0>Non Psychotrope</mat-option>
+                                  <mat-option  [value]=1>Psychotrope</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                              <mat-form-field *ngIf='isPsy' appearance="fill" [ngClass]="{'col-md-2 col-lg-2 col-xl-2': isPsy, 'col-md-3 col-lg-3 col-xl-3':!isPsy}"  >
+                                <mat-label>N° BCMD </mat-label>
+                                <input formControlName="refDocument" matInput />
+                                <mat-error *ngIf="form.controls.refDocument.invalid" >Réference document obligatoire</mat-error>
+                               
+                              </mat-form-field>
+                              <mat-form-field appearance="fill"  [ngClass]="{'col-md-2 col-lg-2 col-xl-2': isPsy, 'col-md-3 col-lg-3 col-xl-3':!isPsy}" >
+                                <mat-label>Nom Client</mat-label>
+                                <mat-select formControlName="customerId" required [(ngModel)]="selectedCustomer"  disabled="disabled" style="font-weight: 900;font-size: 16px;">
+                                  <mat-option>--</mat-option>
+                                  <mat-option *ngFor="let customer of customers" [value]="customer.id">
+                                    {{customer.name}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+
+                              <!-- <div [ngClass]="{'col-md-2 col-lg-2 col-xl-2': isPsy, 'col-md-3 col-lg-3 col-xl-3':!isPsy}"  >
+                             
+
+                                <ng-select [(ngModel)]="selectedCustomer" 
+                                    [items]="customers" 
+                                    bindValue="id" 
+                                    bindLabel="name"  
+                                    [virtualScroll]	='true' 
+                                    [dropdownPosition]='bottom' 
+                                    formControlName="customerId" 
+                                    labelForId='Client' 
+                                    placeholder='Client' 
+                                    [searchFn]="customSearchFn"
+                                    (change)="onClientSelection($event)">
+                                  <ng-template ng-header-tmp class="table-dropdown-no-scroll" >
+                                  
+                                    <table class="table table-striped" style=" max-width: 95.5%;overflow-x: hidden;">
+                                      <thead>
+                                        <tr class="row dropdown-line-table" >
+                                          <th width="40%" >Code</th>
+                                          <th width="60%" >Nom </th>
+                                         
+                                        </tr>
+                                      </thead>
+                                    </table>
+                                  </ng-template>
+                                  <ng-template let-item="item" ng-option-tmp class="table-dropdown "  let-itemIndex="itemIndex" >
+                                    <table class="table table-striped" style="max-width: 95.5%;overflow-x: hidden;" >
+                                      <tr  class="row  dropdown-line-table ">
+                                        <td  width="40%">{{item.code}}</td>
+                                        <td width="60%">{{item.name}}</td>
+                                      </tr>
+                                    </table> 
+                                  </ng-template>
+                                </ng-select> 
+                              </div>  -->
+                              <mat-form-field color="accent" appearance="fill"  class="col-md-2 col-lg-2 col-xl-2"   >
+                                <mat-label>Date prévue de livraison</mat-label>
+                                <input matInput [matDatepicker]="picker1" formControlName="expectedShippingDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                              </mat-form-field>
+                              <mat-form-field color="accent" appearance="fill"  class="col-md-2 col-lg-2 col-xl-2" >
+                                <mat-label>Date BC</mat-label>
+                                <input matInput [matDatepicker]="picker2" formControlName="orderDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                <mat-datepicker #picker2></mat-datepicker>
+                              </mat-form-field>
+
+                            </div>
+                          
+                          </form>
+
+                        </div>
+                      
+                      </div>
+                        <div >
+                          <div class="card mb-1" *ngIf="currentClient != null">
+                            <ejs-grid  #batchgrid id='batchgrid' 
+                              (created)="created()" 
+                              [gridLines]='gridLines' 
+                              (load)='load($event)'
+                              (dataBound)="dataBound($event)"
+                              (toolbarClick)='clickHandler($event)'
+                              showColumnMenu='true'
+                              [dataSource]='rows'
+                              [allowSelection]='true' 
+                              [allowSorting]='true'
+                              [pageSettings]="pageSettings" 
+                              [allowFiltering]='true' 
+                              (keyPressed)="keyPressed($event)"
+                              (commandClick)='commandClick($event)' 
+                              (actionComplete)="actionComplete($event)"
+
+                              [editSettings]='editOptions' 
+                              (recordDoubleClick)='onDoubleClick($event)' 
+                              allowExcelExport='true'
+                              [toolbar]='toolbarItems'>
+                              <e-columns>
+                                <e-column field='id' headerText='N°' [width]='100' isPrimaryKey='true'>
+                                  <ng-template #template let-data >
+                                    <span *ngIf="getRateMarqueLine(data) < 0"><img width="20px" src="/assets/images/icons8-brake-warning-96_2.png" /></span>
+                                     {{ getIndexRow(data.index)}} 
+                                  </ng-template>
+                                </e-column>
+                                <e-column field='productCode'  [width]='120' headerText='Code'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                                <e-column field='productName' headerText='Nom'  [allowFiltering]='true' [allowSorting]='true' [width]='300'  isPrimaryKey='true'></e-column>
+                                <e-column field='internalBatchNumber' [width]='150' headerText='Lot'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                                <e-column field='quantity' [width]='150'  headerText='Qnt'  [validationRules]='quantityRules'  [allowFiltering]='true' [allowSorting]='true' >
+
+                                </e-column>
+
+                                <e-column field='expiryDate' [width]='150' headerText='DDP'  [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' type='date' format='dd/MM/yyyy'></e-column>
+                                <e-column field='ug' headerText='U.G' [width]='120'  isPrimaryKey='true'>
+                                  <ng-template #template let-data >
+                                     {{ getUG(data)}} 
+                                  </ng-template>
+                                </e-column>
+                                <e-column field='discount' [width]='150' headerText='Remise'  [allowFiltering]='false' isPrimaryKey='true' [allowSorting]='true'   textAlign='Left'></e-column>
+                                <e-column field='unitPrice' [width]='150' headerText='Prix'  format="N2"  [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' textAlign='Left'></e-column>
+                                <e-column field='packing' [width]='130' headerText='Colisage'   [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' textAlign='Left'></e-column>
+                                <e-column field='extraDiscount' textAlign="Right"[validationRules]='extraDiscountRules' [width]='180' editType= 'numericedit' headerText='Remise manuelle'  [allowFiltering]='false'  [allowSorting]='true'></e-column>
+                                <e-column field='totalExlTax' textAlign="Right" [width]='200' headerText='Total HT'  [allowFiltering]='true' isPrimaryKey='true' type="number" format="N2" [allowSorting]='true'></e-column>
+                                <e-column field='totalInlTax' textAlign="Right" [width]='150' headerText='Total TTC'  [allowFiltering]='true' isPrimaryKey='true' type="number" format="N2" [allowSorting]='true'></e-column>
+                                <e-column field='discountValue' [width]='150' headerText='Total Remise '  [allowFiltering]='true' isPrimaryKey='true'  [allowSorting]='true'></e-column>
+                                <e-column field='pfs' [width]='150' headerText='SHP'  [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' ></e-column>
+                                <e-column field='ppaPFS' [width]='150' headerText='PPA'  format="N2" [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' ></e-column>
+                                <e-column field='rateMarque' [width]='180' headerText='Taux de Marque'  [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' >
+                                  <ng-template #template let-data >
+                                    <span *ngIf="getRateMarqueLine(data) < 0" class="e-icons e-arrow-down" style="color: red;">{{ getRateMarqueLine(data) * 100 | toFixed }} %</span>
+                                    <span *ngIf="getRateMarqueLine(data) > 0" class="e-icons e-arrow-up" style="color:#3fb618;">{{ getRateMarqueLine(data) * 100 | toFixed }} %</span>
+                                 </ng-template>
+                                </e-column>
+
+                               
+                                <e-column headerText='#' [width]='80' [commands]='commands'></e-column>
+                                               
+                              </e-columns>
+                          
+                            </ejs-grid>
+                            <div class="row justify-content-md-center pricing-table">
+                              <div class="col-md-3 col-lg-3">
+                                <div class="item">
+                                  <div class="heading">
+                                    <h5>Total TVA  : <span  class="price-bold"> {{ getTotalTVACart() | currencyFormat :'DZD' }}</span></h5>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-3 col-lg-3">
+                                <div class="item">
+                                  <div class="heading">
+                                    <h5>Total HT Remisé :  <span  class="price-bold"> {{ getTotalTTCCart() - totalTVACart | currencyFormat :'DZD'}}</span></h5>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-3 col-lg-3">
+                                <div class="item">
+                                  <div class="heading">
+                                    <h5>Total TTC  : <span  class="price-bold">{{ getTotalTTCCart() | currencyFormat :'DZD' }}</span></h5>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-3 col-lg-3">
+                                <div class="item">
+                                  <div class="heading">
+                                    <h5>Total Remise  : <span  class="price-bold">{{ getTotalDiscountCart() | currencyFormat :'DZD' }}</span></h5>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-3 col-lg-3">
+                                <div class="item">
+                                  <div class="heading">
+                                    <h5>Taux de marque : <span  class="price-bold">{{ globalRateMarque }} % </span> </h5>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-3 col-lg-3">
+                                <div class="item">
+                                  <div class="heading">
+                                    <h5>Taux de marge :  <span  class="price-bold">{{ globalRateBenefit }} %</span> </h5>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-3 col-lg-3">
+                                <div class="item">
+                                  <div class="heading">
+                                    <h5>Marge Globale : <span  class="price-bold">{{ globalBenefit | currencyFormat :'DZD' }}</span></h5>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-3 col-lg-3">
+                               
+                              </div>
+                            </div>
+                           
+                          </div>
+                        </div>
+                  
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+    </mat-tab>
+    <mat-tab  id="article2"  label="Commandes en attente (F1)" style="height: 500px;" > 
+      <ng-template matTabContent>  
+        <ejs-grid  #pendingGrid id='pendingGrid'
+          [gridLines]='gridLines'  
+          (dataBound)="dataBoundPending($event)"
+          [dataSource]='cachedOrders'
+          [allowSelection]='true' 
+          [allowSorting]='true'
+          [pageSettings]="pageSettings" 
+          [allowFiltering]='true' 
+          (commandClick)='pendingCommandClick($event)' 
+          [editSettings]='editPendingOptions' 
+          [allowPaging]='true'
+          (keyPressed)="keyPressed($event)"
+          [selectionSettings]='selectionOptions'
+          (rowSelected)="rowSelected($event)"
+          (dataStateChange)= 'dataStateChange($event)'
+          (toolbarClick)='clickPendingHandler($event)'
+          [toolbar]='pendingToolbarItems'
+          >
+          <e-columns>
+            <e-column field='id' headerText='N°' [width]='100' textAlign='Center' isPrimaryKey='true'>
+              <ng-template #template let-data >
+                {{ getIndexRow(data.index)}} 
+              </ng-template>
+            </e-column>
+            <e-column field='orderNumber'  [width]='200' headerText='N°'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+            <e-column field='createdBy'  [width]='200' headerText='Crée par'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+            <e-column field='psychotropic'  [width]='200' headerText='Type'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'>
+              <ng-template #template let-data >
+                <span *ngIf="data.psychotropic" class="label bg-red shadow-style" style='margin-right: 5px;'>Psychotrope</span>
+                <span *ngIf="!data.psychotropic"class="label bg-green shadow-style" style='margin-right: 5px;'>Non Psychotrope</span>
+
+              </ng-template>
+            </e-column>
+            <e-column headerText='#'  [commands]='commandPending'></e-column>
+
+          </e-columns>
+        </ejs-grid>
+        <h4 class="page-title">Lignes Commande</h4>
+        <ejs-grid #detailgrid  [allowSelection]='false' [dataSource]="items">
+          <e-columns>
+              <e-column field='id' headerText='N°' [width]='80' textAlign='Center' isPrimaryKey='true'>
+                <ng-template #template let-data >
+                  {{ getIndexRow(data.index)}} 
+                </ng-template>
+              </e-column>
+              <e-column field='productName' headerText='Article'></e-column>
+              <e-column field='internalBatchNumber' headerText='Lot'></e-column>
+              <e-column field='expiryDate' headerText='DDP'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+              <e-column field='quantity' headerText='Quantité'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true'></e-column>
+          
+          </e-columns>
+        </ejs-grid>
+      </ng-template>
+    </mat-tab>
+    <mat-tab (click)="fetchInvoices()"   id="article2"  label="Journal des ventes " style="height: 500px;" > 
+      <ng-template matTabContent>  
+      <app-invoice-log-list [customerId] ="customerId"  [envetsInvoice]="eventsSubject.asObservable()"></app-invoice-log-list>
+      </ng-template>
+    </mat-tab>
+    <mat-tab (click)="fetchProducts()"   id="article3"  label="Journal des ventes par produit " style="height: 500px;" > 
+      <ng-template matTabContent>  
+      <app-products-sales-log [customerId] ="customerId"  [eventsProducts]="eventsSubjectByProducts.asObservable()"></app-products-sales-log>
+      </ng-template>
+    </mat-tab>
+    <mat-tab (click)="fetchCustomerDebts()"  id="article4"   label="Créance" style="height: 500px;">
+      <ng-template matTabContent>  
+        <app-debt-log-list [customerId] ="customerId"  [eventsDebt]="eventsSubjectByDebt.asObservable() | async"></app-debt-log-list>
+        </ng-template>
+      
+    </mat-tab>
+  </mat-tab-group>
+   
+</section>

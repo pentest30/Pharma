@@ -1,0 +1,56 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card " *ngIf="deliveryReceipt">
+            <div class="header"><h2>N° Bon de Reception : {{deliveryReceipt.deliveryReceiptSequenceNumber}}</h2></div>
+            <div class="row" style="padding: 30px;" *ngIf="deliveryReceipt && deliveryReceipt.items.length">
+                <mat-chip-list class="mat-chip-list" style="float: right;">
+                    <mat-chip  color="primary" style="width: 300px;" >
+                        Total TTC : {{deliveryReceipt.totalAmount | currencyFormat :'DZD' }}
+                    </mat-chip>
+                    
+                    <mat-chip  style="width: 300px;" color="primary" >
+                        Total HT : {{deliveryReceipt.receiptsAmountExcTax | currencyFormat :'DZD' }}
+                    </mat-chip>
+                </mat-chip-list>
+            </div>
+            <ejs-grid 
+            #detailgrid 
+            showColumnMenu="true" 
+            [allowFiltering]='true'
+            [gridLines]="gridLines"
+            [allowSelection]='false' 
+            (dataBound)="dataBound($event)"
+            [dataSource]="deliveryReceipt.items">
+                <e-columns>
+                    <e-column field='id' headerText='N°' [width]='100' textAlign='Center' isPrimaryKey='true'>
+                        <ng-template #template let-data >
+                        {{ getIndexRow(data.index)}} 
+                        </ng-template>
+                    </e-column>
+                  
+                    <e-column field='productCode'  [width]='150' headerText='Code'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                    <e-column field='productName' headerText='Nom'  [allowFiltering]='true' [allowSorting]='true' [width]='300'  isPrimaryKey='true'></e-column>
+                    <e-column field='vendorBatchNumber' [width]='180' headerText='Lot Fournisseur'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+
+                    <e-column field='internalBatchNumber' [width]='180' headerText='Lot Interne'  [allowFiltering]='true' [allowSorting]='true'  isPrimaryKey='true' textAlign='Left'></e-column>
+                    <e-column field='quantity' [width]='150' editType= 'numericedit' headerText='Qnt'   [allowFiltering]='true' [allowSorting]='true' ></e-column>
+                    <e-column field='unitPrice' [width]='150' headerText='Prix achat'   format="N2" [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' textAlign='Right'></e-column>
+                    <e-column field='expiryDate' [width]='150' headerText='DDP'   format="dd/MM/yyyy" type="date" [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' textAlign='Right'></e-column>
+                  
+                    <e-column field='packing' [width]='150' headerText='Colisage'  [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' ></e-column>
+                    <e-column field='packingNumber' [width]='180' headerText='Nombre de colis'  [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' ></e-column>
+                    <e-column field='bulk' [width]='150' headerText='Vrac'  [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' ></e-column>
+
+                    <e-column field='pfs' [width]='150' headerText='SHP'  [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' ></e-column>
+                    <e-column field='ppa' [width]='150' headerText='PPA'  format="N2" [allowFiltering]='true' [allowSorting]='true' isPrimaryKey='true' textAlign='Right' ></e-column>
+
+                    
+                    
+                </e-columns>
+            </ejs-grid>
+            <div class="text-left mt-2">
+                <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">Fermer (Echap)</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+<div style="width: 750px; height: 500px; padding-bottom: 30px;">
+  <div class="row">
+    <div class="col-sm-4" ><span class="text-medium" style="color: #343a40;font-weight: 600; margin-left: 5px;">Code Produit :</span> {{this.productCode}}</div>
+    <div class="col-sm-4" ><span class="text-medium" style="color: #343a40;font-weight: 600;"> Produit :</span> {{this.productName}}</div>
+    <div class="col-sm-4" ><span class="text-medium" style="color: #343a40;font-weight: 600;"> Quantité demandée :</span> {{this.qntQuota}}</div>
+  </div>    
+  <br>
+  <br>
+       <ejs-grid
+      #grid2
+      showColumnMenu="true"
+      [allowSelection]="true"
+      [dataSource]="items"
+      [allowPaging]="true"
+      [allowFiltering]="true"
+      (rowSelected)="rowSelected($event)"
+      (actionComplete)="onQuantityChange($event)"
+      [editSettings]='editOptions'
+    >
+      <e-columns>
+        <e-column
+          [width]="130"
+          field="customerCode"
+          headerText="Code client"
+          isPrimaryKey='true'
+        ></e-column>
+        <e-column
+          [width]="130"
+          field="customerName"
+          headerText="Client"
+          isPrimaryKey='true'
+        ></e-column>
+        <e-column [width]="130"
+        headerText="Quantité demandée"
+        editType= 'numericedit'
+        field="qntQuota"
+        >
+        </e-column>
+      <e-column
+      [width]="130"
+      field="availableQuantity"
+      headerText="Quantité disponible"
+      isPrimaryKey='true'
+      >
+</e-column>
+
+
+
+        <e-column
+          [width]="80"
+          headerText="Actions"
+          [allowFiltering]="false"
+          isPrimaryKey="true"
+          [allowSorting]="false"
+        >
+          <ng-template #template let-row>
+            <button
+              mat-icon-button
+              class="button-action"
+              [matMenuTriggerFor]="menu"
+              aria-label="Click to see more actions"
+            >
+              <i class="material-icons">more_vert</i>
+            </button>
+            <mat-menu #menu="matMenu" style="height: 25px">
+              <button mat-menu-item (click)="delete(row)">
+                <mat-icon aria-label="Edit">check</mat-icon> Supprimer
+              </button>
+
+
+            </mat-menu>
+          </ng-template>
+        </e-column>
+      </e-columns>
+
+    </ejs-grid>
+    <br>
+    <div class="text-right">
+      <button   style="margin-left:2px;" (click)="save()" mat-raised-button class="personlized-button-blue" >Enregistrer
+      </button>
+  </div>
+</div>
+

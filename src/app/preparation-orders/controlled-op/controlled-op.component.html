@@ -1,0 +1,105 @@
+<section class="content">
+    <div class="container-fluid">
+      <div class="block-header">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <ul class="breadcrumb breadcrumb-style">
+              <li class="breadcrumb-item">
+                <h4 class="page-title">BLs</h4>
+              </li>
+              <li class="breadcrumb-item bcrumb-1">
+                <a routerLink="/dashboard/main">
+                  <i class="fas fa-home"></i>Control OP</a
+                >
+              </li>
+
+              <li class="breadcrumb-item active">Liste</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="header">
+              <div class="row">
+                <div class="col-sm-12 col-md-3">
+                </div>
+                <div class="form-group col-sm-12 col-md-6">
+                  <label for="exampleInputEmail1">Code à barre</label>
+                  <input type="text" class="form-control" [formControl]="barcodeFormControl" #barcodeRef (change)="getEditZone($event.target.value)" (keyup.enter)="getEditZone($event.target.value)" autofocus>
+                </div>
+                <div class="col-sm-12 col-md-3 dataTables_filter" >
+                  <mat-slide-toggle color="primary" (change)="toggleSearch($event)" style="float: right;"  >Recherche avancée</mat-slide-toggle>
+                </div>
+
+              </div>
+            </div>
+            <div class="spinner__loading" *ngIf="loading">
+              <div><mat-spinner></mat-spinner> </div>
+            </div>
+            <ejs-grid
+              #grid
+              style="margin-left: 10px; margin-right: 10px;"
+              [gridLines]="gridLines"
+              [dataSource]="data"
+              [allowSelection]="true"
+              [allowSorting]="true"
+              [allowFiltering]="true"
+              [gridLines]="gridLines"
+              [allowPaging]="true"
+              (dataBound)="dataBound($event)"
+              [filterSettings]='filterSettings'
+              [allowGrouping]='true'
+              [groupSettings]='groupOptions'
+              [selectionSettings]='selectionOptions'
+              (actionBegin)='begin($event)' (actionComplete)='complete($event)'
+              (rowSelected)='rowSelected($event)'
+
+            >
+                <e-columns>
+                <!-- <e-column type='checkbox' width='50'></e-column> -->
+
+                <e-column field="orderIdentifier" headerText="N° Cmd"  width='170'>
+                  <ng-template #template let-row>{{row.orderNumber}}</ng-template>
+                </e-column>
+                <e-column field="orderDate" headerText="Date Cmd" format="dd/MM/yyyy"  width='150' type="date"></e-column>
+                <e-column field="barCode" headerText="barcode" format="dd/MM/yyyy"  width='150'></e-column>
+
+                <e-column field="customerName" headerText="Client"  width='350'></e-column>
+                <e-column field="pickingZoneName" width="120" headerText="Zone"  width='100'></e-column>
+
+                <e-column headerText="Actions"  width='180' [allowFiltering]="false" isPrimaryKey="true"
+                [allowSorting]="false"  width='160'> 
+                  <ng-template #template let-row>
+
+                    <button mat-icon-button class="button-action"(click)="view(row)">
+                      <mat-icon aria-label="Visualiser"  matTooltip="Détail">remove_red_eye</mat-icon>
+                    </button>
+                    <button *ngIf="row.countNotControlled > 0"  mat-icon-button class="button-action" (click)="edit(row)">
+                      <mat-icon aria-label="Editer"  matTooltip="Edition">edit</mat-icon>
+                    </button>
+                    <!-- <button *ngIf="row.countNotControlled > 0"  mat-icon-button class="button-action" (click)="save(row)">
+                      <mat-icon aria-label="Controler" matTooltip="Valider">done</mat-icon>
+                    </button> -->
+                    <button *ngIf="row.preparationOrderStatus < 30"  mat-icon-button class="button-action" (click)="addExecuterController(row)">
+                      <mat-icon aria-label="Ajouter les agents" matTooltip="Ajouter agents">supervised_user_circle</mat-icon>
+                    </button>
+                  </ng-template>
+                </e-column>
+              </e-columns>
+              <ng-template #groupSettingsCaptionTemplate let-data>
+                <span class='groupHeader' style='color:blue'>Commande N°: {{data.key}}</span>
+                <mat-progress-bar mode="determinate" [value]="getRate(data.items, data.count)"></mat-progress-bar>
+
+              </ng-template>
+            </ejs-grid>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

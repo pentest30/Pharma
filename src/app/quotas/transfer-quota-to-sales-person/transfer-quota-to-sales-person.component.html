@@ -1,0 +1,42 @@
+<section >
+    <div >
+      <h4> Transfert quota</h4>
+          <div class="text-right">
+     
+            <button  [disabled]="!selectedSalesPerson"  mat-raised-button (click)="save()" class="personlized-button" style="margin-right:2px;" 
+                >Enregistrer </button>
+            <button  style="margin-left:2px;" (click)="close()" mat-raised-button class="personlized-button-blue" >Fermer
+            </button>
+            </div>
+            <br>
+          <div class="body table-responsive">
+            <ejs-grid
+              #grid
+              showColumnMenu="true"
+              [allowSelection]="true"
+              [dataSource]="salesPersons"
+              [allowPaging]="true"
+              [allowFiltering]="true"
+              (rowSelected)="rowSelected($event)"              
+            >
+              <e-columns>
+                <e-column
+                [width]="130"
+                field="salesPersonId"
+                headerText="Commercial(e)"
+                [visible]="false"
+              ></e-column>
+                <e-column
+                [width]="130"
+                field="userName"
+                headerText="Commercial(e)"
+               
+              ></e-column>
+              </e-columns>
+            
+            </ejs-grid>
+          </div>
+        
+         
+    </div>
+    </section>

@@ -1,0 +1,119 @@
+     <form [formGroup]="formGroup"> 
+
+        <div class="form-group mt-1" >
+          <ng-select  autofocus
+          (focus)="$event.target.select()"
+          formControlName="internalBatchNumber"
+          placeholder="Liste des lots"
+          #internalBatch
+          [items]="invent" 
+          class="dropdown-grid"
+          [(ngModel)] = "internalBatchNumber"
+          bindValue="internalBatchNumber" 
+          bindLabel="internalBatchNumber"  
+          [virtualScroll]	='true' 
+          [markFirst]='true'
+          (change)='onBatchSelection($event)'	> 
+            <ng-template ng-header-tmp class="table-dropdown-no-scroll">
+              <table class="table table-striped" style=" overflow-x: hidden;" >
+                <thead>
+                  <tr class="row  dropdown-line-table" >
+                    <th class="" width="15%" sortable="internalBatchNumber" (sort)="onSortBatch($event)"> N°Lot Interne</th>
+                    <th class="" width="15%" sortable="expiryDate" (sort)="onSortBatch($event)"> Date d'expiration</th>
+                    <th class="" width="15%" sortable="physicalAvailableQuantity" (sort)="onSortBatch($event)"> Total livrable</th>
+                    <th class="" width="15%" sortable="salesUnitPrice" (sort)="onSortBatch($event)"> PV.U</th>
+                    <th class="" width="15%" sortable="ppaTTC" (sort)="onSortBatch($event)"> PPA</th>
+                    <th class="" width="5%" sortable="pfs" (sort)="onSortBatch($event)"> SHP</th>
+                    <th class="" width="5%" sortable="packing" > Colis</th>
+                    <th class="" width="15%" sortable="supplierName" > Fournisseur</th>
+
+                  </tr>
+                </thead>
+              </table>
+            </ng-template>
+            <ng-template let-item="item" ng-option-tmp class="table  table-dropdown ">
+              <table class="table table-striped ">
+                <tr class="row dropdown-line-table">
+                  <td class="" width="15%" >{{item.internalBatchNumber}}</td>
+                  <td class="" width="15%">
+                    <span  class="badge" [class.bg-success-border]="getDifferenceDates(item.expiryDate)" [class.bg-danger-border]="!getDifferenceDates(item.expiryDate)">
+                      {{item.expiryDate |  date: 'dd/MM/yyyy'}}
+                    </span>
+                  </td>
+                  <td class="" width="15%">
+                    <span class="badge" [class.bg-success-border]="item.physicalAvailableQuantity > 0" [class.bg-danger-border]="item.physicalAvailableQuantity == 0">
+                      {{item.physicalAvailableQuantity}}
+                    </span>
+                  </td>
+                  <td class="" width="15%">{{item.salesUnitPrice | currencyFormat :'DZD' }}</td>
+                  <td class="" width="15%">{{item.ppaHT | currencyFormat :'DZD' }}</td>
+                  <td class="" width="5%">{{item.pfs | currencyFormat :'DZD' }}</td>
+                  <td class="" width="5%"><span *ngIf="item.packing">{{item.packing }}</span></td>
+                  <td class="" width="15%"><span style="white-space: break-spaces;line-height: 1em;">{{item.supplierName }}</span></td>
+                </tr>
+              </table> 
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group" > 
+          <mat-form-field style="margin-left: 2px;">
+            <mat-label>Quantité </mat-label>
+            <mat-label *ngIf="formGroup.get('quantity')"></mat-label>
+            <input autocomplete="off"   #quantity type="number" 
+            (focus)="$event.target.select()"
+            min="1" matInput  formControlName="quantity" required >
+            
+             <mat-error *ngIf="formGroup?.get('quantity')?.hasError('required')">
+              La quantité est obligatoire
+            </mat-error>
+            <mat-error *ngIf="formGroup?.get('quantity')?.hasError('quantityRange')">
+              La quantité est supérieure à la quantité autorisée
+            </mat-error>
+            <mat-error *ngIf="
+            
+            formGroup?.get('quantity')?.hasError('quantityByBox')">
+              La quantité doit être par colis d'origine
+            </mat-error>
+
+            
+          </mat-form-field>
+        </div>
+
+        <div class="text-left">
+                  
+          <button mat-raised-button  [class.spinner]="isSavingItem" 
+          [disabled]="!formGroup.valid" [class.personlized-button]="formGroup.valid" 
+          [class.disabled-personlized-button]="!formGroup.valid"
+            style="margin-right:2px;" 
+            (click)="save()">
+            Enregistrer </button>
+            <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">Fermer (Echap)</button>
+        </div>
+      </form>
+      <div class="mt-5">
+        <h3 style="margin-top: 50px;">Paliers des UG</h3>
+        <ejs-grid 
+        #grid  
+        [gridLines]='gridLines'  
+        [allowSelection]='false' 
+        [dataSource]="discounts"
+        [allowPaging]='true'>
+          <e-columns>
+              <e-column field='productFullName' headerText='Article'></e-column>
+              <e-column field='fromDateShort'   headerText='Date'></e-column>
+              <e-column field='toDateShort'   headerText='Date'></e-column>
+              <e-column field='discountRate' headerText='Taux Remise'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true' type="number" format="N2">
+                <ng-template #template let-row>
+                  {{row.discountRate * 100}} %
+                </ng-template>
+              </e-column>
+              <e-column field='thresholdQuantity' headerText='Quantité'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true' type="number" format="N2"></e-column>
+              <e-column field='ug' headerText='UG'  [allowFiltering]='true' isPrimaryKey='true' [allowSorting]='true' type="number" format="N2">
+                <ng-template #template let-row>
+                  {{ getUg(row.thresholdQuantity, row.discountRate)}}
+                </ng-template>
+              </e-column>
+
+          </e-columns>
+        </ejs-grid>
+      </div> 

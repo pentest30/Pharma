@@ -1,0 +1,137 @@
+
+<h5>Informations système : </h5>
+<ejs-grid
+style="padding: 5px; margin: 10px;" #grid4
+[dataSource]="customers"
+[gridLines]="gridLines">
+<e-columns>
+  <e-column field="defaultSalesGroupName" width="120" headerText="Superviseur" ></e-column>
+  <e-column field="salesPersonName" width="120" headerText="Commercial(e)" ></e-column>
+  <e-column field="sector" width="220" headerText="Secteur" [allowSorting]="true"></e-column>
+  <e-column field="sectorCode" width="120" headerText="Code secteur" [allowSorting]="true"></e-column>
+  <e-column field="limitCredit" width="120"   headerText="Limite crédit" type="number" format="N2"></e-column>
+  <e-column field="paymentDeadline" width="120" headerText="Echéance"></e-column>
+  <e-column field="monthlyObjective" width="120"  headerText="Obj mensuel" type="number" format="N2"></e-column>
+  <e-column field="debt" width="120"  headerText="Créance"  type="number"  format="N2"></e-column>
+
+</e-columns>
+</ejs-grid>
+<h5>Informations générales :</h5>
+<ejs-grid
+style="padding: 5px; margin: 10px;" #grid
+[dataSource]="customers"
+[gridLines]="gridLines">
+    <e-columns>
+        <e-column field="code" width="150" headerText="Code" [allowSorting]="true"  ></e-column>
+        <e-column field="organizationName" width="250" headerText="Nom de l'organisation " [allowSorting]="true"></e-column>
+        <e-column field="organizationGroupCode" width="120" headerText="Code Groupe" [allowSorting]="true"></e-column>
+        <e-column field="activity" width="120" headerText="Activité" [allowSorting]="true"></e-column>
+        <e-column field="organizationStatusDescription" width="120" headerText="Statut" [allowSorting]="true"></e-column>
+        <e-column field="disabledReason" width="120" headerText="Raison du blocage" [allowSorting]="true"></e-column>
+        <e-column field="establishmentDate" width="120" headerText="Date d'integration" format="dd/MM/yyyy" type="date"></e-column>
+       
+       
+
+    </e-columns>
+</ejs-grid>
+<h5>Informations fiscales :</h5>
+<ejs-grid
+style="padding: 5px; margin: 10px;" #grid
+[dataSource]="customers"
+[gridLines]="gridLines">
+    <e-columns>
+        <e-column field="nif" width="120" headerText="NIF " [allowSorting]="true"></e-column>
+        <e-column field="nis" width="120" headerText="NIS" [allowSorting]="true"></e-column>
+        <e-column field="rc" width="120" headerText="RC" [allowSorting]="true"></e-column>
+        <e-column field="ai" width="120" headerText="AI" [allowSorting]="true"></e-column>
+        <e-column field="paymentMode" width="120" headerText="Mode de paiement" >
+          <ng-template #template let-data>
+            <span
+              *ngIf="data.paymentMode ==0"
+              >Chèque</span
+            >
+            <span
+              *ngIf="data.paymentMode ==1"
+              >Transfert</span
+            >
+            <span
+            *ngIf="data.paymentMode ==2"
+            >Carte de crédit</span
+          >
+          </ng-template>
+        </e-column>
+       
+    </e-columns>
+</ejs-grid>
+<h6>Comptes bancaires</h6>
+<ejs-grid
+    style="padding: 5px; margin: 10px;" #grid2
+    [dataSource]="bankAccounts"
+    [gridLines]="gridLines">
+    <e-columns>
+        <e-column field="bankName" width="120" headerText="Banque " [allowSorting]="true"></e-column>
+        <e-column field="bankCode" width="120" headerText="Code" [allowSorting]="true"></e-column>
+        <e-column field="number" width="120" headerText="N° de compte" [allowSorting]="true"></e-column>
+
+    </e-columns>
+</ejs-grid>
+<h5>Adresses et contacts : </h5>
+<ejs-grid
+    style="padding: 5px; margin: 10px;" #grid
+    [dataSource]="addresses"
+    [gridLines]="gridLines">
+    <e-columns>
+        <e-column field="country" width="120" headerText="Pays " [allowSorting]="true"></e-column>
+        <e-column field="city" width="120" headerText="Ville" [allowSorting]="true"></e-column>
+        <e-column field="zipCode" width="120" headerText="Code postal" [allowSorting]="true"></e-column>
+        <e-column field="street" width="120" headerText="Rue" [allowSorting]="true"></e-column>
+        <e-column field="main" width="120" headerText="Principale" [allowSorting]="true">
+          <ng-template #template let-data>
+            <span
+              *ngIf="data.main ==true"
+              >Oui</span
+            >
+            <span
+              *ngIf="data.main ==false"
+              >Non</span
+            >
+          </ng-template>
+        </e-column>
+
+    </e-columns>
+</ejs-grid>
+
+<h6>Numéros de téléphones</h6>
+<ejs-grid
+    style="padding: 5px; margin: 10px;" #grid3
+    [dataSource]="phoneNumbers"
+    [gridLines]="gridLines">
+    <e-columns>
+        <e-column field="countryCode" width="120" headerText="Code Pays " [allowSorting]="true"></e-column>
+        <e-column field="number" width="120" headerText="Numéro" [allowSorting]="true"></e-column>
+        <e-column field="isFax" width="120" headerText="Fax" [allowSorting]="true">
+          <ng-template #template let-data>
+            <span
+              *ngIf="data.isFax ==true"
+              >Oui</span
+            >
+            <span
+              *ngIf="data.isFax ==false"
+              >Non</span
+            >
+          </ng-template>
+        </e-column>
+
+    </e-columns>
+</ejs-grid>
+<h6>Emails</h6>
+<ejs-grid
+    style="padding: 5px; margin: 10px;" #grid4
+    [dataSource]="emails"
+    [gridLines]="gridLines">
+    <e-columns>
+        <e-column field="email" width="120" headerText="Email " [allowSorting]="true"></e-column>
+
+    </e-columns>
+</ejs-grid>
+

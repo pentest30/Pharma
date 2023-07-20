@@ -1,0 +1,216 @@
+
+<section class="content">
+
+<div style="margin-top: -65px;" >
+
+  <span class="parent">
+    <ng-select  appAutoFocus
+    class="auto-grow mat-form-field-infix ng-tns-c110-56"
+    [(ngModel)] = "productId"
+    placeholder="Liste des articles"
+    #internalBatch
+    [items]="inventQuotas"
+    class="dropdown-grid"
+    bindValue="productId"
+    [searchFn]="customProductSearchFn"
+    bindLabel="productFullName"
+    [virtualScroll]	='true'
+    [markFirst]='true'
+    (change)='onProductSelection($event)'
+    style="display: inline-block;width: 90%;"
+    [disabled]="productSelected"
+
+    >
+    <ng-template ng-header-tmp class="table-dropdown-no-scroll">
+      <table class="table table-striped" style=" overflow-x: hidden;" >
+        <thead>
+          <tr class="row  dropdown-line-table" >
+            <th class="" width="20%" sortable="productCode" >Code article</th>
+            <th class="" width="55%" sortable="productFullName" > Article</th>
+            <th class="" width="20%" sortable="physicalDispenseQuantity" > Quantité disponible</th>
+          </tr>
+        </thead>
+      </table>
+    </ng-template>
+    <ng-template let-item="item" ng-option-tmp class="table  table-dropdown ">
+      <table class="table table-striped ">
+        <tr class="row dropdown-line-table">
+          <td class="" width="20%" >{{item.productCode}}</td>
+        <td class="" width="55%">{{item.productFullName}}</td>
+        <td class="" width="20%">{{item.physicalDispenseQuantity}}</td>
+        </tr>
+      </table>
+    </ng-template>
+    </ng-select>
+    <a mat-raised-button *ngIf="hasRecordToday && productId && !requestId" style="margin-left: 5px;" class="personlized-button-blue" (click)="release()">
+                    <i class="fas fa-trash">  Libérer</i>
+
+  </a>
+</span>
+    <br>
+    <br>
+<div>
+  <mat-radio-group (ngModelChange)="onClientTypeChange($event)"  aria-label="Select an option" [(ngModel)]="customerType" >
+    <mat-radio-button   [value]="1">Routine</mat-radio-button>
+    <mat-radio-button  [value]="2">Nouveau</mat-radio-button>
+    <mat-radio-button  [value]="3">Partenaire</mat-radio-button>
+  </mat-radio-group>
+  <br>
+  <br>
+  <mat-form-field style="margin-left: 2px" >
+    <mat-label>Début de l'interval </mat-label>
+  <input
+  [disabled]="!productId"
+    type="number"
+    matInput
+    autocomplete="off"
+    [(ngModel)] = "start"
+    (ngModelChange) ="onStartChange($event)"
+  />
+</mat-form-field>
+  <mat-form-field style="margin-left: 2px" >
+    <mat-label>Nombre de clients </mat-label>
+  <input
+  [disabled]="!productId"
+    type="number"
+    matInput
+    autocomplete="off"
+    [(ngModel)] = "totalCustomers"
+    (ngModelChange) ="onChange($event)"
+  />
+
+
+  </mat-form-field>
+  <mat-form-field  style="margin-left: 2px">
+    <mat-label>Date  </mat-label>
+    <input matInput [matDatepicker]="picker" [disabled]="!productId" (dateChange)="setToDate($event.value)"  [(ngModel)] = "date" (focus)="picker.open()"  required>
+    <mat-datepicker #picker></mat-datepicker>
+
+</mat-form-field>
+</div>
+    <div >
+      <mat-form-field style="margin-left: 2px">
+        <mat-label>arrivage </mat-label>
+      <input
+        type="number"
+        matInput
+        autocomplete="off"
+        [disabled]="!productId"
+        [(ngModel)]="qntQuota"
+        (ngModelChange) ="onQuotaChange($event)"
+      />
+      </mat-form-field>
+
+    </div>
+    <div class="text-right">
+
+      <button  [disabled]="!productId||qntQuota<=0" mat-raised-button (click)="dispatch()" class="personlized-button" style="margin-right:2px;"
+          >Attribuer les quantités </button>
+      <button  [disabled]="!dispatched || isAddingQuota"  appSingleClick style="margin-left:2px;" (click)="save()" mat-raised-button class="personlized-button-blue" >Enregistrer
+      </button>
+      <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">Fermer (Echap)</button>
+ 
+    </div>
+      <br>
+      <div class="spinner-container" *ngIf="isLoading">
+        <mat-progress-bar color="primary" mode="indeterminate"> </mat-progress-bar>
+       </div>
+    <br>
+    <ejs-grid
+    #grid
+  style="padding: 5px"
+  [dataSource] = "customers"
+  [allowSelection]="true"
+  [allowSorting]="true"
+  [gridLines]="gridLines"
+  [allowPaging]='true'
+  [allowFiltering]="true"
+  (rowSelected)='rowSelected($event)'
+  [selectionSettings]="selectOptions"
+  [enableHover]="false"
+  (commandClick)="pendingCommandClick($event)"
+  showColumnMenu="true"
+>
+  <e-columns>
+     <e-column
+    field="rank"
+    width="50"
+    headerText="Ordre"
+    isPrimaryKey="true"
+    [allowSorting]="false"
+  ></e-column>
+    <e-column
+      field="customerCode"
+      width="100"
+      headerText="Code"
+      [allowSorting]="false"
+    ></e-column>
+
+    <e-column
+      field="customerName"
+      headerText="Nom"
+      [allowSorting]="false"
+      width="200"
+    ></e-column>
+    <e-column
+      field="totalAmount"
+      headerText="Total"
+      format ="C2"
+      type="number"
+      [allowSorting]="false"
+      width="100"
+
+    ></e-column>
+    <e-column
+      field="quota"
+      headerText="Qnt attribuée"
+      [allowSorting]="false"
+      width="80"
+    ></e-column>
+    <e-column
+    headerText="Actions"
+    [allowSorting]="false"
+    [width]="60"
+    [commands]="commandPending"
+  ></e-column>
+  </e-columns>
+</ejs-grid>
+<br>
+
+  </div>
+</section>
+<style>
+  #parent {
+  list-style: none;
+  width: 100%;
+  height: 90px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+#parent > li {
+  display: inline-block;
+  width: 50%;
+  height: 100%;
+  background-color: red;
+}
+ng-select select-dropdown > div {
+  z-index: 2;
+}
+.ng-select.auto-grow {
+display: flex;
+
+
+}
+.ng-select-container {
+  min-width: 100px;
+  width: auto;
+}
+
+.ng-dropdown-panel {
+  width: auto;
+}
+</style>

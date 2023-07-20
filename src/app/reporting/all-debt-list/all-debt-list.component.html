@@ -1,0 +1,88 @@
+
+<section class="content">
+    <div class="container-fluid" style="min-height: 50%;">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul class="breadcrumb breadcrumb-style ">
+                        <li class="breadcrumb-item">
+                            <h4 class="page-title">Reporting</h4>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-1">
+                            <a routerLink="/dashboard/main">
+                                <i class="fas fa-home"></i>Créances</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="spinner-container" *ngIf="loading">
+            <mat-spinner color="primary"></mat-spinner>
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                
+                           
+                    <div class="body ">
+                        <div style="height: 100%;margin: 25px;padding-top: 10px;">
+                            <div class="row">
+                                <h3> Liste des créances </h3>
+                              </div>
+                              
+                           <hr>
+                            <ejs-grid
+                        #grid
+                        (actionBegin)='begin($event)'
+                        showColumnMenu="true"
+                        [allowSelection]="true"
+                        [selectionSettings]='selectionOptions'
+                        [gridLines]="gridLines"
+                        [dataSource]="data"
+                        [allowPaging]="true"
+                        [allowSorting]="true"
+                        [allowFiltering]="true"
+                        (dataBound)="dataBound($event)"
+                        
+                        >
+                        <e-columns>
+                          
+                          <e-column headerText='#' [width]="70">
+                            <ng-template #template let-row>
+                              <button mat-icon-button [matMenuTriggerFor]="menu" class="button-action" aria-label="Actions">
+                                <mat-icon>more_vert</mat-icon>
+                              </button>
+                              <mat-menu #menu="matMenu">
+                               
+                                <button  mat-menu-item (click)="view(row)">
+                                  <mat-icon>remove_red_eye</mat-icon>
+                                  <span>Détail Facture</span>
+                                </button>
+                              </mat-menu>
+                            </ng-template>
+                          </e-column>
+                          <e-column [width]="100" field="customerCode"  headerText="Code client"></e-column>
+                          <e-column [width]="200" field="customerName"  headerText="Nom"></e-column>
+                          <e-column [width]="180" field="invoiceAmount" format="N2" headerText="Montant facture" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+                          <e-column [width]="180" field="paymentAmount" format="N2" headerText="Montant payé" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+                          <e-column [width]="180" field="dept" format="N2" headerText="Reste à payer" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true"></e-column>
+                         
+                        </e-columns>
+                        </ejs-grid>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+   
+</section>
+
+
+
+
+
+
+

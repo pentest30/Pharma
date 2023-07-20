@@ -1,0 +1,79 @@
+<section class="content">
+    <div class="container-fluid">
+      <div class="block-header">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="breadcrumb breadcrumb-style ">
+                    <li class="breadcrumb-item">
+                        <h4 class="page-title">Facturation</h4>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-1">
+                        <a routerLink="/dashboard/main">
+                            <i class="fas fa-home"></i>Transactions Financières</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="header">
+          <div class="row">
+             
+          </div>
+        </div>
+  
+        <div class="body table-responsive">
+          <ejs-grid
+          #grid
+          (actionBegin)='begin($event)'
+          showColumnMenu="true"
+          [allowSelection]="false"
+          [gridLines]="gridLines"
+          [dataSource]="data"
+          [allowPaging]="true"
+          [allowFiltering]="true"
+          (dataBound)="dataBound($event)"
+          >
+            <e-columns>
+              <e-column headerText='#' [width]="100">
+                <ng-template #template let-row>
+                  <button mat-icon-button [matMenuTriggerFor]="menu" class="button-action" aria-label="Actions">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <!-- <button  mat-menu-item (click)="print(row)">
+                      <mat-icon>edit</mat-icon>
+                      <span>Editer</span>
+                    </button> -->
+                   
+                  </mat-menu>
+                </ng-template>
+              </e-column>
+              <e-column [width]="170" field="refDocument" headerText="Ref Document" [allowFiltering]="true" isPrimaryKey="true" [allowSorting]="true" type="string"></e-column>
+              <e-column [width]="200" field="documentDate" format="dd/MM/yyyy" type="date" headerText="Date"></e-column>
+              <e-column [width]="220" field="financialTransactionType" headerText="Etat" type="string">
+                <ng-template #filterTemplate let-data>
+                  <ejs-dropdownlist id='financialTransactionType' [(ngModel)]="data.Name" [enabled]="data.column.allowFiltering" showClearButton="true"
+                    (change)=onChange($event) [dataSource]='dropStates' [fields]='fields'[popupHeight]='height' >
+                  </ejs-dropdownlist>
+                </ng-template>
+                <ng-template #template let-data>
+                  <span *ngIf="data.financialTransactionType == 10" class="label l-bg-green shadow-style" style="margin-right: 5px">Facture Client </span>
+                  <span *ngIf="data.financialTransactionType == 20" class="label bg-red shadow-style" style="margin-right: 5px">Facture Achat</span>
+                  <span *ngIf="data.financialTransactionType == 30" class="label l-bg-purple shadow-style" style="margin-right: 5px">Rembourssement</span>
+  
+                </ng-template>
+              </e-column>
+              <e-column [width]="180" field="transactionAmount" format="N2" headerText="Total TTC" [allowFiltering]="true" isPrimaryKey="true"[allowSorting]="true"></e-column>
+              <e-column [width]="180" field="createdBy" headerText="Créée par"></e-column>
+              <e-column [width]="180" field="createdDateTime"  headerText="Date de création" format="dd/MM/yyyy hh:mm" type="date"></e-column>
+              <e-column [width]="180" field="updatedBy" headerText="Modifiée par"></e-column>
+              <e-column [width]="180" field="updatedDateTime" headerText="Date de modification" format="dd/MM/yyyy hh:mm" type="date"></e-column>
+            </e-columns>
+          </ejs-grid>
+      
+        </div>
+      </div>
+    </div>
+  </section>
+    

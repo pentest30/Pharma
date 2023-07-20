@@ -1,0 +1,65 @@
+
+<form [formGroup]="formGroup" *ngIf='formGroup && invoice.invoiceItems'>
+    <br>  
+    <div class="form-group mt-1">
+        <ng-select id="productId" autofocus  
+        placeholder="Liste des articles"
+        #productId 
+        formControlName="productId"
+        class="dropdown-grid"
+       
+        [items]="invoice.invoiceItems"
+        [markFirst]="true"
+        bindValue="productId" 
+        bindLabel="productName" 
+        [virtualScroll]	='true'
+        (change)='onProductSelection($event)'> 
+    
+            <ng-template ng-header-tmp class="table-dropdown-no-scroll" >
+                <table class="table table-striped" style=" overflow-x: hidden;">
+                <thead>
+                    <tr class="row dropdown-line-table" >
+                        <th width="10%" sortable="code" > Code</th>
+                        <th width="30%" sortable="fullName" > Designation</th>
+                        <th width="20%" sortable="vendorBatchNumber" > Lot Fr</th>
+                        <th width="20%" sortable="internalBatchNumber" > Lot Interne</th>
+                        <th width="20%" sortable="returnedQuantity" > Quantité </th>
+                        <th width="20%" sortable="expiryDate" > DDP </th>
+
+                    </tr>
+                </thead>
+                </table>
+            </ng-template>
+            <ng-template let-item="item" ng-option-tmp class="table-dropdown "  let-itemIndex="itemIndex" >
+                <table class="table table-striped" style=" overflow-x: hidden;" >
+                    <tr class="row  dropdown-line-table ">
+                        <td #select style="display: none;">{{item.productId}}</td>
+                        <td  width="10%">{{item.productCode}}</td>
+                        <td width="30%" style="text-overflow: ellipsis;overflow: hidden;">{{item.productName}}</td>
+                        <td width="20%" style="text-overflow: ellipsis;overflow: hidden;">{{item.vendorBatchNumber}}</td>
+                        <td width="20%" style="text-overflow: ellipsis;overflow: hidden;">{{item.internalBatchNumber}}</td>
+                        <td width="20%" style="text-overflow: ellipsis;overflow: hidden;">{{item.quantity - item.returnedQty}}</td>
+                        <td width="20%" style="text-overflow: ellipsis;overflow: hidden;">{{item.expiryDate}}</td>
+    
+                    </tr>
+                </table> 
+            </ng-template>
+        </ng-select>
+    </div>
+    <div class="form-group " >
+        <mat-form-field style="margin-left: 2px;">
+            <mat-label>quantité </mat-label>
+            <input autocomplete="off"   #quantity type="number" min="1" matInput  formControlName="quantity" required >
+            <mat-error *ngIf="formGroup.get('quantity').hasError('required')">
+                Quantité est obligatoire
+            </mat-error>
+        </mat-form-field>
+    </div>
+     
+    <div class="text-left">
+        <button mat-raised-button  #saveButton [disabled]="!formGroup.valid" [class.personlized-button]="formGroup.valid" [class.disabled-personlized-button]="!formGroup.valid" style="margin-right:2px;" 
+            (click)="save()">Enregistrer </button>
+        <button style="margin-left:2px;" mat-raised-button class="personlized-button-blue" (click)="close()">Fermer (Echap)</button>
+    </div>
+    </form>
+    

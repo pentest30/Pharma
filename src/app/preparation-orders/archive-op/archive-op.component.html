@@ -1,0 +1,117 @@
+<section class="content">
+    <div class="container-fluid">
+      <div class="block-header">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <ul class="breadcrumb breadcrumb-style">
+              <li class="breadcrumb-item">
+                <h4 class="page-title">BLs</h4>
+              </li>
+              <li class="breadcrumb-item bcrumb-1">
+                <a routerLink="/dashboard/main">
+                  <i class="fas fa-home"></i>Archive OP</a
+                >
+              </li>
+             
+              <li class="breadcrumb-item active">Liste</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card container-shadow ">
+            <div class="header">
+              <div class="row">
+                <div class="col-sm-12 col-md-6">
+                </div>
+                <div class="form-group col-sm-12 col-md-6">
+                </div>
+                
+              </div>
+            </div>
+            
+            <ejs-grid
+              #grid
+              showColumnMenu="true"
+              style="margin-left: 10px; margin-right: 10px;"
+              [gridLines]="gridLines"
+              [dataSource]="data"
+              [allowSelection]="true"
+              [allowSorting]="true"
+              [allowFiltering]="true"
+              [gridLines]="gridLines"
+              [allowPaging]="true"
+              (dataBound)="dataBound($event)"
+              [selectionSettings]='selectionOptions'
+              (actionBegin)='begin($event)' 
+              (actionComplete)='complete($event)' 
+              (rowSelected)='rowSelected($event)'
+              [allowGrouping] = "true"
+              [groupSettings]='groupOptions'
+
+            >
+                <e-columns>
+                <!-- <e-column type='checkbox' width='50'></e-column> -->
+
+                <e-column field="orderIdentifier" headerText="N° Cmd"  width='130'></e-column>
+                <e-column field="orderDate" headerText="Date Cmd" format="dd/MM/yyyy" type="date"  width='80'></e-column>
+                <e-column field="customerName" headerText="Client"  width='200'></e-column>
+                <e-column field="zoneGroupName" headerText="G.Zone"  width='80'></e-column>
+                <e-column field="pickingZoneName" headerText="Zone"  width='80'></e-column>
+                <e-column field="totalPackageAsString" headerText="N° colis"  width='100'> </e-column> 
+                <e-column field="verifiedByName" headerText="Contrôlé par" width='150'></e-column>
+                <e-column field="verifiedTime" headerText="Contrôlé le"  [allowFiltering]="true" format="dd/MM/yyyy à HH:mm" [allowSorting]="false" type="date" width='150'></e-column>
+                <e-column field='preparationOrderStatus'  headerText='Status'    textAlign='Left'  width='130'>
+                  <ng-template #filterTemplate let-data>
+                      <ejs-dropdownlist id='preparationOrderStatus' [(ngModel)]="data.Name" [enabled]="data.column.allowFiltering" showClearButton="true"
+                      (change)=onChange($event) [dataSource]='dropStates' [fields]='fields'[popupHeight]='height'>
+                    </ejs-dropdownlist>
+                  </ng-template> 
+                  <ng-template #template let-data>
+                      <span *ngIf="data.preparationOrderStatus == 0" class="label l-bg-orange shadow-style" style="margin-right: 5px">En préparation</span>
+                      <span *ngIf="data.preparationOrderStatus == 10" class="label bg-purple shadow-style" style="margin-right: 5px">Préparé</span>
+                      <span *ngIf="data.preparationOrderStatus == 20" class="label bg-red shadow-style" style="margin-right: 5px">Contrôlé</span>
+                      <span *ngIf="data.preparationOrderStatus == 30" class="label bg-green shadow-style" style="margin-right: 5px">Consolidé</span>
+                      <span *ngIf="data.preparationOrderStatus == 50" class="label bg-blue shadow-style" style="margin-right: 5px">En Zone d'expédition</span>
+                      <span *ngIf="data.preparationOrderStatus == 500" class="label bg-grey shadow-style" style="margin-right: 5px">Commande annulée</span>
+                      
+                    </ng-template>
+                  </e-column>
+                <e-column headerText="Actions" [allowFiltering]="false" isPrimaryKey="true"[allowSorting]="false" width='210'>
+                <ng-template #template let-row>
+                  <button mat-icon-button class="button-action"(click)="view(row)">
+                    <mat-icon aria-label="Visualiser">remove_red_eye</mat-icon> 
+                  </button> 
+
+                  <button  mat-icon-button class="button-action" (click)="printBl(row)" >
+                    <mat-icon aria-label="Imprimer" matTooltip="Imprimer">print</mat-icon> 
+                  </button>
+                  <button mat-icon-button [matMenuTriggerFor]="menu" class="button-action" aria-label="Plus d'actions">
+                    <i class="material-icons">more_vert</i>
+                  </button> 
+                  <mat-menu #menu="matMenu"> 
+                    <button mat-menu-item *ngIf="row.preparationOrderStatus <=10" (click)="control(row)">Contrôler</button>
+                    <button mat-menu-item *ngIf="row.preparationOrderStatus == 20" (click)="consolidate(row)">Consolider</button>
+                    <button mat-menu-item *ngIf="row.preparationOrderStatus == 30" (click)="ship(row)">Expédier</button>
+                  </mat-menu>
+
+ 
+              </ng-template>
+          </e-column>
+              </e-columns>
+              <ng-template #groupSettingsCaptionTemplate let-data> 
+                <span class='groupHeader' style='color:blue'>Commande N°: {{data.key}} </span> 
+        
+              </ng-template> 
+            </ejs-grid>
+
+           
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  

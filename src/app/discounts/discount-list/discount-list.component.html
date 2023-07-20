@@ -1,0 +1,68 @@
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul class="breadcrumb breadcrumb-style ">
+                        <li class="breadcrumb-item">
+                            <h4 class="page-title">Marques</h4>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-1">
+                            <a routerLink="/dashboard/main">
+                                <i class="fas fa-home"></i>Gestion des accord commerciaux</a>
+                        </li>
+                        <li class="breadcrumb-item bcrumb-2">
+                            <a href="#" onClick="return false;">Marques</a>
+                        </li>
+                        <li class="breadcrumb-item active">Liste</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+            <mat-spinner></mat-spinner>
+        </div> -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card ">
+                    <div class="header">
+                       <button class="mat-focus-indicator personlized-button mat-raised-button mat-button-base"  (click)="openDialog()"> + Accord commercial</button>
+                                                  
+                    </div>
+                    <div class="body table-responsive">
+
+                        <ejs-grid
+                            #grid
+                            (commandClick)='ListingCommandClick($event)' 
+                            showColumnMenu="true"
+                            [gridLines]="gridLines"
+                            [dataSource]="data"
+                            [allowPaging]="true"
+                            [allowFiltering]="true"
+                            >
+                            <e-columns>
+
+                                <e-column field='productFullName' headerText='Article' isPrimaryKey=true ></e-column> 
+                                <e-column field='thresholdQuantity' headerText='Seuil' isPrimaryKey=true type="string"></e-column> 
+                                <e-column field='discountRate' headerText='Remise' isPrimaryKey=true type="number"  format='C3'>
+                                    <ng-template #template let-data>{{data.discountRate * 100 | number}} %</ng-template>
+                                </e-column> 
+                                <e-column field='fromDateShort' headerText='Date de début' isPrimaryKey=true type='string' ></e-column> 
+                                <e-column field='toDateShort' headerText='Date de fin' isPrimaryKey=true type='string' ></e-column> 
+                                <e-column headerText='#'  [commands]='commandListing'></e-column>
+
+                            </e-columns>
+                        </ejs-grid>
+                    </div>
+                 
+                </div>
+            </div>
+        </div>
+        
+    </div>
+   
+</section>
+
+
+
+

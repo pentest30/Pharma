@@ -1,0 +1,21 @@
+<section class="content"  style="overflow: auto;overflow-y: hidden;" >
+    <div class="container-fluid">
+        <div class="block-header">
+          <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <ul class="breadcrumb breadcrumb-style ">
+                      <li class="breadcrumb-item">
+                          <h4 class="page-title">Reporting</h4>
+                      </li>
+                      <li class="breadcrumb-item bcrumb-1">
+                          <a routerLink="/dashboard/main">
+                              <i class="fas fa-home"></i>Journal des ventes par produit</a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+        </div>
+    <app-products-sales-log [customerId] ="customerId"  [byCustomer] ="false" [eventsProducts]="eventsSubjectByProducts.asObservable()"></app-products-sales-log>
+    </div>
+
+</section>

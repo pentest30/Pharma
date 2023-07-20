@@ -1,0 +1,62 @@
+<div>
+    <h6 mat-dialog-title>{{modalTitle}}</h6>
+    <div>
+        <form class="form-form m-5" [formGroup]="form" *ngIf="form">
+            <input type="hidden" formControlName="id">
+            <div>
+                    <ng-select  
+                    [items]="products$ | async" 
+                    placeholder="Liste des articles"
+                    [(ngModel)]="selectedProduct"
+                    [minTermLength]="minLengthTerm" 
+                    [loading]="productsLoading"
+                    typeToSearchText="Veuillez saisir {{minLengthTerm}} caractères ou plus pour commencer la recherche." 
+                    [typeahead]="productsInput$"
+                     bindValue="id" 
+                     formControlName="productId"  
+                     bindLabel="fullName" 
+                     [virtualScroll]='true'  
+                     (change)="onClientSelection($event)"
+                     >
+                    </ng-select>
+                 
+            </div>
+            <div>
+                <mat-form-field >
+                    <mat-label>Seuil </mat-label>
+                    <input type="number" matInput formControlName="thresholdQuantity"  required>
+
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field >
+                    <mat-label>Remise </mat-label>
+                    <input type="number" matInput formControlName="discountRate"  required>
+
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field color="accent" appearance="fill" >
+                    <mat-label>De</mat-label>
+                    <input matInput [matDatepicker]="from" formControlName="from">
+                    <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
+                    <mat-datepicker #from></mat-datepicker>
+                  </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field color="accent" appearance="fill">
+                    <mat-label>De</mat-label>
+                    <input matInput [matDatepicker]="to" formControlName="to">
+                    <mat-datepicker-toggle matSuffix [for]="to"></mat-datepicker-toggle>
+                    <mat-datepicker #to></mat-datepicker>
+                  </mat-form-field>
+            </div>
+            <div class="text-left">
+                <button mat-raised-button  color="primary" style="margin-right:2px;" 
+                    (click)="save()">Enregistrer </button>
+                <button style="margin-left:2px;" mat-raised-button color="default" (click)="close()">Fermer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
